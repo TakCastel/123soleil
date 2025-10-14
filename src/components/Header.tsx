@@ -27,7 +27,7 @@ export default function Header() {
               Accueil
             </Link>
             <Link href="/association" className="hover:text-secondary transition-colors">
-              L'Association
+              L&apos;Association
             </Link>
             <Link href="/projets" className="hover:text-secondary transition-colors">
               Projets
@@ -58,7 +58,7 @@ export default function Header() {
               Accueil
             </Link>
             <Link href="/association" className="block hover:text-secondary transition-colors">
-              L'Association
+              L&apos;Association
             </Link>
             <Link href="/projets" className="block hover:text-secondary transition-colors">
               Projets

@@ -22,7 +22,7 @@ export default function Home() {
             href="/adhesion" 
             className="border border-primary text-primary px-8 py-3 hover:bg-primary hover:text-black transition-colors rounded"
           >
-            Adhérer à l'association
+            Adhérer à l&apos;association
           </Link>
         </div>
       </section>

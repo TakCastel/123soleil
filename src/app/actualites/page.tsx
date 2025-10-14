@@ -55,7 +55,7 @@ export default function Actualites() {
       <h1 className="text-4xl font-bold mb-8">Actualités</h1>
       
       <p className="text-gray-600 mb-12 max-w-3xl">
-        Suivez l'actualité de l'association 1, 2, 3 Soleil : nouveaux projets, 
+        Suivez l&apos;actualité de l&apos;association 1, 2, 3 Soleil : nouveaux projets, 
         événements, formations et partenariats.
       </p>
 
