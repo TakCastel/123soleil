@@ -1,0 +1,65 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "projets"
+    label: "Projets"
+    folder: "content/projets"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Titre", name: "titre", widget: "string"}
+      - {label: "Catégorie", name: "categorie", widget: "select", options: ["films", "documentaires", "ateliers", "jeunesse"]}
+      - {label: "Année", name: "annee", widget: "number"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Vidéo URL", name: "video_url", widget: "string", required: false}
+      - {label: "Contenu", name: "body", widget: "markdown"}
+
+  - name: "actualites"
+    label: "Actualités"
+    folder: "content/actualites"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Titre", name: "titre", widget: "string"}
+      - {label: "Date", name: "date", widget: "datetime"}
+      - {label: "Catégorie", name: "categorie", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Image", name: "image", widget: "image"}
+      - {label: "Contenu", name: "body", widget: "markdown"}
+
+  - name: "pages"
+    label: "Pages"
+    files:
+      - label: "Accueil"
+        name: "accueil"
+        file: "content/pages/accueil.md"
+        fields:
+          - {label: "Titre", name: "titre", widget: "string"}
+          - {label: "Sous-titre", name: "sous_titre", widget: "string"}
+          - {label: "Description", name: "description", widget: "text"}
+          - {label: "Image Hero", name: "hero_image", widget: "image"}
+
+      - label: "Association"
+        name: "association"
+        file: "content/pages/association.md"
+        fields:
+          - {label: "Titre", name: "titre", widget: "string"}
+          - {label: "Histoire", name: "histoire", widget: "markdown"}
+          - {label: "Valeurs", name: "valeurs", widget: "markdown"}
+
+  - name: "membres"
+    label: "Membres de l'équipe"
+    folder: "content/membres"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - {label: "Nom", name: "nom", widget: "string"}
+      - {label: "Rôle", name: "role", widget: "string"}
+      - {label: "Description", name: "description", widget: "text"}
+      - {label: "Photo", name: "photo", widget: "image"}
