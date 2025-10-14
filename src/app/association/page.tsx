@@ -1,7 +1,7 @@
 export default function Association() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8">L'Association</h1>
+      <h1 className="text-4xl font-bold mb-8">L&apos;Association</h1>
       
       <div className="grid md:grid-cols-2 gap-12 mb-16">
         <div>
@@ -18,7 +18,7 @@ export default function Association() {
           </p>
         </div>
         <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-          <span className="text-gray-500">Photo de l'équipe</span>
+          <span className="text-gray-500">Photo de l&apos;équipe</span>
         </div>
       </div>
 

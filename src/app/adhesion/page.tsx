@@ -1,7 +1,7 @@
 export default function Adhesion() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8 text-center">Adhérer à l'Association</h1>
+      <h1 className="text-4xl font-bold mb-8 text-center">Adhérer à l&apos;Association</h1>
       
       <div className="text-center">
         <a

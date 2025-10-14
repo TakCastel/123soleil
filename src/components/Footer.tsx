@@ -28,7 +28,7 @@ export default function Footer() {
                 Accueil
               </Link>
               <Link href="/association" className="block text-gray-300 hover:text-white transition-colors">
-                L'Association
+                L&apos;Association
               </Link>
               <Link href="/projets" className="block text-gray-300 hover:text-white transition-colors">
                 Projets

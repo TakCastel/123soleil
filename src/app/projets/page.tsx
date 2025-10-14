@@ -72,11 +72,11 @@ export default function Projets() {
     <div className="max-w-6xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-8">Nos Projets</h1>
       
-      <p className="text-gray-600 mb-12 max-w-3xl">
-        Découvrez l'ensemble de nos créations : films, documentaires, ateliers de formation 
-        et projets jeunesse. Chaque projet témoigne de notre engagement pour la création 
-        audiovisuelle et la transmission des savoirs.
-      </p>
+        <p className="text-gray-600 mb-12 max-w-3xl">
+          Découvrez l&apos;ensemble de nos créations : films, documentaires, ateliers de formation 
+          et projets jeunesse. Chaque projet témoigne de notre engagement pour la création 
+          audiovisuelle et la transmission des savoirs.
+        </p>
 
       {/* Filtres */}
       <div className="mb-12">
