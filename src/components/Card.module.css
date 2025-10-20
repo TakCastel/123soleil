@@ -1,0 +1,161 @@
+.card {
+  position: relative;
+  background: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.06),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.cardMedia {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #e5e7eb;
+  position: relative;
+  overflow: hidden;
+}
+
+.cardBody {
+  padding: 1.25rem;
+  position: relative;
+  z-index: 15;
+}
+
+
+.cardBadge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+
+
+/* Shiny effect overlay - only on hover enter */
+.cardMedia::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+  z-index: 2;
+  opacity: 0;
+}
+
+.card:hover .cardMedia::before {
+  animation: shinySweep 0.6s ease-out forwards;
+}
+
+/* Additional shiny effect for the whole card - only on hover enter */
+.card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  z-index: 3;
+  opacity: 0;
+}
+
+.card:hover::after {
+  animation: shinySweepHorizontal 0.5s ease-out forwards;
+}
+
+@keyframes shinySweep {
+  0% {
+    transform: translateX(-100%);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 1;
+  }
+}
+
+@keyframes shinySweepHorizontal {
+  0% {
+    left: -100%;
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 1;
+  }
+}
+
+/* Optimisation des performances */
+.card {
+  will-change: transform;
+}
+
+/* Title animation */
+.card h3 {
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 20;
+}
+
+
+/* CTA button animation */
+.card .cta-stacked {
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+
+
+/* Staggered animation for card elements - only on initial load */
+.card h3,
+.card p,
+.card .cardBadge,
+.card .cta-stacked {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+/* Animation d'entrée seulement si la card n'a pas encore été animée */
+.card:not(.has-animated) h3,
+.card:not(.has-animated) p,
+.card:not(.has-animated) .cardBadge,
+.card:not(.has-animated) .cta-stacked {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideInUp 0.6s ease-out forwards;
+}
+
+.card:not(.has-animated) h3 { animation-delay: 0.1s; }
+.card:not(.has-animated) p { animation-delay: 0.2s; }
+.card:not(.has-animated) .cardBadge { animation-delay: 0.3s; }
+.card:not(.has-animated) .cta-stacked { animation-delay: 0.4s; }
+
+@keyframes slideInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
