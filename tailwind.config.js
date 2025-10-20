@@ -18,6 +18,10 @@ module.exports = {
           hover: 'var(--secondary-hover)',
           light: 'var(--secondary-light)',
         },
+        neutral: {
+          dark: 'var(--neutral-dark)',
+          light: 'var(--neutral-light)'
+        }
       },
     },
   },

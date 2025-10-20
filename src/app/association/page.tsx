@@ -1,27 +1,82 @@
+import Card from '@/components/Card';
+
 export default function Association() {
   return (
-    <div className="max-w-6xl mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-8">L&apos;Association</h1>
-      
-      <div className="grid md:grid-cols-2 gap-12 mb-16">
-        <div>
-          <h2 className="text-2xl font-semibold mb-6">Notre Histoire</h2>
-          <p className="text-gray-600 mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-          </p>
-          <p className="text-gray-600 mb-4">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-            culpa qui officia deserunt mollit anim id est laborum.
+    <div className="">
+      {/* En-tête diagonal jaune à pois */}
+      <section className="bg-diagonal-primary dotted-overlay">
+        <div className="max-w-6xl mx-auto px-4 py-16 text-center">
+          <h1 className="display-title text-5xl md:text-6xl text-[color:var(--secondary)] title-tilt mb-3">1,2,3...</h1>
+          <p className="subtitle-black small mt-1">Quelques mots</p>
+          <p className="text-gray-700 max-w-3xl mx-auto mt-4">
+            Découvrez l'histoire, les missions et les engagements de notre association audiovisuelle, au service
+            d'une médiation culturelle solidaire et inclusive sur le territoire avignonnais.
           </p>
         </div>
-        <div className="w-full h-64 bg-gray-200 rounded-lg flex items-center justify-center">
-          <span className="text-gray-500">Photo de l&apos;équipe</span>
-        </div>
-      </div>
+      </section>
 
+      {/* Présentation */}
+      <section className="max-w-6xl mx-auto px-4 py-12">
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+          <div>
+            <h2 className="display-title text-3xl mb-1 text-[color:var(--neutral-dark)]">LES OBJECTIFS</h2>
+            <p className="subtitle-black small mb-4">DES ATELIERS</p>
+            <p className="text-gray-700 mb-4">
+              Créée en 2017, l’association 1,2,3 Soleil est implantée à Avignon (84000). Elle
+              favorise les initiatives audiovisuelles collectives et citoyennes auprès des jeunes
+              et des habitants des quartiers prioritaires.
+            </p>
+            <p className="text-gray-700 mb-4">
+              Les médiations associent tournage, écriture, montage et diffusion, dans un cadre d’éducation
+              à l’image et aux médias. Depuis 2023, le siège social est situé à la Maison pour Tous Monclar (MPT).
+            </p>
+          </div>
+          <div className="w-full ratio-4-3 bg-gray-200 flex items-center justify-center">
+            <span className="text-gray-500">Image de couverture (picsum)</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Services et activités */}
+      <section className="max-w-6xl mx-auto px-4 py-16">
+        <h2 className="display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)]">Nos Services</h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
+          <Card
+            title="Ateliers Vidéo"
+            description="Découvrez nos ateliers de création audiovisuelle pour tous les âges. Tournage, écriture, montage et diffusion dans un cadre d'éducation à l'image."
+            category="Formation"
+            href="/projets"
+            ctaLabel="Découvrir →"
+          />
+          <Card
+            title="Médiation Culturelle"
+            description="Nous développons des dispositifs de médiation vidéo avec des participants solidaires pour sensibiliser aux réalités contemporaines."
+            category="Médiation"
+            href="/projets"
+            ctaLabel="En savoir plus →"
+          />
+          <Card
+            title="Projets Collectifs"
+            description="Participez à nos projets audiovisuels collectifs et citoyens qui favorisent l'inclusion et le partage sur le territoire avignonnais."
+            category="Projets"
+            href="/projets"
+            ctaLabel="Rejoindre →"
+          />
+        </div>
+      </section>
+
+      {/* Objectifs des ateliers */}
+      <section className="max-w-6xl mx-auto px-4 py-12">
+        <div className="bg-[color:var(--primary)] dotted-overlay rounded-lg p-8 md:p-10">
+          <h2 className="display-title text-3xl text-[color:var(--secondary)] mb-6">LES OBJECTIFS DES ATELIERS</h2>
+          <ul className="list-stars space-y-3 text-[color:var(--neutral-dark)]">
+            <li>Favoriser un sens fort des liens et du tissu intergénérationnel.</li>
+            <li>Développer des dispositifs de médiation vidéo avec des participants solidaires.</li>
+            <li>Sensibiliser aux réalités contemporaines et territoriales.</li>
+            <li>Produire des contenus audiovisuels porteurs d'inclusion et de partage.</li>
+          </ul>
+        </div>
+      </section>
     </div>
   );
 }
