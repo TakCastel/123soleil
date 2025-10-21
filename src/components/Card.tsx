@@ -36,6 +36,9 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
   }, [delay]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    // Désactiver les effets hover sur mobile (écrans < 768px)
+    if (window.innerWidth < 768) return;
+    
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
@@ -44,6 +47,9 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
   };
 
   const handleMouseLeave = () => {
+    // Désactiver les effets hover sur mobile (écrans < 768px)
+    if (window.innerWidth < 768) return;
+    
     setIsHovered(false);
     setMousePosition({ x: 0.5, y: 0.5 });
   };
@@ -83,7 +89,12 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
              ${(mousePosition.x - 0.5) * 20}px ${(mousePosition.y - 0.5) * 20 + 40}px 40px rgba(0, 0, 0, 0.2)`
           : '0 4px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)'
       }}
-      onMouseEnter={() => setIsHovered(true)}
+      onMouseEnter={() => {
+        // Désactiver les effets hover sur mobile (écrans < 768px)
+        if (window.innerWidth >= 768) {
+          setIsHovered(true);
+        }
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >

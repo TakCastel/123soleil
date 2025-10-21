@@ -10,8 +10,8 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b-2 border-black h-24 text-[color:var(--neutral-dark)]">
-      <div className="relative max-w-6xl mx-auto px-4 h-24 flex items-center">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b-2 border-black h-16 md:h-24 text-[color:var(--neutral-dark)]">
+      <div className="relative max-w-6xl mx-auto px-4 h-16 md:h-24 flex items-center">
         {/* Overlapping logo token - left aligned */}
         <Link href="/">
           <motion.div 
@@ -23,7 +23,7 @@ export default function Header() {
             }}
             whileTap={{ scale: 0.95 }}
           >
-            <Logo width={84} height={84} className="w-full h-full object-cover aspect-square" animated={false} />
+            <Logo width={84} height={84} className="w-14 h-14 md:w-full md:h-full object-cover aspect-square" animated={false} />
           </motion.div>
         </Link>
 
@@ -55,7 +55,7 @@ export default function Header() {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden absolute left-0 right-0 top-24 bg-white border-b border-gray-200 px-4 py-4 space-y-4 z-30">
+          <nav className="md:hidden absolute left-0 right-0 top-16 md:top-24 bg-white border-b border-gray-200 px-4 py-4 space-y-4 z-30">
             <Link href="/" className="block hover:text-[color:var(--secondary)] transition-colors">Accueil</Link>
             <Link href="/association" className="block hover:text-[color:var(--secondary)] transition-colors">L&apos;Association</Link>
             <Link href="/projets" className="block hover:text-[color:var(--secondary)] transition-colors">Médiations</Link>

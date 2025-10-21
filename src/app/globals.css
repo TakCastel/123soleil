@@ -290,9 +290,15 @@ body {
 /* HERO: full-height diagonal mosaic with center hole */
 .hero-section {
   position: relative;
-  min-height: calc(100vh - 96px); /* header = 96px */
+  min-height: calc(100vh - 64px); /* header mobile = 64px */
   background: var(--primary);
   overflow: hidden; /* clip rotated mosaic */
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    min-height: calc(100vh - 96px); /* header desktop = 96px */
+  }
 }
 .hero-section.dotted-overlay { /* reinforce dots visibility over yellow */
   background-image: radial-gradient(#ffffff 3px, transparent 3px);

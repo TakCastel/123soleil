@@ -285,7 +285,7 @@ export default function Hero() {
             />
             <div className="relative z-10">
               <motion.h1
-                className="display-title text-6xl md:text-7xl mb-3 text-[color:var(--secondary)]"
+                className="display-title text-4xl sm:text-5xl md:text-6xl lg:text-7xl mb-3 text-[color:var(--secondary)]"
                 variants={titleContainerVariants}
                 initial="hidden"
                 animate={titleVisible ? "visible" : "hidden"}
