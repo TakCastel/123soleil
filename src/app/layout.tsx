@@ -33,7 +33,7 @@ export default function RootLayout({
       <body className={`antialiased bg-white text-[color:var(--neutral-dark)]`}>
         <Header />
         {/* Add extra top padding on small screens to accommodate smaller logo overlap */}
-        <main className="min-h-screen pt-24 sm:pt-24">
+        <main className="min-h-screen pt-16 sm:pt-24">
           {children}
         </main>
         <Footer />
