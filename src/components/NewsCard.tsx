@@ -31,8 +31,19 @@ export default function NewsCard({
 }: NewsCardProps) {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [imageError, setImageError] = useState(false);
-  // Mémoriser le nombre aléatoire une seule fois
-  const [randomSeed] = useState(() => Math.floor(Math.random() * 1000));
+  
+  // Générer un seed déterministe basé sur le titre pour éviter les problèmes d'hydratation
+  const generateSeed = (str: string) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32bit integer
+    }
+    return Math.abs(hash) % 1000;
+  };
+  
+  const randomSeed = generateSeed(title);
 
   useEffect(() => {
     const timer = setTimeout(() => {

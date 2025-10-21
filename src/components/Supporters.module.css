@@ -1,0 +1,76 @@
+.supportersSection {
+  background-color: #f5f5f5;
+  padding: 4rem 1rem;
+  border-top: 2px solid #000;
+  position: relative;
+  width: 100%;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.logosContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4rem;
+  flex-wrap: wrap;
+}
+
+.logoWrapper {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.logoWrapper:hover {
+  transform: scale(1.05);
+}
+
+.logo {
+  width: auto;
+  height: auto;
+  max-width: 200px;
+  max-height: 100px;
+  object-fit: contain;
+  /* Filtre pour convertir en gris anthracite */
+  filter: grayscale(100%) brightness(0.4) contrast(1.2);
+  transition: filter 0.4s ease;
+}
+
+/* Logo Grand Avignon en négatif */
+.logoGrandAvignon {
+  /* Inverser + grayscale pour avoir fond blanc et texte noir */
+  filter: invert(1) grayscale(100%);
+}
+
+.logoWrapper:hover .logoGrandAvignon {
+  /* Au survol, inverser uniquement pour avoir fond blanc et texte turquoise */
+  filter: invert(1);
+}
+
+/* Logo Ville d'Avignon reste en gris anthracite */
+.logoVilleAvignon {
+  /* Reste en gris même au survol */
+  filter: grayscale(100%) brightness(0.4) contrast(1.2);
+}
+
+.logoWrapper:hover .logoVilleAvignon {
+  /* Pas de changement au survol */
+  filter: grayscale(100%) brightness(0.4) contrast(1.2);
+}
+
+@media (max-width: 768px) {
+  .logosContainer {
+    gap: 2rem;
+  }
+  
+  .logo {
+    max-width: 150px;
+    max-height: 75px;
+  }
+}
+
