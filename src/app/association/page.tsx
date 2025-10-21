@@ -9,8 +9,8 @@ export default function Association() {
           <h1 className="display-title text-5xl md:text-6xl text-[color:var(--secondary)] title-tilt mb-3">1,2,3...</h1>
           <p className="subtitle-black small mt-1">Quelques mots</p>
           <p className="text-gray-700 max-w-3xl mx-auto mt-4">
-            Découvrez l'histoire, les missions et les engagements de notre association audiovisuelle, au service
-            d'une médiation culturelle solidaire et inclusive sur le territoire avignonnais.
+            Découvrez l&apos;histoire, les missions et les engagements de notre association audiovisuelle, au service
+            d&apos;une médiation culturelle solidaire et inclusive sur le territoire avignonnais.
           </p>
         </div>
       </section>
@@ -43,7 +43,7 @@ export default function Association() {
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
           <Card
             title="Ateliers Vidéo"
-            description="Découvrez nos ateliers de création audiovisuelle pour tous les âges. Tournage, écriture, montage et diffusion dans un cadre d'éducation à l'image."
+            description="Découvrez nos ateliers de création audiovisuelle pour tous les âges. Tournage, écriture, montage et diffusion dans un cadre d&apos;éducation à l&apos;image."
             category="Formation"
             href="/projets"
             ctaLabel="Découvrir →"
@@ -73,7 +73,7 @@ export default function Association() {
             <li>Favoriser un sens fort des liens et du tissu intergénérationnel.</li>
             <li>Développer des dispositifs de médiation vidéo avec des participants solidaires.</li>
             <li>Sensibiliser aux réalités contemporaines et territoriales.</li>
-            <li>Produire des contenus audiovisuels porteurs d'inclusion et de partage.</li>
+            <li>Produire des contenus audiovisuels porteurs d&apos;inclusion et de partage.</li>
           </ul>
         </div>
       </section>

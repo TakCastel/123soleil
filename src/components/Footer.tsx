@@ -1,9 +1,9 @@
 "use client";
 import Link from 'next/link';
-import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useInView } from '../hooks/useInView';
 import Button from './Button';
+import Logo from './Logo';
 
 export default function Footer() {
   const { ref: logoRef, isInView: logoInView } = useInView({ threshold: 0.3, triggerOnce: true });
@@ -82,34 +82,25 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto px-4 py-16">
         {/* Logo section with animation */}
         <motion.div 
-          ref={logoRef}
+          ref={logoRef as React.RefObject<HTMLDivElement>}
           className="flex justify-center mb-12"
           variants={logoVariants}
           initial="hidden"
           animate={logoInView ? "visible" : "hidden"}
         >
-          <motion.div 
-            className="footer-logo-token"
-            whileHover={{ 
-              scale: 1.05,
-              rotate: 2,
-              transition: { duration: 0.2 }
-            }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Image 
-              src="/logo.jpg" 
-              alt="1, 2, 3 Soleil" 
+          <Link href="/">
+            <Logo 
               width={120} 
               height={120} 
-              className="w-28 h-28 object-cover" 
+              className="w-full h-full object-cover aspect-square"
+              wrapperClassName="footer-logo-token"
             />
-          </motion.div>
+          </Link>
         </motion.div>
 
         {/* Main content grid with staggered animations */}
-        <motion.div 
-          ref={contentRef}
+        <motion.div
+          ref={contentRef as React.RefObject<HTMLDivElement>}
           className="grid md:grid-cols-3 gap-12 mb-12"
           variants={contentVariants}
           initial="hidden"
@@ -235,8 +226,8 @@ export default function Footer() {
         </motion.div>
         
         {/* Bottom section with legal links */}
-        <motion.div 
-          ref={bottomRef}
+        <motion.div
+          ref={bottomRef as React.RefObject<HTMLDivElement>}
           className="border-t-2 border-[color:var(--neutral-dark)] pt-8"
           variants={bottomVariants}
           initial="hidden"
@@ -254,7 +245,7 @@ export default function Footer() {
               animate={bottomInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
               transition={{ delay: 0.3, duration: 0.4 }}
             >
-              &copy; 2024 Association 1, 2, 3 Soleil. Tous droits réservés.
+              &copy; 2025 Association 1, 2, 3 Soleil. Tous droits réservés.
             </motion.p>
             <motion.div 
               className="flex justify-center space-x-6 text-sm"

@@ -122,7 +122,7 @@ export default function Projets() {
       </div>
 
       {/* Grille des médiations */}
-      <div ref={gridRef} className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
+      <div ref={gridRef as React.RefObject<HTMLDivElement>} className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
         {filteredProjets.map((projet, index) => (
           <Card
             key={projet.id}
