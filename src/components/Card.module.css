@@ -12,6 +12,11 @@
   perspective: 1000px;
 }
 
+.cardLink {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 .cardMedia {
   width: 100%;
   aspect-ratio: 16 / 9;

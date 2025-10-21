@@ -1,5 +1,3 @@
-import Card from '@/components/Card';
-
 export default function Association() {
   return (
     <div className="">
@@ -34,34 +32,6 @@ export default function Association() {
           <div className="w-full ratio-4-3 bg-gray-200 flex items-center justify-center">
             <span className="text-gray-500">Image de couverture (picsum)</span>
           </div>
-        </div>
-      </section>
-
-      {/* Services et activités */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
-        <h2 className="display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)]">Nos Services</h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
-          <Card
-            title="Ateliers Vidéo"
-            description="Découvrez nos ateliers de création audiovisuelle pour tous les âges. Tournage, écriture, montage et diffusion dans un cadre d&apos;éducation à l&apos;image."
-            category="Formation"
-            href="/projets"
-            ctaLabel="Découvrir →"
-          />
-          <Card
-            title="Médiation Culturelle"
-            description="Nous développons des dispositifs de médiation vidéo avec des participants solidaires pour sensibiliser aux réalités contemporaines."
-            category="Médiation"
-            href="/projets"
-            ctaLabel="En savoir plus →"
-          />
-          <Card
-            title="Projets Collectifs"
-            description="Participez à nos projets audiovisuels collectifs et citoyens qui favorisent l'inclusion et le partage sur le territoire avignonnais."
-            category="Projets"
-            href="/projets"
-            ctaLabel="Rejoindre →"
-          />
         </div>
       </section>
 

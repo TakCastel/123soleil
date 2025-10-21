@@ -1,0 +1,154 @@
+.container {
+  min-height: 100vh;
+  padding: 2rem;
+  background: #f5f5f5;
+}
+
+.badge {
+  background: #ff6b35;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  background: white;
+  padding: 3rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.backLink {
+  display: inline-block;
+  color: #0066cc;
+  text-decoration: none;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #0052a3;
+  text-decoration: underline;
+}
+
+.header {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.categorie {
+  display: inline-block;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #1a1a1a;
+  margin: 1rem 0;
+  line-height: 1.2;
+}
+
+.date {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.description {
+  font-size: 1.2rem;
+  color: #444;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+.imageWrapper {
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.articleContent {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #333;
+}
+
+.articleContent h2 {
+  font-size: 1.8rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.articleContent h3 {
+  font-size: 1.4rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1a1a1a;
+}
+
+.articleContent p {
+  margin-bottom: 1rem;
+}
+
+.articleContent ul,
+.articleContent ol {
+  margin-left: 2rem;
+  margin-bottom: 1rem;
+}
+
+.articleContent li {
+  margin-bottom: 0.5rem;
+}
+
+.articleContent strong {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .content {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+}
+

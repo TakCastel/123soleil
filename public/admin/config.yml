@@ -17,7 +17,7 @@ collections:
       - {label: "Année", name: "annee", widget: "number"}
       - {label: "Description", name: "description", widget: "text"}
       - {label: "Image", name: "image", widget: "image"}
-      - {label: "Vidéo URL", name: "video_url", widget: "string", required: false}
+      - {label: "Vidéo (chemin)", name: "video_url", widget: "string", required: false, hint: "Chemin vers la vidéo (ex: /videos/projets/nom-projet.mp4)"}
       - {label: "Contenu", name: "body", widget: "markdown"}
 
   - name: "actualites"
