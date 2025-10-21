@@ -11,8 +11,8 @@ export default function Hero() {
   const subtitle1Letters = Array.from(subtitle1);
   const subtitle2 = 'SOLIDAIRE ET INCLUSIF !';
   const subtitle2Letters = Array.from(subtitle2);
-  const baseDelay = 0.15; // delayChildren used by the container
-  const perLetterStagger = 0.06; // stronger visual staggering per letter
+  const baseDelay = 0.05; // Réduit de 150ms à 50ms
+  const perLetterStagger = 0.03; // Réduit de 60ms à 30ms par lettre
   
   // Calculer la durée totale d'animation pour chaque étape
   const getAnimationDuration = (textLength: number) => baseDelay + (textLength * perLetterStagger);
@@ -37,9 +37,9 @@ export default function Hero() {
   useEffect(() => {
     // Configuration centralisée des timings (facile à modifier)
     const TIMING = {
-      images: 800,
-      title: 1000,
-      triangle: 800, // Même timing que les images
+      images: 300, // Réduit de 800ms à 300ms
+      title: 500, // Réduit de 1000ms à 500ms
+      triangle: 300, // Réduit de 800ms à 300ms
       subtitle1Trigger: 0.75, // 75% du titre
       subtitle2Trigger: 0.25, // 25% du sous-titre 1
       cta1Trigger: 0.75, // 75% du sous-titre 2

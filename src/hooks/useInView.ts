@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 
 interface UseInViewOptions {
   threshold?: number;
@@ -7,9 +7,14 @@ interface UseInViewOptions {
 }
 
 export function useInView(options: UseInViewOptions = {}) {
-  const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options;
   const [isInView, setIsInView] = useState(false);
   const ref = useRef<HTMLElement>(null);
+
+  const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options;
+
+  const reset = useCallback(() => {
+    setIsInView(false);
+  }, []);
 
   useEffect(() => {
     const element = ref.current;
@@ -38,11 +43,6 @@ export function useInView(options: UseInViewOptions = {}) {
       observer.unobserve(element);
     };
   }, [threshold, rootMargin, triggerOnce]);
-
-  // Fonction pour réinitialiser l'état (utile lors du changement de filtres)
-  const reset = () => {
-    setIsInView(false);
-  };
 
   return { ref, isInView, reset };
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import styles from './Card.module.css';
 
 type CardProps = {
@@ -23,6 +23,8 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
+  const cardRef = useRef<HTMLDivElement>(null);
   // Mémoriser le nombre aléatoire une seule fois
   const [randomSeed] = useState(() => Math.floor(Math.random() * 1000));
 
@@ -32,6 +34,19 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
     }, 1000 + (delay * 1000));
     return () => clearTimeout(timer);
   }, [delay]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setMousePosition({ x, y });
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setMousePosition({ x: 0.5, y: 0.5 });
+  };
 
   // Utiliser lorem picsum comme fallback
   const getFinalImageUrl = () => {
@@ -43,23 +58,34 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
 
   const hasImage = true; // Toujours vrai car on a un fallback
 
+  // Calculer la rotation en fonction de la position de la souris
+  const rotateX = isHovered ? (mousePosition.y - 0.5) * -10 : 0;
+  const rotateY = isHovered ? (mousePosition.x - 0.5) * 10 : 0;
+
   return (
     <div 
+      ref={cardRef}
       className={`${styles.card} card-item ${hasAnimated ? 'has-animated' : ''} ${isHovered ? styles.cardHovered : ''}`}
       style={{
         position: 'relative',
         transformStyle: 'preserve-3d',
-        perspective: 1000,
         transform: isHovered 
-          ? 'translateY(-4px) rotateX(2deg) rotateY(2deg) rotateZ(0deg) scale(1.05)'
-          : 'translateY(-2px) rotateX(3deg) rotateY(3deg) rotateZ(0deg) scale(1.0)',
-        transition: 'all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+          ? `translateY(-16px) translateZ(50px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`
+          : 'translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) scale(1.0)',
+        transformOrigin: 'center center',
+        transition: isHovered 
+          ? 'transform 0.1s ease-out, box-shadow 0.3s ease-out' 
+          : 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease-out',
         boxShadow: isHovered 
-          ? '0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 4px var(--primary, #ff6b6b), inset 0 0 0 1px rgba(255, 255, 255, 0.1)'
-          : '0 8px 20px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04)'
+          ? `0 30px 60px rgba(0, 0, 0, 0.25), 
+             0 15px 30px rgba(0, 0, 0, 0.15), 
+             0 0 0 3px var(--primary, #F9D849),
+             ${(mousePosition.x - 0.5) * 20}px ${(mousePosition.y - 0.5) * 20 + 40}px 40px rgba(0, 0, 0, 0.2)`
+          : '0 4px 8px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04)'
       }}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       {/* Lien invisible qui couvre toute la carte */}
       {href && (
@@ -108,7 +134,13 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
           {category && <span className="text-sm text-gray-600 capitalize">{category}</span>}
           {href && ctaLabel && (
             <span className="cta-stacked cta-stacked--primary" style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>
-              <span className="cta-bg" />
+              <span 
+                className="cta-bg" 
+                style={{
+                  transform: isHovered ? 'translate(0, 0)' : 'translate(-8px, -8px)',
+                  transition: 'transform 0.3s ease-out'
+                }}
+              />
               <span className="cta-border" />
               <span className="cta-label">{ctaLabel}</span>
             </span>

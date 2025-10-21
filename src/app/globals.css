@@ -230,7 +230,11 @@ body {
 }
 
 /* Cards grid interactions */
-.cards-grid { position: relative; perspective: 1200px; }
+.cards-grid { 
+  position: relative;
+  perspective: 1500px;
+  perspective-origin: center center;
+}
 
 
 /* HERO: full-height diagonal mosaic with center hole */
@@ -402,3 +406,66 @@ body {
   transform: translate(2px, 2px);
   box-shadow: 4px 4px 0px #000000;
 }
+
+/* Scroll animations */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.scroll-animate {
+  opacity: 0;
+  animation-fill-mode: both;
+}
+
+.scroll-animate.in-view {
+  animation-duration: 800ms;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.scroll-animate.fade-up.in-view {
+  animation-name: fade-in-up;
+}
+
+.scroll-animate.fade-in.in-view {
+  animation-name: fade-in;
+}
+
+.scroll-animate.scale-in.in-view {
+  animation-name: scale-in;
+}
+
+/* Animation delays for staggered effects */
+.scroll-delay-0 { animation-delay: 0ms; }
+.scroll-delay-100 { animation-delay: 100ms; }
+.scroll-delay-200 { animation-delay: 200ms; }
+.scroll-delay-300 { animation-delay: 300ms; }
+.scroll-delay-400 { animation-delay: 400ms; }
+.scroll-delay-500 { animation-delay: 500ms; }
+.scroll-delay-600 { animation-delay: 600ms; }
