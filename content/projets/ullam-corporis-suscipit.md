@@ -1,6 +1,6 @@
 ---
 titre: "Ullam Corporis Suscipit Laboriosam"
-categorie: "ateliers"
+categorie: "mediations"
 annee: 2023
 description: "Nisi ut aliquid ex ea commodi consequatur quis autem vel eum iure reprehenderit"
 image: "/images/projets/ullam-corporis-suscipit.jpg"

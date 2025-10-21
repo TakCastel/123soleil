@@ -1,15 +1,19 @@
 import { getProjets } from '@/lib/projets';
 import ProjetsClient from './ProjetsClient';
 
-export default function Projets() {
-  const projets = getProjets();
+interface ProjetsPageProps {
+  searchParams: { filter?: string };
+}
+
+export default function Projets({ searchParams }: ProjetsPageProps) {
+  const filter = searchParams.filter;
+  const projets = getProjets(filter);
 
   const filters = [
     { id: 'tous', label: 'Tous' },
-    { id: 'films', label: 'Films' },
-    { id: 'documentaires', label: 'Documentaires' },
-    { id: 'ateliers', label: 'Ateliers' },
-    { id: 'jeunesse', label: 'Jeunesse' }
+    { id: 'court-metrages', label: 'Réalisations' },
+    { id: 'lipdubs', label: 'Lipdubs' },
+    { id: 'mediations', label: 'Médiations' }
   ];
 
   return <ProjetsClient projets={projets} filters={filters} />;

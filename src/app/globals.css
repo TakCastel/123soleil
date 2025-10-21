@@ -106,6 +106,56 @@ body {
 .cta-offset .cta-label { position: relative; color: #000000; transition: color 200ms ease-out; }
 .cta-offset:hover .cta-label { color: #ffffff; }
 .cta-offset--red { --cta-offset-color: var(--secondary); }
+.cta-offset--red .cta-surface { background: var(--secondary); border: 2px solid var(--secondary); }
+.cta-offset--red .cta-label { color: #000000; }
+.cta-offset--red:hover .cta-surface { background: #000000; }
+.cta-offset--red:hover .cta-label { color: #ffffff; }
+
+/* Variante pour les filtres de projets */
+.cta-offset--red-filter { --cta-offset-color: #ffffff; }
+.cta-offset--red-filter .cta-underlay { 
+  background: #000000; 
+  transform: translate(4px, 4px);
+}
+.cta-offset--red-filter .cta-surface { 
+  background: #ffffff; 
+  border: 2px solid #000000; 
+}
+.cta-offset--red-filter .cta-label { 
+  color: #000000; 
+  font-weight: 700;
+}
+.cta-offset--red-filter:hover .cta-surface { background: #000000; }
+.cta-offset--red-filter:hover .cta-label { color: #ffffff; }
+
+/* État actif pour les filtres (jaune) */
+.cta-offset--red-filter.active { --cta-offset-color: var(--primary); }
+.cta-offset--red-filter.active .cta-surface { 
+  background: var(--primary); 
+  border: 2px solid #000000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.cta-offset--red-filter.active .cta-label { 
+  color: #000000; 
+  font-weight: 800;
+}
+.cta-offset--red-filter.active:hover .cta-surface { background: #000000; }
+.cta-offset--red-filter.active:hover .cta-label { color: #ffffff; }
+.cta-offset--white { --cta-offset-color: #000000; }
+.cta-offset--white .cta-underlay { 
+  background: #000000; 
+  transform: translate(4px, 4px);
+}
+.cta-offset--white .cta-surface { 
+  background: #ffffff; 
+  border: 2px solid #000000; 
+}
+.cta-offset--white .cta-label { 
+  color: #000000; 
+  font-weight: 700;
+}
+.cta-offset--white:hover .cta-surface { background: #000000; }
+.cta-offset--white:hover .cta-label { color: #ffffff; }
 
 /* Overlapping square logo token */
 .header-logo-token {

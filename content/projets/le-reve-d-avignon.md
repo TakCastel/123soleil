@@ -1,6 +1,6 @@
 ---
 titre: "Duis Aute Irure Dolor Reprehenderit"
-categorie: "films"
+categorie: "court-metrages"
 annee: 2023
 description: "Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt"
 image: "/images/projets/le-reve-d-avignon.jpg"

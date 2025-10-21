@@ -23,11 +23,7 @@
 .logoWrapper {
   position: relative;
   display: inline-block;
-  transition: transform 0.3s ease;
-}
-
-.logoWrapper:hover {
-  transform: scale(1.05);
+  cursor: pointer;
 }
 
 .logo {

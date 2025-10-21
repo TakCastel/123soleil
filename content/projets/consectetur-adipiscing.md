@@ -1,6 +1,6 @@
 ---
 titre: "Consectetur Adipiscing Elit"
-categorie: "ateliers"
+categorie: "mediations"
 annee: 2023
 description: "Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil"
 image: "/images/projets/consectetur-adipiscing.jpg"

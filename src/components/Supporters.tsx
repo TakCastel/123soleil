@@ -24,7 +24,7 @@ export default function Supporters() {
             href="https://www.grandavignon.fr" 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`${styles.logoWrapper} scroll-animate scale-in scroll-delay-100 ${logo1Ref.isInView ? 'in-view' : ''}`}
+            className={`${styles.logoWrapper} scroll-animate scale-in scroll-delay-100 ${logo1Ref.isInView ? 'in-view' : ''} transition-transform duration-300 ease-in-out hover:scale-105`}
           >
             <Image
               src="/grand-avignon-logo.svg"
@@ -39,7 +39,7 @@ export default function Supporters() {
             href="https://www.avignon.fr" 
             target="_blank" 
             rel="noopener noreferrer"
-            className={`${styles.logoWrapper} scroll-animate scale-in scroll-delay-200 ${logo2Ref.isInView ? 'in-view' : ''}`}
+            className={`${styles.logoWrapper} scroll-animate scale-in scroll-delay-200 ${logo2Ref.isInView ? 'in-view' : ''} transition-transform duration-300 ease-in-out hover:scale-105`}
           >
             <Image
               src="/ville-avignon-logo.png"

@@ -129,8 +129,8 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
             )}
           </div>
         </div>
-        {description && <p className="text-gray-700 mb-5 text-base leading-relaxed">{description}</p>}
-        <div className="flex justify-between items-center">
+        {description && <p className="text-gray-700 mb-5 text-base leading-relaxed flex-grow">{description}</p>}
+        <div className="flex justify-between items-center mt-auto">
           {category && <span className="text-sm text-gray-600 capitalize">{category}</span>}
           {href && ctaLabel && (
             <span className="cta-stacked cta-stacked--primary" style={{ position: 'relative', zIndex: 2, pointerEvents: 'none' }}>

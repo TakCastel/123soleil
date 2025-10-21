@@ -1,6 +1,6 @@
 ---
 titre: "Voluptatem Accusantium Doloremque"
-categorie: "films"
+categorie: "court-metrages"
 annee: 2023
 description: "Itaque earum rerum hic tenetur sapiente delectus ut aut reiciendis voluptatibus"
 image: "/images/projets/voluptatem-accusantium.jpg"

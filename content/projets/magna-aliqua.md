@@ -1,6 +1,6 @@
 ---
 titre: "Magna Aliqua Veniam"
-categorie: "jeunesse"
+categorie: "mediations"
 annee: 2024
 description: "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet consectetur"
 image: "/images/projets/magna-aliqua.jpg"
