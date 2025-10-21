@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import Hero from '@/components/Hero';
 import Card from '@/components/Card';
 import NewsCard from '@/components/NewsCard';
@@ -67,7 +66,7 @@ export default function Home() {
               date={actualite.date}
               category={actualite.categorie}
               href={`/actualites/${actualite.id}`}
-              variant="vertical"
+              variant="newspaper"
               delay={index * 0.2}
             />
           ))}

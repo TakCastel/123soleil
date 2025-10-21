@@ -1,9 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import Button from './Button';
+import Logo from './Logo';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,8 +13,18 @@ export default function Header() {
     <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b-2 border-black h-24 text-[color:var(--neutral-dark)]">
       <div className="relative max-w-6xl mx-auto px-4 h-24 flex items-center">
         {/* Overlapping logo token - left aligned */}
-        <Link href="/" className="header-logo-token header-logo-token--left">
-          <Image src="/logo.jpg" alt="1, 2, 3 Soleil" width={84} height={84} className="w-20 h-20 object-cover" />
+        <Link href="/">
+          <motion.div 
+            className="header-logo-token header-logo-token--left"
+            whileHover={{ 
+              scale: 1.05,
+              rotate: 2,
+              transition: { duration: 0.2 }
+            }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Logo width={84} height={84} className="w-full h-full object-cover aspect-square" animated={false} />
+          </motion.div>
         </Link>
 
         <div className="flex w-full items-center justify-between">

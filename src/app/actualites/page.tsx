@@ -101,7 +101,7 @@ export default function Actualites() {
           </div>
           <p className="subtitle-black small mt-1">NOS ACTUALITÉS</p>
           <p className="text-gray-700 max-w-3xl mx-auto mt-4">
-            Suivez l'actualité de l'association 1,2,3 Soleil: actions de médiation, diffusions, 
+            Suivez l&apos;actualité de l&apos;association 1,2,3 Soleil: actions de médiation, diffusions, 
             partenariats et appels à participation. Restez informé des temps forts et des nouvelles initiatives.
           </p>
         </div>
