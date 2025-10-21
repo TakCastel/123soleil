@@ -13,7 +13,7 @@ export interface Projet {
   content?: string;
 }
 
-export function getProjets(): Projet[] {
+export function getProjets(categorie?: string): Projet[] {
   const projetsDirectory = path.join(process.cwd(), 'content/projets');
   
   // Vérifier si le dossier existe
@@ -38,7 +38,8 @@ export function getProjets(): Projet[] {
         description: data.description || '',
         image: data.image && data.image !== '' ? data.image : undefined
       };
-    });
+    })
+    .filter(projet => !categorie || projet.categorie === categorie);
 
   // Trier par année décroissante
   projets.sort((a, b) => b.annee - a.annee);

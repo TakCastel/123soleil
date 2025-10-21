@@ -35,8 +35,8 @@ export default function Logo({
     <motion.div 
       className={wrapperClassName}
       whileHover={{ 
-        scale: 1.05,
-        rotate: 2,
+        scale: 1.03,
+        rotate: 1,
         transition: { duration: 0.2 }
       }}
       whileTap={{ scale: 0.95 }}

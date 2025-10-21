@@ -13,7 +13,7 @@ collections:
     slug: "{{slug}}"
     fields:
       - {label: "Titre", name: "titre", widget: "string"}
-      - {label: "Catégorie", name: "categorie", widget: "select", options: ["films", "documentaires", "ateliers", "jeunesse"]}
+      - {label: "Catégorie", name: "categorie", widget: "select", options: ["court-metrages", "lipdubs", "mediations"]}
       - {label: "Année", name: "annee", widget: "number"}
       - {label: "Description", name: "description", widget: "text"}
       - {label: "Image", name: "image", widget: "image"}

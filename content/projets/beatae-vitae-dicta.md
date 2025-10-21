@@ -1,6 +1,6 @@
 ---
 titre: "Beatae Vitae Dicta Explicabo"
-categorie: "documentaires"
+categorie: "court-metrages"
 annee: 2024
 description: "Omnis voluptas assumenda est omnis dolor repellendus temporibus autem quibusdam"
 image: "/images/projets/beatae-vitae-dicta.jpg"

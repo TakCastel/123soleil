@@ -1,6 +1,6 @@
 ---
 titre: "Facilis Expedita Distinctio"
-categorie: "jeunesse"
+categorie: "lipdubs"
 annee: 2024
 description: "Harum quidem rerum facilis est et expedita distinctio nam libero tempore soluta nobis"
 image: "/images/projets/facilis-expedita-distinctio.jpg"

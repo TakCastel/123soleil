@@ -1,6 +1,6 @@
 ---
 titre: "Tempus Incididunt Labore"
-categorie: "documentaires"
+categorie: "lipdubs"
 annee: 2024
 description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque"
 image: "/images/projets/tempus-incididunt.jpg"

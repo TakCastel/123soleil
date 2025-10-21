@@ -4,6 +4,7 @@ import { useInView } from '@/hooks/useInView';
 import Card from '@/components/Card';
 import NewsCard from '@/components/NewsCard';
 import Button from '@/components/Button';
+import ButtonOffset from '@/components/ButtonOffset';
 import { MdMovie, MdPeople, MdLocationCity, MdStar, MdVideocam, MdHandshake } from 'react-icons/md';
 import type { Projet } from '@/lib/projets';
 import type { Actualite } from '@/lib/actualites';
@@ -80,14 +81,13 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button 
-            href="/projets" 
-            variant="secondary"
-            labelColor="#000000"
+          <ButtonOffset 
+            onClick={() => window.location.href = '/projets'}
+            variant="white"
             className="inline-block"
           >
             Voir tous les projets
-          </Button>
+          </ButtonOffset>
         </div>
       </section>
 
@@ -193,14 +193,13 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button 
-            href="/actualites" 
-            variant="secondary"
-            labelColor="#000000"
+          <ButtonOffset 
+            onClick={() => window.location.href = '/actualites'}
+            variant="white"
             className="inline-block"
           >
             Voir toutes les actualités
-          </Button>
+          </ButtonOffset>
         </div>
       </section>
     </>
