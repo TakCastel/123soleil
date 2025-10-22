@@ -10,7 +10,7 @@ export function useInView(options: UseInViewOptions = {}) {
   const [isInView, setIsInView] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
-  const { threshold = 0.1, rootMargin = '0px', triggerOnce = true } = options;
+  const { threshold = 0.1, rootMargin = '-50px', triggerOnce = true } = options;
 
   const reset = useCallback(() => {
     setIsInView(false);

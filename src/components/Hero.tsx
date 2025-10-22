@@ -174,8 +174,8 @@ export default function Hero() {
     const subtitle1Duration = baseDelay + (subtitle1Letters.length * adjustedSubtitle1Stagger);
     const totalDuration = titleDuration + subtitle1Duration;
     
-    // Délai aléatoire entre 0 et 40% de la durée totale pour être encore plus rapide
-    return Math.random() * (totalDuration * 0.4);
+    // Délai aléatoire entre 0 et 30% de la durée totale pour réduire les animations simultanées
+    return Math.random() * (totalDuration * 0.3);
   };
 
   const imageVariants = {
@@ -266,7 +266,12 @@ export default function Hero() {
             <motion.div
               key={i}
               className="hero-cell"
-              style={{ backgroundImage: `url(https://picsum.photos/seed/${i + 200}/1000/800)` }}
+              style={{ 
+                backgroundImage: `url(https://picsum.photos/seed/${i + 200}/1000/800)`,
+                willChange: 'transform, opacity, filter',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)' // Force GPU acceleration
+              }}
               custom={i}
               variants={imageVariants}
               initial="hidden"
@@ -291,12 +296,17 @@ export default function Hero() {
                 animate={titleVisible ? "visible" : "hidden"}
               >
                 {letters.map((char, i) => (
-                  <motion.span
-                    key={i}
-                    custom={i}
-                    variants={titleLetterVariants}
-                    style={{ display: 'inline-block', willChange: 'transform' }}
-                  >
+                    <motion.span
+                      key={i}
+                      custom={i}
+                      variants={titleLetterVariants}
+                      style={{ 
+                        display: 'inline-block', 
+                        willChange: 'transform, opacity',
+                        backfaceVisibility: 'hidden',
+                        perspective: 1000
+                      }}
+                    >
                     {char === ' ' ? '\u00A0' : char}
                   </motion.span>
                 ))}
@@ -320,7 +330,12 @@ export default function Hero() {
                         key={i}
                         custom={i}
                         variants={subtitleLetterVariants}
-                        style={{ display: 'inline-block', willChange: 'transform' }}
+                        style={{ 
+                          display: 'inline-block', 
+                          willChange: 'transform, opacity',
+                          backfaceVisibility: 'hidden',
+                          perspective: 1000
+                        }}
                       >
                         {char === ' ' ? '\u00A0' : char}
                       </motion.span>
@@ -346,7 +361,12 @@ export default function Hero() {
                         key={i}
                         custom={i}
                         variants={subtitleLetterVariants}
-                        style={{ display: 'inline-block', willChange: 'transform' }}
+                        style={{ 
+                          display: 'inline-block', 
+                          willChange: 'transform, opacity',
+                          backfaceVisibility: 'hidden',
+                          perspective: 1000
+                        }}
                       >
                         {char === ' ' ? '\u00A0' : char}
                       </motion.span>

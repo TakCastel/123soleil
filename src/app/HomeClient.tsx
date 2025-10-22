@@ -5,6 +5,7 @@ import Card from '@/components/Card';
 import NewsCard from '@/components/NewsCard';
 import Button from '@/components/Button';
 import ButtonOffset from '@/components/ButtonOffset';
+import MessageBox from '@/components/MessageBox';
 import { MdMovie, MdPeople, MdLocationCity, MdStar, MdVideocam, MdHandshake } from 'react-icons/md';
 import type { Projet } from '@/lib/projets';
 import type { Actualite } from '@/lib/actualites';
@@ -41,31 +42,30 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
     <>
       {/* Élargissement du champ d'action */}
       <section className="max-w-6xl mx-auto px-4 py-12">
-        <div 
-          ref={introSection.ref as React.RefObject<HTMLDivElement>}
-          className={`bg-white border-2 border-black p-8 md:p-10 text-center max-w-4xl mx-auto scroll-animate scale-in ${introSection.isInView ? 'in-view' : ''}`}
+        <MessageBox 
+          title="1,2,3 Soleil !"
+          centered={true}
         >
-          <h2 className="display-title text-3xl mb-6 text-[color:var(--secondary)]">1,2,3 Soleil !</h2>
-          <p className="text-gray-700 text-lg leading-relaxed">
+          <p>
             élargit son champ d&apos;action et propose depuis 2022 des ateliers aux établissements scolaires, centres sociaux, ESAT, EPAHD, MPT et d&apos;autres structures sociales du Grand Avignon et au-delà.
           </p>
-        </div>
+        </MessageBox>
       </section>
 
       {/* Featured Projects */}
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2 
           ref={projetsSection.ref as React.RefObject<HTMLHeadingElement>}
-          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate fade-up ${projetsSection.isInView ? 'in-view' : ''}`}
+          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate slide-left ${projetsSection.isInView ? 'in-view' : ''}`}
         >
-          Projets Récents
+          Dernières réalisations
         </h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
           {projets.map((projet, index) => (
             <div
               key={projet.id}
               ref={projetRefs[index]?.ref as React.RefObject<HTMLDivElement>}
-              className={`scroll-animate fade-up scroll-delay-${(index + 1) * 100} ${projetRefs[index]?.isInView ? 'in-view' : ''}`}
+              className={`scroll-animate slide-up scroll-delay-${(index + 1) * 100} ${projetRefs[index]?.isInView ? 'in-view' : ''}`}
             >
               <Card
                 title={projet.titre}
@@ -96,7 +96,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
         <div className="max-w-6xl mx-auto px-4">
           <h2 
             ref={chiffresSection.ref as React.RefObject<HTMLHeadingElement>}
-            className={`display-title text-3xl mb-2 text-center text-[color:var(--secondary)] scroll-animate fade-in ${chiffresSection.isInView ? 'in-view' : ''}`}
+            className={`display-title text-3xl mb-2 text-center text-[color:var(--secondary)] scroll-animate slide-left ${chiffresSection.isInView ? 'in-view' : ''}`}
           >
             QUELQUES CHIFFRES
           </h2>
@@ -104,7 +104,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
           <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
             <div 
               ref={stat1.ref as React.RefObject<HTMLDivElement>}
-              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate scale-in scroll-delay-100 ${stat1.isInView ? 'in-view' : ''}`}
+              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate slide-left scroll-delay-100 ${stat1.isInView ? 'in-view' : ''}`}
             >
               <MdMovie className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
@@ -114,7 +114,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             </div>
             <div 
               ref={stat2.ref as React.RefObject<HTMLDivElement>}
-              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate scale-in scroll-delay-200 ${stat2.isInView ? 'in-view' : ''}`}
+              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate slide-right scroll-delay-200 ${stat2.isInView ? 'in-view' : ''}`}
             >
               <MdPeople className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
@@ -124,7 +124,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             </div>
             <div 
               ref={stat3.ref as React.RefObject<HTMLDivElement>}
-              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate scale-in scroll-delay-300 ${stat3.isInView ? 'in-view' : ''}`}
+              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate slide-left scroll-delay-300 ${stat3.isInView ? 'in-view' : ''}`}
             >
               <MdLocationCity className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
@@ -135,7 +135,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             </div>
             <div 
               ref={stat4.ref as React.RefObject<HTMLDivElement>}
-              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate scale-in scroll-delay-400 ${stat4.isInView ? 'in-view' : ''}`}
+              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate slide-right scroll-delay-400 ${stat4.isInView ? 'in-view' : ''}`}
             >
               <MdStar className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
@@ -146,7 +146,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             </div>
             <div 
               ref={stat5.ref as React.RefObject<HTMLDivElement>}
-              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate scale-in scroll-delay-500 ${stat5.isInView ? 'in-view' : ''}`}
+              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate slide-left scroll-delay-500 ${stat5.isInView ? 'in-view' : ''}`}
             >
               <MdVideocam className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
@@ -156,7 +156,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             </div>
             <div 
               ref={stat6.ref as React.RefObject<HTMLDivElement>}
-              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate scale-in scroll-delay-600 ${stat6.isInView ? 'in-view' : ''}`}
+              className={`bg-white border-2 border-black p-6 flex items-start gap-4 scroll-animate slide-right scroll-delay-600 ${stat6.isInView ? 'in-view' : ''}`}
             >
               <MdHandshake className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
@@ -172,7 +172,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2 
           ref={actualitesSection.ref as React.RefObject<HTMLHeadingElement>}
-          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate fade-up ${actualitesSection.isInView ? 'in-view' : ''}`}
+          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate slide-left ${actualitesSection.isInView ? 'in-view' : ''}`}
         >
           Actualités
         </h2>

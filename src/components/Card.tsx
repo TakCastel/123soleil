@@ -25,8 +25,17 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
   const [imageError, setImageError] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
   const cardRef = useRef<HTMLDivElement>(null);
-  // Mémoriser le nombre aléatoire une seule fois
-  const [randomSeed] = useState(() => Math.floor(Math.random() * 1000));
+  // Mémoriser le nombre aléatoire basé sur le titre pour éviter les problèmes d'hydratation
+  const [randomSeed] = useState(() => {
+    // Utiliser le titre comme seed pour avoir un nombre déterministe
+    let hash = 0;
+    for (let i = 0; i < title.length; i++) {
+      const char = title.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convertir en 32bit integer
+    }
+    return Math.abs(hash) % 1000;
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,7 +65,8 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
 
   // Utiliser lorem picsum comme fallback
   const getFinalImageUrl = () => {
-    if (imageError || !imageUrl || imageUrl === '') {
+    // Si pas d'image définie ou erreur de chargement, utiliser Lorem Picsum
+    if (imageError || !imageUrl || imageUrl === '' || imageUrl.startsWith('/images/')) {
       return `https://picsum.photos/600/400?random=${randomSeed}`;
     }
     return imageUrl;
@@ -65,8 +75,8 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
   const hasImage = true; // Toujours vrai car on a un fallback
 
   // Calculer la rotation en fonction de la position de la souris
-  const rotateX = isHovered ? (mousePosition.y - 0.5) * -10 : 0;
-  const rotateY = isHovered ? (mousePosition.x - 0.5) * 10 : 0;
+  const rotateX = isHovered ? (mousePosition.y - 0.5) * 15 : 0;
+  const rotateY = isHovered ? (mousePosition.x - 0.5) * 15 : 0;
 
   return (
     <div 
@@ -76,7 +86,7 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
         position: 'relative',
         transformStyle: 'preserve-3d',
         transform: isHovered 
-          ? `translateY(-16px) translateZ(50px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`
+          ? `translateY(-16px) translateZ(70px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.08)`
           : 'translateY(0px) translateZ(0px) rotateX(0deg) rotateY(0deg) scale(1.0)',
         transformOrigin: 'center center',
         transition: isHovered 

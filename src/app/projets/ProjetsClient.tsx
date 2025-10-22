@@ -5,8 +5,9 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Card from '@/components/Card';
 import FilterButton from '@/components/FilterButton';
 import { useInView } from '@/hooks/useInView';
-import { useMultipleInView } from '@/hooks/useMultipleInView';
 import { Projet } from '@/lib/projets';
+import PageHeader from '@/components/PageHeader';
+import { usePageContentDelay } from '@/hooks/usePageContentDelay';
 
 interface ProjetsClientProps {
   projets: Projet[];
@@ -17,6 +18,18 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
   const searchParams = useSearchParams();
   const router = useRouter();
   
+  // Hook pour retarder l'apparition du contenu
+  const { isContentVisible } = usePageContentDelay({ triggerAt: 0.3 });
+  
+  // Fallback de sécurité - si le hook ne fonctionne pas, afficher après 1 seconde
+  const [fallbackVisible, setFallbackVisible] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setFallbackVisible(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const shouldShowContent = isContentVisible || fallbackVisible;
+  
   // États séparés et clairs
   const [displayFilter, setDisplayFilter] = useState(() => {
     const filterParam = searchParams.get('filter');
@@ -26,9 +39,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
   const [isLoading, setIsLoading] = useState(false);
   
   // Hooks pour les animations
-  const headerRef = useInView({ threshold: 0.2 });
   const filtersRef = useInView({ threshold: 0.3 });
-  const { registerRef, isInView } = useMultipleInView({ threshold: 0.2 });
 
   // Synchroniser avec les changements d'URL (navigation navigateur)
   useEffect(() => {
@@ -48,10 +59,17 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
     }
   }, [isLoading, searchParams, filters]);
 
+  // Forcer l'affichage des cartes après un changement de filtre
+  const [forceShowCards, setForceShowCards] = useState(false);
+  
+  // Forcer l'affichage des cartes au chargement initial (refresh)
+  const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+
 
   const handleFilterChange = async (filterId: string) => {
     // 1. Bloquer les filtres immédiatement
     setIsLoading(true);
+    setForceShowCards(false); // Réinitialiser l'affichage forcé
     
     // 2. Mettre à jour l'URL (ce qui va déclencher un re-render avec les nouveaux projets)
     const params = new URLSearchParams(searchParams.toString());
@@ -72,6 +90,29 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
 
   // Les projets sont déjà filtrés côté serveur
   const filteredProjets = projets;
+
+  // Forcer l'affichage des cartes après un changement de filtre
+  useEffect(() => {
+    if (!isLoading && filteredProjets.length > 0) {
+      // Forcer l'affichage des cartes après un court délai
+      const timer = setTimeout(() => {
+        setForceShowCards(true);
+      }, 100);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, filteredProjets.length]);
+
+  // Forcer l'affichage des cartes au chargement initial (refresh)
+  useEffect(() => {
+    if (shouldShowContent && filteredProjets.length > 0 && !isLoading) {
+      const timer = setTimeout(() => {
+        setInitialLoadComplete(true);
+      }, 500); // Délai un peu plus long pour le chargement initial
+      
+      return () => clearTimeout(timer);
+    }
+  }, [shouldShowContent, filteredProjets.length, isLoading]);
 
   // Contenu SEO adaptatif selon le filtre
   const getSeoContent = () => {
@@ -109,28 +150,19 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
     <div className="">
       {/* En-tête diagonal jaune à pois */}
       <section className="bg-diagonal-primary dotted-overlay">
-        <div 
-          ref={headerRef.ref as React.RefObject<HTMLDivElement>}
-          className={`max-w-6xl mx-auto px-4 py-16 text-center scroll-animate fade-in ${headerRef.isInView ? 'in-view' : ''}`}
-        >
-          {/* Hidden SEO H1 */}
-          <h1 className="sr-only">{seoContent.seoTitle}</h1>
-          {/* Visible phrase pair */}
-          <div>
-            <span className="display-title text-5xl md:text-6xl text-[color:var(--secondary)] title-tilt mb-1 inline-block">{seoContent.title}</span>
-          </div>
-          <p className="subtitle-black small mt-1">DE L&apos;ASSOCIATION</p>
-          <p className="text-gray-700 max-w-3xl mx-auto mt-4">
-            {seoContent.description}
-          </p>
-        </div>
+        <PageHeader
+          seoTitle={seoContent.seoTitle}
+          mainTitle={seoContent.title}
+          subtitle="DE L'ASSOCIATION"
+          description={seoContent.description}
+        />
       </section>
 
-      <div className="max-w-6xl mx-auto px-4 py-16">
+      <div className={`max-w-6xl mx-auto px-4 py-16 transition-opacity duration-500 ${shouldShowContent ? 'opacity-100' : 'opacity-0'}`}>
         {/* Filtres */}
         <div 
           ref={filtersRef.ref as React.RefObject<HTMLDivElement>}
-          className={`mb-16 scroll-animate fade-up ${filtersRef.isInView ? 'in-view' : ''}`}
+          className="mb-16"
         >
           <div className="flex flex-wrap gap-3">
             {filters.map((filter, index) => (
@@ -139,8 +171,9 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
                 onClick={() => !isLoading && handleFilterChange(filter.id)}
                 active={displayFilter === filter.id}
                 disabled={isLoading}
+                className={`${filtersRef.isInView && shouldShowContent ? 'animate-in-left' : 'opacity-0 -translate-x-6'}`}
                 style={{ 
-                  animationDelay: filtersRef.isInView ? `${index * 50}ms` : '0ms'
+                  animationDelay: filtersRef.isInView && shouldShowContent ? `${index * 100}ms` : '0ms'
                 }}
               >
                 {filter.label}
@@ -163,10 +196,15 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
             </div>
           )}
           {!isLoading && filteredProjets.map((projet, index) => {
+            const delay = (index % 3) * 100; // Délai basé sur la colonne (comme les actualités)
+            
+            // Forcer l'affichage si on vient de changer de filtre ou au chargement initial
+            const shouldAnimate = shouldShowContent || forceShowCards || initialLoadComplete;
+            
             return (
               <div
                 key={projet.id}
-                className="opacity-100"
+                className={`group scroll-animate fade-up scroll-delay-${delay} ${shouldAnimate ? 'in-view' : ''}`}
               >
                 <Card
                   title={projet.titre}

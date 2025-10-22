@@ -2,11 +2,12 @@ import { getProjets } from '@/lib/projets';
 import ProjetsClient from './ProjetsClient';
 
 interface ProjetsPageProps {
-  searchParams: { filter?: string };
+  searchParams: Promise<{ filter?: string }>;
 }
 
-export default function Projets({ searchParams }: ProjetsPageProps) {
-  const filter = searchParams.filter;
+export default async function Projets({ searchParams }: ProjetsPageProps) {
+  const resolvedSearchParams = await searchParams;
+  const filter = resolvedSearchParams.filter;
   const projets = getProjets(filter);
 
   const filters = [

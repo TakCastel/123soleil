@@ -23,7 +23,8 @@ export default function Logo({
       alt="1, 2, 3 Soleil" 
       width={width} 
       height={height} 
-      className={className} 
+      className={className}
+      priority={true}
     />
   );
 
