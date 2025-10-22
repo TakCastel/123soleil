@@ -28,7 +28,7 @@ export default function FilterButton({
         focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2
         disabled:opacity-50 disabled:cursor-not-allowed
         ${active 
-          ? 'bg-gray-200 border-gray-400 text-black hover:bg-gray-300' 
+          ? 'bg-[var(--secondary)] border-[var(--secondary)] text-white hover:bg-[var(--secondary-hover)] hover:border-[var(--secondary-hover)]' 
           : 'bg-white border-gray-300 text-black hover:bg-gray-50 hover:border-gray-400'
         }
         ${className}

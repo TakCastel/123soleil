@@ -1,9 +1,11 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import NewsCard from '@/components/NewsCard';
 import { useInView } from '@/hooks/useInView';
-import { useMultipleInView } from '@/hooks/useMultipleInView';
 import { Actualite } from '@/lib/actualites';
+import PageHeader from '@/components/PageHeader';
+import { usePageContentDelay } from '@/hooks/usePageContentDelay';
 
 interface ActualitesClientProps {
   latestNews: Actualite[];
@@ -11,46 +13,46 @@ interface ActualitesClientProps {
 }
 
 export default function ActualitesClient({ latestNews, otherNews }: ActualitesClientProps) {
+  // Hook pour retarder l'apparition du contenu
+  const isContentVisible = usePageContentDelay({ triggerAt: 0.3 });
+  
+  // Fallback de sécurité - si le hook ne fonctionne pas, afficher après 1 seconde
+  const [fallbackVisible, setFallbackVisible] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => setFallbackVisible(true), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+  
+  const shouldShowContent = isContentVisible || fallbackVisible;
+  
   // Hooks pour les animations des sections
-  const headerRef = useInView({ threshold: 0.2 });
   const titleLatestRef = useInView({ threshold: 0.3 });
   const heroCardRef = useInView({ threshold: 0.2 });
   const sideCard1Ref = useInView({ threshold: 0.2 });
   const sideCard2Ref = useInView({ threshold: 0.2 });
   const titleOtherRef = useInView({ threshold: 0.3 });
 
-  // Hook pour gérer plusieurs cartes d'actualités
-  const { registerRef, isInView } = useMultipleInView({ threshold: 0.2 });
+  // Hook pour gérer plusieurs cartes d'actualités - simplifié
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-white">
       {/* Header cohérent avec les autres pages */}
-      <div className="max-w-6xl mx-auto px-4 py-16">
-        <div 
-          ref={headerRef.ref as React.RefObject<HTMLDivElement>}
-          className={`text-center mb-16 scroll-animate fade-in ${headerRef.isInView ? 'in-view' : ''}`}
-        >
-          {/* Hidden SEO H1 */}
-          <h1 className="sr-only">Actualités</h1>
-          {/* Visible phrase pair */}
-          <div>
-            <span className="display-title text-5xl md:text-6xl text-[color:var(--secondary)] title-tilt mb-1 inline-block">SUIVEZ</span>
-          </div>
-          <p className="subtitle-black small mt-1">NOS ACTUALITÉS</p>
-          <p className="text-gray-700 max-w-3xl mx-auto mt-4">
-            Suivez l&apos;actualité de l&apos;association 1,2,3 Soleil: actions de médiation, diffusions, 
-            partenariats et appels à participation. Restez informé des temps forts et des nouvelles initiatives.
-          </p>
-        </div>
+      <div className="mb-16">
+        <PageHeader
+          seoTitle="Actualités - Association 1,2,3 Soleil"
+          mainTitle="SUIVEZ"
+          subtitle="NOS ACTUALITÉS"
+          description="Suivez l'actualité de l'association 1,2,3 Soleil: actions de médiation, diffusions, partenariats et appels à participation. Restez informé des temps forts et des nouvelles initiatives."
+        />
       </div>
 
       {/* Section HERO - 3 dernières actualités */}
       {latestNews.length > 0 && (
-        <div className="max-w-6xl mx-auto px-4 py-16">
+        <div className={`max-w-6xl mx-auto px-4 py-16 transition-opacity duration-500 ${shouldShowContent ? 'opacity-100' : 'opacity-0'}`}>
           <div>
             <div 
               ref={titleLatestRef.ref as React.RefObject<HTMLDivElement>}
-              className={`text-center mb-12 scroll-animate fade-up ${titleLatestRef.isInView ? 'in-view' : ''}`}
+              className={`text-center mb-12 scroll-animate fade-up ${titleLatestRef.isInView && shouldShowContent ? 'in-view' : ''}`}
             >
               <h2 className="display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)]">Dernières actualités</h2>
             </div>
@@ -59,7 +61,7 @@ export default function ActualitesClient({ latestNews, otherNews }: ActualitesCl
               {/* Grande carte principale - BREAKING NEWS */}
               <div 
                 ref={heroCardRef.ref as React.RefObject<HTMLDivElement>}
-                className={`lg:col-span-8 scroll-animate scale-in ${heroCardRef.isInView ? 'in-view' : ''}`}
+                className={`lg:col-span-8 scroll-animate scale-in ${heroCardRef.isInView && shouldShowContent ? 'in-view' : ''}`}
               >
                 <div className="relative group">
                   {latestNews[0].isBreaking && (
@@ -91,7 +93,7 @@ export default function ActualitesClient({ latestNews, otherNews }: ActualitesCl
                       <div 
                         key={actualite.id} 
                         ref={ref.ref as React.RefObject<HTMLDivElement>}
-                        className={`relative scroll-animate scale-in scroll-delay-${(index + 1) * 100} ${ref.isInView ? 'in-view' : ''}`}
+                        className={`relative scroll-animate scale-in scroll-delay-${(index + 1) * 100} ${ref.isInView && shouldShowContent ? 'in-view' : ''}`}
                       >
                         <NewsCard
                           title={actualite.titre}
@@ -117,12 +119,12 @@ export default function ActualitesClient({ latestNews, otherNews }: ActualitesCl
 
       {/* Section NEWSPAPER - Toutes les autres actualités */}
       {otherNews.length > 0 && (
-        <div className="bg-gray-100 py-16">
+        <div className={`bg-gray-100 py-16 transition-opacity duration-500 ${shouldShowContent ? 'opacity-100' : 'opacity-0'}`}>
           <div className="max-w-6xl mx-auto px-4">
             <div>
               <div 
                 ref={titleOtherRef.ref as React.RefObject<HTMLDivElement>}
-                className={`text-center mb-12 scroll-animate fade-up ${titleOtherRef.isInView ? 'in-view' : ''}`}
+                className={`text-center mb-12 scroll-animate fade-up ${titleOtherRef.isInView && shouldShowContent ? 'in-view' : ''}`}
               >
                 <h2 className="display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)]">Toutes les actualités</h2>
               </div>
@@ -135,8 +137,7 @@ export default function ActualitesClient({ latestNews, otherNews }: ActualitesCl
                   return (
                     <div 
                       key={actualite.id} 
-                      ref={registerRef(`news-${actualite.id}`)}
-                      className={`group scroll-animate fade-up scroll-delay-${delay} ${isInView(`news-${actualite.id}`) ? 'in-view' : ''}`}
+                      className={`group scroll-animate fade-up scroll-delay-${delay} ${shouldShowContent ? 'in-view' : ''}`}
                     >
                       <NewsCard
                         title={actualite.titre}
