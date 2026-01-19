@@ -3,7 +3,6 @@
 import { useInView } from '@/hooks/useInView';
 import Card from '@/components/Card';
 import NewsCard from '@/components/NewsCard';
-import Button from '@/components/Button';
 import ButtonOffset from '@/components/ButtonOffset';
 import MessageBox from '@/components/MessageBox';
 import { MdMovie, MdPeople, MdLocationCity, MdStar, MdVideocam, MdHandshake } from 'react-icons/md';
@@ -17,7 +16,6 @@ interface HomeClientProps {
 
 export default function HomeClient({ projets, actualites }: HomeClientProps) {
   // Hooks pour chaque section
-  const introSection = useInView({ threshold: 0.2 });
   const projetsSection = useInView({ threshold: 0.1 });
   const chiffresSection = useInView({ threshold: 0.1 });
   const actualitesSection = useInView({ threshold: 0.1 });
@@ -36,8 +34,6 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
   const stat6 = useInView({ threshold: 0.3 });
 
   const projetRefs = [projet1, projet2, projet3];
-  const statRefs = [stat1, stat2, stat3, stat4, stat5, stat6];
-
   return (
     <>
       {/* Élargissement du champ d'action */}

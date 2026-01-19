@@ -8,7 +8,7 @@ interface ProjetsPageProps {
 export default async function Projets({ searchParams }: ProjetsPageProps) {
   const resolvedSearchParams = await searchParams;
   const filter = resolvedSearchParams.filter;
-  const projets = getProjets(filter);
+  const projets = await getProjets(filter);
 
   const filters = [
     { id: 'tous', label: 'Tous' },

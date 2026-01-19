@@ -1,10 +1,13 @@
 "use client";
-import Link from 'next/link';
 import Button from './Button';
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-export default function Hero() {
+interface HeroProps {
+  imageUrls?: string[];
+}
+
+export default function Hero({ imageUrls = [] }: HeroProps) {
   const title = '1,2,3 SOLEIL';
   const letters = Array.from(title);
   const subtitle1 = 'POUR UN CINÉMA';
@@ -19,8 +22,6 @@ export default function Hero() {
   
   // Durées d'animation pour chaque étape
   const titleDuration = getAnimationDuration(letters.length);
-  const subtitle1Duration = getAnimationDuration(subtitle1Letters.length);
-  const subtitle2Duration = getAnimationDuration(subtitle2Letters.length);
   
   // Ajuster les stagger pour que toutes les animations aient la même durée
   const adjustedTitleStagger = perLetterStagger;
@@ -56,34 +57,34 @@ export default function Hero() {
     setTimeout(() => setTitleVisible(true), TIMING.title);
     
     // Calculer les durées d'animation (en millisecondes)
-    const titleDuration = (baseDelay + (letters.length * perLetterStagger)) * 1000;
-    const subtitle1Duration = (baseDelay + (subtitle1Letters.length * adjustedSubtitle1Stagger)) * 1000;
-    const subtitle2Duration = (baseDelay + (subtitle2Letters.length * adjustedSubtitle2Stagger)) * 1000;
+    const titleDurationMs = (baseDelay + (letters.length * perLetterStagger)) * 1000;
+    const subtitle1DurationMs = (baseDelay + (subtitle1Letters.length * adjustedSubtitle1Stagger)) * 1000;
+    const subtitle2DurationMs = (baseDelay + (subtitle2Letters.length * adjustedSubtitle2Stagger)) * 1000;
     
     // 4. Sous-titre 1 "POUR UN CINÉMA" à 75% du titre
-    const subtitle1Delay = TIMING.title + (titleDuration * TIMING.subtitle1Trigger);
+    const subtitle1Delay = TIMING.title + (titleDurationMs * TIMING.subtitle1Trigger);
     setTimeout(() => setSubtitle1Visible(true), subtitle1Delay);
     
     // 5. Sous-titre 2 "SOLIDAIRE ET INCLUSIF" à 75% du sous-titre 1
-    const subtitle2Delay = subtitle1Delay + (subtitle1Duration * TIMING.subtitle2Trigger);
+    const subtitle2Delay = subtitle1Delay + (subtitle1DurationMs * TIMING.subtitle2Trigger);
     setTimeout(() => setSubtitle2Visible(true), subtitle2Delay);
     
     // 6. CTA 1 à 75% du sous-titre 2
-    const cta1Delay = subtitle2Delay + (subtitle2Duration * TIMING.cta1Trigger);
+    const cta1Delay = subtitle2Delay + (subtitle2DurationMs * TIMING.cta1Trigger);
     setTimeout(() => setCta1Visible(true), cta1Delay);
     
     // 7. CTA 2 à 75% du CTA 1
     const cta2Delay = cta1Delay + (200 * TIMING.cta2Trigger); // 200ms de durée pour CTA 1
     setTimeout(() => setCta2Visible(true), cta2Delay);
-  }, []);
-
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: adjustedTitleStagger, delayChildren: baseDelay }
-    }
-  };
+  }, [
+    adjustedSubtitle1Stagger,
+    adjustedSubtitle2Stagger,
+    letters.length,
+    subtitle1Letters.length,
+    subtitle2Letters.length,
+    baseDelay,
+    perLetterStagger
+  ]);
 
   // Variants pour le premier sous-titre avec animation lettre par lettre
   const subtitle1ContainerVariants = {
@@ -179,7 +180,7 @@ export default function Hero() {
   };
 
   const imageVariants = {
-    hidden: (index: number) => ({
+    hidden: () => ({
       opacity: 0,
       scale: 0.5, // Moins petit pour un effet plus doux
       filter: 'blur(4px)' // Moins de blur pour un effet plus subtil
@@ -246,6 +247,10 @@ export default function Hero() {
     }
   };
 
+  const heroImages = imageUrls.filter(Boolean);
+
+  let imageCursor = 0;
+
   return (
     <section className="hero-section dotted-overlay">
       {/* 4x4 grid full of images; center content overlays the 2x2 area */}
@@ -261,13 +266,17 @@ export default function Hero() {
           if (shouldBeEmpty(i)) {
             return null;
           }
-          
+
+          const fallbackUrl = `https://picsum.photos/seed/${i + 200}/1000/800`;
+          const imageUrl = heroImages[imageCursor] || fallbackUrl;
+          imageCursor += 1;
+
           return (
             <motion.div
               key={i}
               className="hero-cell"
               style={{ 
-                backgroundImage: `url(https://picsum.photos/seed/${i + 200}/1000/800)`,
+                backgroundImage: `url(${imageUrl})`,
                 willChange: 'transform, opacity, filter',
                 backfaceVisibility: 'hidden',
                 transform: 'translateZ(0)' // Force GPU acceleration

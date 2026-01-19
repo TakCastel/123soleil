@@ -1,72 +1,74 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import { fetchDirectus, getDirectusAssetUrl } from './directus';
 
 export interface Projet {
   id: string;
   titre: string;
-  categorie: string;
+  categorie?: string;
   annee: number;
-  description: string;
+  description?: string;
   image?: string;
   video_url?: string;
   content?: string;
 }
 
-export function getProjets(categorie?: string): Projet[] {
-  const projetsDirectory = path.join(process.cwd(), 'content/projets');
-  
-  // Vérifier si le dossier existe
-  if (!fs.existsSync(projetsDirectory)) {
-    return [];
-  }
+type DirectusMediation = {
+  id: string | number;
+  slug?: string;
+  titre?: string;
+  sous_titre?: string;
+  date?: string;
+  body?: string;
+  image?: string;
+  video?: string;
+  categorie?: string;
+};
 
-  const filenames = fs.readdirSync(projetsDirectory);
-  
-  const projets = filenames
-    .filter(filename => filename.endsWith('.md'))
-    .map(filename => {
-      const filePath = path.join(projetsDirectory, filename);
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(fileContents);
-      
-      return {
-        id: filename.replace(/\.md$/, ''),
-        titre: data.titre || '',
-        categorie: data.categorie || '',
-        annee: data.annee || new Date().getFullYear(),
-        description: data.description || '',
-        image: data.image && data.image !== '' ? data.image : undefined
-      };
-    })
-    .filter(projet => !categorie || projet.categorie === categorie);
+const MEDIATIONS_FIELDS = [
+  'id',
+  'slug',
+  'titre',
+  'sous_titre',
+  'date',
+  'body',
+  'image',
+  'video',
+  'categorie'
+].join(',');
 
-  // Trier par année décroissante
-  projets.sort((a, b) => b.annee - a.annee);
+const toYear = (dateValue?: string) => {
+  if (!dateValue) return new Date().getFullYear();
+  const parsed = new Date(dateValue);
+  return Number.isNaN(parsed.getTime()) ? new Date().getFullYear() : parsed.getFullYear();
+};
 
-  return projets;
+const mapProjet = (item: DirectusMediation): Projet => {
+  const imageId = item?.image;
+  const videoId = item?.video;
+  return {
+    id: item?.slug || String(item?.id),
+    titre: item?.titre || '',
+    categorie: item?.categorie || undefined,
+    annee: toYear(item?.date),
+    description: item?.sous_titre || undefined,
+    image: imageId ? getDirectusAssetUrl(imageId) : undefined,
+    video_url: videoId ? getDirectusAssetUrl(videoId) : undefined,
+    content: item?.body || ''
+  };
+};
+
+export async function getProjets(categorie?: string): Promise<Projet[]> {
+  const baseQuery = `/items/mediations?fields=${encodeURIComponent(MEDIATIONS_FIELDS)}&limit=-1&sort=-date`;
+  const filterQuery = categorie ? `&filter[categorie][_eq]=${encodeURIComponent(categorie)}` : '';
+  const response = await fetchDirectus<DirectusMediation[]>(`${baseQuery}${filterQuery}`);
+  return (response?.data || []).map(mapProjet);
 }
 
-export function getProjetBySlug(slug: string) {
-  const projetsDirectory = path.join(process.cwd(), 'content/projets');
-  const filePath = path.join(projetsDirectory, `${slug}.md`);
-  
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-  
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContents);
-  
-  return {
-    id: slug,
-    titre: data.titre || '',
-    categorie: data.categorie || '',
-    annee: data.annee || new Date().getFullYear(),
-    description: data.description || '',
-    image: data.image && data.image !== '' ? data.image : undefined,
-    video_url: data.video_url,
-    content: content
-  };
+export async function getProjetBySlug(slug: string) {
+  const response = await fetchDirectus<DirectusMediation[]>(
+    `/items/mediations?fields=${encodeURIComponent(MEDIATIONS_FIELDS)}&filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
+  );
+  const item = response?.data?.[0];
+  if (!item) return null;
+  return mapProjet(item);
 }
 

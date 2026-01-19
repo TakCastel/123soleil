@@ -1,58 +1,67 @@
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
+import { fetchDirectus, getDirectusAssetUrl } from './directus';
 
 export interface Actualite {
   id: string;
   titre: string;
   date: string;
-  categorie: string;
-  description: string;
+  categorie?: string;
+  description?: string;
   image?: string;
   isBreaking?: boolean;
   content?: string;
 }
 
-export function getActualites(): Actualite[] {
-  const actualitesDirectory = path.join(process.cwd(), 'content/actualites');
-  
-  // Vérifier si le dossier existe
-  if (!fs.existsSync(actualitesDirectory)) {
-    return [];
-  }
+type DirectusActualite = {
+  id: string | number;
+  slug?: string;
+  titre?: string;
+  sous_titre?: string;
+  date?: string;
+  body?: string;
+  image?: string;
+  categorie?: string;
+};
 
-  const filenames = fs.readdirSync(actualitesDirectory);
-  
-  const actualites = filenames
-    .filter(filename => filename.endsWith('.md'))
-    .map(filename => {
-      const filePath = path.join(actualitesDirectory, filename);
-      const fileContents = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(fileContents);
-      
-      return {
-        id: filename.replace(/\.md$/, ''),
-        titre: data.titre || '',
-        date: data.date ? new Date(data.date).toLocaleDateString('fr-FR', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        }) : '',
-        categorie: data.categorie || '',
-        description: data.description || '',
-        image: data.image && data.image !== '' ? data.image : undefined,
-        isBreaking: false
-      };
-    });
+const ACTUALITES_FIELDS = [
+  'id',
+  'slug',
+  'titre',
+  'sous_titre',
+  'date',
+  'body',
+  'image',
+  'categorie'
+].join(',');
 
-  // Trier par date décroissante
-  actualites.sort((a, b) => {
-    const dateA = new Date(a.date);
-    const dateB = new Date(b.date);
-    return dateB.getTime() - dateA.getTime();
+const formatDate = (dateValue?: string) => {
+  if (!dateValue) return '';
+  return new Date(dateValue).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
   });
+};
 
-  // Marquer la première actualité comme "breaking news"
+const mapActualite = (item: DirectusActualite): Actualite => {
+  const imageId = item?.image;
+  return {
+    id: item?.slug || String(item?.id),
+    titre: item?.titre || '',
+    date: formatDate(item?.date),
+    categorie: item?.categorie || undefined,
+    description: item?.sous_titre || undefined,
+    image: imageId ? getDirectusAssetUrl(imageId) : undefined,
+    isBreaking: false,
+    content: item?.body || ''
+  };
+};
+
+export async function getActualites(): Promise<Actualite[]> {
+  const response = await fetchDirectus<DirectusActualite[]>(
+    `/items/actualites?fields=${encodeURIComponent(ACTUALITES_FIELDS)}&limit=-1&sort=-date`
+  );
+  const actualites = (response?.data || []).map(mapActualite);
+
   if (actualites.length > 0) {
     actualites[0].isBreaking = true;
   }
@@ -60,29 +69,12 @@ export function getActualites(): Actualite[] {
   return actualites;
 }
 
-export function getActualiteBySlug(slug: string) {
-  const actualitesDirectory = path.join(process.cwd(), 'content/actualites');
-  const filePath = path.join(actualitesDirectory, `${slug}.md`);
-  
-  if (!fs.existsSync(filePath)) {
-    return null;
-  }
-  
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(fileContents);
-  
-  return {
-    id: slug,
-    titre: data.titre || '',
-    date: data.date ? new Date(data.date).toLocaleDateString('fr-FR', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    }) : '',
-    categorie: data.categorie || '',
-    description: data.description || '',
-    image: data.image && data.image !== '' ? data.image : undefined,
-    content: content
-  };
+export async function getActualiteBySlug(slug: string) {
+  const response = await fetchDirectus<DirectusActualite[]>(
+    `/items/actualites?fields=${encodeURIComponent(ACTUALITES_FIELDS)}&filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
+  );
+  const item = response?.data?.[0];
+  if (!item) return null;
+  return mapActualite(item);
 }
 

@@ -11,7 +11,7 @@ interface ProjetPageProps {
 }
 
 export default async function ProjetPage({ params }: ProjetPageProps) {
-  const projet = getProjetBySlug(params.slug);
+  const projet = await getProjetBySlug(params.slug);
   
   if (!projet) {
     notFound();
@@ -41,6 +41,7 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
 
         {projet.image && (
           <div className={styles.imageWrapper}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={projet.image} alt={projet.titre} className={styles.image} />
           </div>
         )}
