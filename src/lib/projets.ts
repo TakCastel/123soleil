@@ -59,16 +59,26 @@ const mapProjet = (item: DirectusMediation): Projet => {
 export async function getProjets(categorie?: string): Promise<Projet[]> {
   const baseQuery = `/items/mediations?fields=${encodeURIComponent(MEDIATIONS_FIELDS)}&limit=-1&sort=-date`;
   const filterQuery = categorie ? `&filter[categorie][_eq]=${encodeURIComponent(categorie)}` : '';
-  const response = await fetchDirectus<DirectusMediation[]>(`${baseQuery}${filterQuery}`);
-  return (response?.data || []).map(mapProjet);
+  try {
+    const response = await fetchDirectus<DirectusMediation[]>(`${baseQuery}${filterQuery}`);
+    return (response?.data || []).map(mapProjet);
+  } catch (error) {
+    console.warn('Impossible de charger les mediations depuis Directus.', error);
+    return [];
+  }
 }
 
 export async function getProjetBySlug(slug: string) {
-  const response = await fetchDirectus<DirectusMediation[]>(
-    `/items/mediations?fields=${encodeURIComponent(MEDIATIONS_FIELDS)}&filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
-  );
-  const item = response?.data?.[0];
-  if (!item) return null;
-  return mapProjet(item);
+  try {
+    const response = await fetchDirectus<DirectusMediation[]>(
+      `/items/mediations?fields=${encodeURIComponent(MEDIATIONS_FIELDS)}&filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
+    );
+    const item = response?.data?.[0];
+    if (!item) return null;
+    return mapProjet(item);
+  } catch (error) {
+    console.warn('Impossible de charger la mediation depuis Directus.', error);
+    return null;
+  }
 }
 
