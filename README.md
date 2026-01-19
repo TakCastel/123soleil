@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Migration Directus prod
 
-## Getting Started
+### Script de migration (local -> VPS)
+Le script `scripts/migrate-directus-db.sh`:
+- dump la DB locale via Docker
+- stream le dump en SSH vers le VPS
+- reset le schema public puis injecte le dump
+- redemarre Directus (et optionnellement le front)
+- option `--backup` pour sauvegarder la DB du VPS avant ecrasement
 
-First, run the development server:
-
+Exemple:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+chmod +x scripts/migrate-directus-db.sh
+./scripts/migrate-directus-db.sh --backup
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Variables (override possible via env):
+- `VPS_HOST`
+- `VPS_USER`
+- `VPS_DIR`
+- `POSTGRES_CONTAINER`
+- `DIRECTUS_CONTAINER`
+- `DB_USER`
+- `DB_NAME`
+- `FRONTEND_CONTAINER` (optionnel)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Pour eviter d'avoir des infos sensibles en clair dans le repo, vous pouvez
+creer un fichier local `scripts/migrate-directus-db.env` (non versionne) :
+```bash
+VPS_HOST=your.vps.ip.or.host
+VPS_USER=your_ssh_user
+VPS_DIR=/path/to/project
+POSTGRES_CONTAINER=postgres
+DIRECTUS_CONTAINER=directus
+DB_USER=directus
+DB_NAME=directus
+FRONTEND_CONTAINER=frontend
+```
+Le script charge automatiquement ce fichier s'il existe, ou bien le `.env` a la
+racine. Pour un autre chemin, utilisez `MIGRATE_DIRECTUS_ENV=/chemin/vers/fichier.env`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Point critique: Basic Auth
+Ne pas activer de Basic Auth global sur `api.123soleil-cinema.fr`.
+Sinon `/auth/login` renvoie 401 et la connexion Directus est impossible.
+Si besoin, proteger le front uniquement, ou exclure explicitement `/auth/*`.
