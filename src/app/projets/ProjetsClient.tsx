@@ -19,7 +19,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
   const router = useRouter();
   
   // Hook pour retarder l'apparition du contenu
-  const { isContentVisible } = usePageContentDelay({ triggerAt: 0.3 });
+  const isContentVisible = usePageContentDelay({ triggerAt: 0.3 });
   
   // Fallback de sécurité - si le hook ne fonctionne pas, afficher après 1 seconde
   const [fallbackVisible, setFallbackVisible] = useState(false);

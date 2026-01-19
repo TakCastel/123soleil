@@ -11,7 +11,7 @@ interface ActualitePageProps {
 }
 
 export default async function ActualitePage({ params }: ActualitePageProps) {
-  const actualite = getActualiteBySlug(params.slug);
+  const actualite = await getActualiteBySlug(params.slug);
   
   if (!actualite) {
     notFound();
@@ -39,6 +39,7 @@ export default async function ActualitePage({ params }: ActualitePageProps) {
 
         {actualite.image && (
           <div className={styles.imageWrapper}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={actualite.image} alt={actualite.titre} className={styles.image} />
           </div>
         )}

@@ -8,7 +8,7 @@ import { usePageContentDelay } from '@/hooks/usePageContentDelay';
 
 export default function AssociationClient() {
   // Hook pour retarder l'apparition du contenu
-  const { isContentVisible } = usePageContentDelay({ triggerAt: 0.3 }); // Délai plus court pour test
+  const isContentVisible = usePageContentDelay({ triggerAt: 0.3 }); // Délai plus court pour test
   
   // Fallback de sécurité - si le hook ne fonctionne pas, afficher après 1 seconde
   const [fallbackVisible, setFallbackVisible] = useState(false);
@@ -22,7 +22,6 @@ export default function AssociationClient() {
   // Hooks pour les animations
   const gridLeftRef = useInView({ threshold: 0.2 });
   const gridRightRef = useInView({ threshold: 0.2 });
-  const objectifsRef = useInView({ threshold: 0.2 });
 
   return (
     <div className="">

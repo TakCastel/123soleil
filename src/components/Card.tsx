@@ -14,12 +14,10 @@ type CardProps = {
   category?: string;
   ctaLabel?: string;
   slashSide?: 'left' | 'right';
-  isVisible?: boolean;
   delay?: number;
 };
 
-export default function Card({ title, description, imageAlt = '', imageUrl, href, badge, category, ctaLabel, isVisible = true, delay = 0 }: CardProps) {
-  const [shouldAnimate, setShouldAnimate] = useState(true);
+export default function Card({ title, description, imageAlt = '', imageUrl, href, badge, category, ctaLabel, delay = 0 }: CardProps) {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
@@ -71,8 +69,6 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
     }
     return imageUrl;
   };
-
-  const hasImage = true; // Toujours vrai car on a un fallback
 
   // Calculer la rotation en fonction de la position de la souris
   const rotateX = isHovered ? (mousePosition.y - 0.5) * 15 : 0;
@@ -134,6 +130,7 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
           position: 'relative'
         }}
       >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
           src={getFinalImageUrl()} 
           alt={imageAlt}

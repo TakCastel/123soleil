@@ -62,8 +62,6 @@ export default function NewsCard({
     return imageUrl;
   };
 
-  const hasImage = true; // Toujours vrai car on a un fallback
-
   return (
     <div
       className={`${styles.newsCard} ${styles[variant]} ${hasAnimated ? styles.hasAnimated : ''} ${isBreaking ? styles.breaking : ''}`}
@@ -90,6 +88,7 @@ export default function NewsCard({
       
       {/* Image avec effet comics */}
       <div className={`${styles.imageContainer}`} style={{ position: 'relative', zIndex: 0 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img 
           src={getFinalImageUrl()} 
           alt={imageAlt} 
