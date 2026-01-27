@@ -6,6 +6,7 @@ import { useInView } from '@/hooks/useInView';
 import { Actualite } from '@/lib/actualites';
 import PageHeader from '@/components/PageHeader';
 import { usePageContentDelay } from '@/hooks/usePageContentDelay';
+import type React from 'react';
 
 interface ActualitesClientProps {
   latestNews: Actualite[];

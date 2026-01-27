@@ -57,24 +57,34 @@ const mapActualite = (item: DirectusActualite): Actualite => {
 };
 
 export async function getActualites(): Promise<Actualite[]> {
-  const response = await fetchDirectus<DirectusActualite[]>(
-    `/items/actualites?fields=${encodeURIComponent(ACTUALITES_FIELDS)}&limit=-1&sort=-date`
-  );
-  const actualites = (response?.data || []).map(mapActualite);
+  try {
+    const response = await fetchDirectus<DirectusActualite[]>(
+      `/items/actualites?fields=${encodeURIComponent(ACTUALITES_FIELDS)}&limit=-1&sort=-date`
+    );
+    const actualites = (response?.data || []).map(mapActualite);
 
-  if (actualites.length > 0) {
-    actualites[0].isBreaking = true;
+    if (actualites.length > 0) {
+      actualites[0].isBreaking = true;
+    }
+
+    return actualites;
+  } catch (error) {
+    console.warn('Impossible de charger les actualités depuis Directus.', error);
+    return [];
   }
-
-  return actualites;
 }
 
 export async function getActualiteBySlug(slug: string) {
-  const response = await fetchDirectus<DirectusActualite[]>(
-    `/items/actualites?fields=${encodeURIComponent(ACTUALITES_FIELDS)}&filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
-  );
-  const item = response?.data?.[0];
-  if (!item) return null;
-  return mapActualite(item);
+  try {
+    const response = await fetchDirectus<DirectusActualite[]>(
+      `/items/actualites?fields=${encodeURIComponent(ACTUALITES_FIELDS)}&filter[slug][_eq]=${encodeURIComponent(slug)}&limit=1`
+    );
+    const item = response?.data?.[0];
+    if (!item) return null;
+    return mapActualite(item);
+  } catch (error) {
+    console.warn('Impossible de charger l’actualité depuis Directus.', error);
+    return null;
+  }
 }
 

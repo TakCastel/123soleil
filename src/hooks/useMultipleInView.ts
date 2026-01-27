@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import type React from 'react';
 
 interface UseMultipleInViewOptions {
   threshold?: number;

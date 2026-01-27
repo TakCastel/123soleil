@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useInView } from '@/hooks/useInView';
 import styles from './Supporters.module.css';
+import type React from 'react';
 
 export default function Supporters() {
   const titleRef = useInView({ threshold: 0.3 });

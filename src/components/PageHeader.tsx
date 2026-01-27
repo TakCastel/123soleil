@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 interface PageHeaderProps {
@@ -9,7 +9,7 @@ interface PageHeaderProps {
   subtitle: string;
   description: string;
   className?: string;
-  onProgress?: (progress: number) => void;
+  onProgress?: (_progress: number) => void;
 }
 
 export default function PageHeader({ 
@@ -75,7 +75,7 @@ export default function PageHeader({
   }, [letters.length, subtitleLetters.length, onProgress]);
 
   // Variants pour le titre principal
-  const titleContainerVariants = {
+  const titleContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -83,7 +83,7 @@ export default function PageHeader({
     }
   };
 
-  const titleLetterVariants = {
+  const titleLetterVariants: Variants = {
     hidden: (i: number) => ({
       opacity: 0,
       y: 14,
@@ -96,7 +96,7 @@ export default function PageHeader({
       scale: 1,
       rotate: 0,
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 520,
         damping: 22,
         mass: 0.6
@@ -105,7 +105,7 @@ export default function PageHeader({
   };
 
   // Variants pour le sous-titre
-  const subtitleContainerVariants = {
+  const subtitleContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -113,7 +113,7 @@ export default function PageHeader({
     }
   };
 
-  const subtitleLetterVariants = {
+  const subtitleLetterVariants: Variants = {
     hidden: (i: number) => ({
       opacity: 0,
       y: 12,
@@ -126,7 +126,7 @@ export default function PageHeader({
       scale: 1,
       rotate: 0,
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 480,
         damping: 24,
         mass: 0.7
@@ -135,7 +135,7 @@ export default function PageHeader({
   };
 
   // Variants pour la description (slide up + fade in)
-  const descriptionVariants = {
+  const descriptionVariants: Variants = {
     hidden: {
       opacity: 0,
       y: 30,
@@ -146,7 +146,7 @@ export default function PageHeader({
       y: 0,
       scale: 1,
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 300,
         damping: 30,
         mass: 0.8

@@ -8,6 +8,7 @@ import { useInView } from '@/hooks/useInView';
 import { Projet } from '@/lib/projets';
 import PageHeader from '@/components/PageHeader';
 import { usePageContentDelay } from '@/hooks/usePageContentDelay';
+import type React from 'react';
 
 interface ProjetsClientProps {
   projets: Projet[];

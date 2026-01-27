@@ -5,6 +5,7 @@ import { useInView } from '@/hooks/useInView';
 import MessageBox from '@/components/MessageBox';
 import PageHeader from '@/components/PageHeader';
 import { usePageContentDelay } from '@/hooks/usePageContentDelay';
+import type React from 'react';
 
 export default function AssociationClient() {
   // Hook pour retarder l'apparition du contenu

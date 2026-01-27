@@ -2,6 +2,7 @@
 
 import { useInView } from '@/hooks/useInView';
 import { ReactNode } from 'react';
+import type React from 'react';
 
 interface MessageBoxProps {
   title: string;

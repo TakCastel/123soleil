@@ -1,6 +1,6 @@
 "use client";
 import Button from './Button';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 interface HeroProps {
@@ -104,7 +104,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
     }
   };
 
-  const subtitleLetterVariants = {
+  const subtitleLetterVariants: Variants = {
     hidden: (i: number) => ({
       opacity: 0,
       y: 12,
@@ -117,7 +117,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
       scale: 1,
       rotate: 0,
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 480,
         damping: 24,
         mass: 0.7
@@ -125,14 +125,15 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
     }
   };
 
-  const heroItem = {
+  const heroItem: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
       transition: { 
         duration: 0.6,
-        ease: "easeOut"
+        // cubic-bezier for "easeOut"
+        ease: [0, 0, 0.58, 1]
       }
     }
   };
@@ -179,7 +180,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
     return Math.random() * (totalDuration * 0.3);
   };
 
-  const imageVariants = {
+  const imageVariants: Variants = {
     hidden: () => ({
       opacity: 0,
       scale: 0.5, // Moins petit pour un effet plus doux
@@ -190,7 +191,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
       scale: 1,
       filter: 'blur(0px)',
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 120, // Plus doux
         damping: 25, // Plus de damping pour moins de rebond
         mass: 1.2, // Plus de masse pour un mouvement plus lent
@@ -208,7 +209,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
     }
   };
 
-  const titleLetterVariants = {
+  const titleLetterVariants: Variants = {
     hidden: (i: number) => ({
       opacity: 0,
       y: 14,
@@ -221,7 +222,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
       scale: 1,
       rotate: 0,
       transition: {
-        type: 'spring',
+        type: 'spring' as const,
         stiffness: 520,
         damping: 22,
         mass: 0.6
@@ -230,7 +231,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
   };
 
   // Animation du triangle : faux triangle très fin → triangle complet
-  const triangleVariants = {
+  const triangleVariants: Variants = {
     hidden: {
       clipPath: 'polygon(0% 49%, 100% 49%, 100% 51%)', // Triangle très fin (3 points)
       opacity: 1
@@ -241,7 +242,8 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
       transition: {
         clipPath: {
           duration: 1.5,
-          ease: "easeInOut"
+          // cubic-bezier approx for "easeInOut"
+          ease: [0.42, 0, 0.58, 1]
         }
       }
     }
