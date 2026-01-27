@@ -8,6 +8,7 @@ import MessageBox from '@/components/MessageBox';
 import { MdMovie, MdPeople, MdLocationCity, MdStar, MdVideocam, MdHandshake } from 'react-icons/md';
 import type { Projet } from '@/lib/projets';
 import type { Actualite } from '@/lib/actualites';
+import type React from 'react';
 
 interface HomeClientProps {
   projets: Projet[];

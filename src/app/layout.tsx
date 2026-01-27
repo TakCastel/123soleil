@@ -3,6 +3,7 @@ import { Slackey, Glegoo } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import type React from "react";
 
 const slackey = Slackey({
   weight: "400",

@@ -1,9 +1,10 @@
 "use client";
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { motion, type Variants } from 'framer-motion';
 import { useInView } from '../hooks/useInView';
 import Button from './Button';
 import Logo from './Logo';
+import type React from 'react';
 
 export default function Footer() {
   const { ref: logoRef, isInView: logoInView } = useInView({ threshold: 0.3, triggerOnce: true });
@@ -11,7 +12,7 @@ export default function Footer() {
   const { ref: bottomRef, isInView: bottomInView } = useInView({ threshold: 0.3, triggerOnce: true });
 
   // Animation variants
-  const logoVariants = {
+  const logoVariants: Variants = {
     hidden: { 
       opacity: 0, 
       scale: 0.8,
@@ -24,13 +25,12 @@ export default function Footer() {
       transition: {
         type: 'spring',
         stiffness: 300,
-        damping: 25,
-        duration: 0.6
+        damping: 25
       }
     }
   };
 
-  const contentVariants = {
+  const contentVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -41,7 +41,7 @@ export default function Footer() {
     }
   };
 
-  const sectionVariants = {
+  const sectionVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 30,
@@ -54,13 +54,12 @@ export default function Footer() {
       transition: {
         type: 'spring',
         stiffness: 200,
-        damping: 20,
-        duration: 0.5
+        damping: 20
       }
     }
   };
 
-  const bottomVariants = {
+  const bottomVariants: Variants = {
     hidden: { 
       opacity: 0, 
       y: 20
@@ -71,8 +70,7 @@ export default function Footer() {
       transition: {
         type: 'spring',
         stiffness: 300,
-        damping: 25,
-        duration: 0.6
+        damping: 25
       }
     }
   };

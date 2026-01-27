@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import styles from './Card.module.css';
+import type React from 'react';
 
 type CardProps = {
   title: string;
