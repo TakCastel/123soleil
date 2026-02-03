@@ -1,6 +1,7 @@
 import { getProjetBySlug } from '@/lib/projets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { marked } from 'marked';
 import styles from './projet.module.css';
 
@@ -56,12 +57,14 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
       {/* Contenu : image, vidéo, corps */}
       <section className="max-w-6xl mx-auto px-4 py-16">
         {projet.image && (
-          <div className="mb-12 border-2 border-black overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="mb-12 border-2 border-black overflow-hidden relative aspect-video w-full">
+            <Image
               src={projet.image}
               alt={projet.titre}
-              className="w-full h-auto block"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 1152px"
+              priority
             />
           </div>
         )}

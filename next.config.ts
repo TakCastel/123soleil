@@ -1,6 +1,13 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      { protocol: 'https', hostname: 'api.123soleil-cinema.fr', pathname: '/assets/**' },
+      { protocol: 'http', hostname: 'localhost', pathname: '/assets/**', port: '8055' },
+      { protocol: 'https', hostname: 'picsum.photos', pathname: '/**' }
+    ]
+  },
   async redirects() {
     const directusBaseUrl =
       process.env.NEXT_PUBLIC_DIRECTUS_URL || "https://api.123soleil-cinema.fr";

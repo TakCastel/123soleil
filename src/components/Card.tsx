@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import styles from './Card.module.css';
 import type React from 'react';
@@ -62,14 +63,9 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
     setMousePosition({ x: 0.5, y: 0.5 });
   };
 
-  // Utiliser lorem picsum comme fallback
-  const getFinalImageUrl = () => {
-    // Si pas d'image définie ou erreur de chargement, utiliser Lorem Picsum
-    if (imageError || !imageUrl || imageUrl === '' || imageUrl.startsWith('/images/')) {
-      return `https://picsum.photos/600/400?random=${randomSeed}`;
-    }
-    return imageUrl;
-  };
+  const finalImageUrl = (imageError || !imageUrl || imageUrl === '' || imageUrl.startsWith('/images/'))
+    ? `https://picsum.photos/600/400?random=${randomSeed}`
+    : imageUrl;
 
   // Calculer la rotation en fonction de la position de la souris
   const rotateX = isHovered ? (mousePosition.y - 0.5) * 15 : 0;
@@ -121,23 +117,23 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
       
       <div
         className={`${styles.cardMedia} flex items-center justify-center`}
-        style={{ 
-          backgroundImage: `url(${getFinalImageUrl()})`, 
-          backgroundSize: 'cover', 
-          backgroundPosition: 'center',
+        style={{
           transform: 'rotate(-8deg) scale(1.2)',
           marginTop: '-4px',
           zIndex: 0,
           position: 'relative'
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img 
-          src={getFinalImageUrl()} 
-          alt={imageAlt}
-          style={{ display: 'none' }}
-          onError={() => setImageError(true)}
-        />
+        <div className="absolute inset-0 w-full h-full">
+          <Image
+            src={finalImageUrl}
+            alt={imageAlt}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={() => setImageError(true)}
+          />
+        </div>
       </div>
       <div className={styles.cardBody} style={{ position: 'relative', zIndex: 0 }}>
         <div className="flex justify-end items-start mb-3 -mt-4 relative z-10">

@@ -14,9 +14,21 @@ const getBaseUrl = () => {
   return baseUrl.replace(/\/$/, '');
 };
 
+/** URL publique pour les assets (HTTPS, utilisée dans le navigateur). En prod, éviter mixed content. */
+const getPublicBaseUrl = () => {
+  const publicUrl =
+    process.env.DIRECTUS_PUBLIC_URL ||
+    process.env.NEXT_PUBLIC_DIRECTUS_URL ||
+    (process.env.NODE_ENV === 'development' ? 'http://localhost:8055' : undefined);
+  if (!publicUrl) {
+    return getBaseUrl();
+  }
+  return publicUrl.replace(/\/$/, '');
+};
+
 export const getDirectusAssetUrl = (fileId: string) => {
   if (!fileId) return '';
-  return `${getBaseUrl()}/assets/${fileId}`;
+  return `${getPublicBaseUrl()}/assets/${fileId}`;
 };
 
 export async function fetchDirectus<T = unknown>(path: string): Promise<DirectusResponse<T>> {
