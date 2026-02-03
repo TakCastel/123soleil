@@ -34,6 +34,16 @@ export default function AssociationClient() {
           subtitle="Quelques mots"
           description="Découvrez l'histoire, les missions et les engagements de notre association audiovisuelle, au service d'une médiation culturelle solidaire et inclusive sur le territoire avignonnais."
         />
+        <div className="flex justify-center pb-8">
+          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg border-2 border-black p-1 bg-black overflow-hidden shrink-0">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/logo-123soleil-animated.gif"
+              alt="Logo 1, 2, 3 Soleil animé"
+              className="block w-full h-full object-cover rounded-md"
+            />
+          </div>
+        </div>
       </section>
 
       {/* Présentation */}
@@ -64,9 +74,9 @@ export default function AssociationClient() {
           </div>
           <div 
             ref={gridRightRef.ref as React.RefObject<HTMLDivElement>}
-            className={`w-full ratio-4-3 bg-gray-200 flex items-center justify-center scroll-animate scale-in scroll-delay-200 ${gridRightRef.isInView && shouldShowContent ? 'in-view' : ''}`}
+            className={`w-full ratio-4-3 bg-gray-100 border-2 border-black overflow-hidden flex items-center justify-center scroll-animate scale-in scroll-delay-200 ${gridRightRef.isInView && shouldShowContent ? 'in-view' : ''}`}
           >
-            <span className="text-gray-500">Image de couverture (picsum)</span>
+            <span className="text-gray-500 text-sm">Photo à venir</span>
           </div>
         </div>
       </section>
