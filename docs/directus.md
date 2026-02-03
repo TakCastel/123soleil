@@ -23,6 +23,29 @@ npm run directus:migrate
 - Le script remplit la galerie `home_settings.hero_images` (max 10).
 - Pour l’accès front, vous pouvez fournir un token Directus via `DIRECTUS_TOKEN`.
 
+## Sélection d’image depuis la librairie (actualités / médiations)
+
+Si, dans le backoffice, choisir une image depuis la librairie pour une actualité ou une médiation ne fonctionne pas, c’est en général que la **relation** entre la collection et `directus_files` n’est pas créée.
+
+**Solution 1 – Réappliquer le schéma (recommandé)**  
+Depuis la racine du projet (avec Directus démarré et identifiants admin dans l’env) :
+```bash
+npm run directus:setup
+```
+Le script crée désormais les relations M2O `mediations.image`, `mediations.video` et `actualites.image` vers `directus_files`. Après exécution, rafraîchir le backoffice et réessayer la sélection d’image.
+
+**Solution 2 – Vérifier / créer la relation à la main**  
+1. **Paramètres** (icône engrenage) → **Data Model**.  
+2. Ouvrir la collection **Médiations** (ou **Actualités**).  
+3. Cliquer sur le champ **Image** (ou **Vidéo** pour médiations).  
+4. Dans la configuration du champ, vérifier qu’une **relation** vers la collection **Directus Files** est bien définie (type « Many to One », collection liée : `directus_files`).  
+5. Si la relation n’existe pas : **Paramètres** → **Data Model** → onglet **Relations**, créer une relation :
+   - **Collection (Many)** : `mediations` (ou `actualites`)
+   - **Champ (Many)** : `image` (ou `video`)
+   - **Collection (One)** : `directus_files`
+   - **Champ (One)** : laisser vide.  
+6. Enregistrer, puis rafraîchir la page et réessayer la sélection depuis la librairie.
+
 ## Accès public (production)
 Si les contenus doivent être publics, donnez au rôle **Public** les droits **READ** sur :
 - `mediations`

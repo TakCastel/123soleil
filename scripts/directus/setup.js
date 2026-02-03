@@ -395,6 +395,47 @@ const runSetup = async () => {
       sort_field: 'sort'
     }
   }, token);
+
+  // Relations M2O vers directus_files pour image/vidéo (sans ça le sélecteur de fichier ne fonctionne pas)
+  await ensureRelation({
+    collection: 'mediations',
+    field: 'image',
+    related_collection: 'directus_files',
+    schema: { on_delete: 'SET NULL' },
+    meta: {
+      many_collection: 'mediations',
+      many_field: 'image',
+      one_collection: 'directus_files',
+      one_field: null,
+      one_deselect_action: 'nullify'
+    }
+  }, token);
+  await ensureRelation({
+    collection: 'mediations',
+    field: 'video',
+    related_collection: 'directus_files',
+    schema: { on_delete: 'SET NULL' },
+    meta: {
+      many_collection: 'mediations',
+      many_field: 'video',
+      one_collection: 'directus_files',
+      one_field: null,
+      one_deselect_action: 'nullify'
+    }
+  }, token);
+  await ensureRelation({
+    collection: 'actualites',
+    field: 'image',
+    related_collection: 'directus_files',
+    schema: { on_delete: 'SET NULL' },
+    meta: {
+      many_collection: 'actualites',
+      many_field: 'image',
+      one_collection: 'directus_files',
+      one_field: null,
+      one_deselect_action: 'nullify'
+    }
+  }, token);
 };
 
 if (require.main === module) {
