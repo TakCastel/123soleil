@@ -84,6 +84,9 @@ const isHomeSettingsBroken = async (token) => {
     });
     return false;
   } catch (error) {
+    if (error.status === 403 || error.status === 404) {
+      return false;
+    }
     if (error.status === 500 && error.message.includes('home_settings.hero_images')) {
       return true;
     }
