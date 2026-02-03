@@ -49,41 +49,37 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
         </MessageBox>
       </section>
 
-      {/* Featured Projects */}
+      {/* News Section */}
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2 
-          ref={projetsSection.ref as React.RefObject<HTMLHeadingElement>}
-          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate slide-left ${projetsSection.isInView ? 'in-view' : ''}`}
+          ref={actualitesSection.ref as React.RefObject<HTMLHeadingElement>}
+          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate slide-left ${actualitesSection.isInView ? 'in-view' : ''}`}
         >
-          Dernières réalisations
+          Actualités
         </h2>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
-          {projets.map((projet, index) => (
-            <div
-              key={projet.id}
-              ref={projetRefs[index]?.ref as React.RefObject<HTMLDivElement>}
-              className={`scroll-animate slide-up scroll-delay-${(index + 1) * 100} ${projetRefs[index]?.isInView ? 'in-view' : ''}`}
-            >
-              <Card
-                title={projet.titre}
-                description={projet.description}
-                imageUrl={projet.image}
-                imageAlt={projet.titre}
-                badge={projet.annee}
-                category={projet.categorie}
-                href={`/projets/${projet.id}`}
-                ctaLabel="En savoir plus →"
-              />
-            </div>
+        <div className="grid md:grid-cols-3 gap-12">
+          {actualites.map((actualite, index) => (
+            <NewsCard
+              key={actualite.id}
+              title={actualite.titre}
+              description={actualite.description}
+              imageUrl={actualite.image}
+              imageAlt={actualite.titre}
+              date={actualite.date}
+              category={actualite.categorie}
+              href={`/actualites/${actualite.id}`}
+              variant="newspaper"
+              delay={index * 0.2}
+            />
           ))}
         </div>
         <div className="text-center mt-12">
           <ButtonOffset 
-            onClick={() => window.location.href = '/projets'}
+            onClick={() => window.location.href = '/actualites'}
             variant="white"
             className="inline-block"
           >
-            Voir tous les projets
+            Voir toutes les actualités
           </ButtonOffset>
         </div>
       </section>
@@ -165,37 +161,41 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
         </div>
       </section>
 
-      {/* News Section */}
+      {/* Featured Projects */}
       <section className="max-w-6xl mx-auto px-4 py-16">
         <h2 
-          ref={actualitesSection.ref as React.RefObject<HTMLHeadingElement>}
-          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate slide-left ${actualitesSection.isInView ? 'in-view' : ''}`}
+          ref={projetsSection.ref as React.RefObject<HTMLHeadingElement>}
+          className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate slide-left ${projetsSection.isInView ? 'in-view' : ''}`}
         >
-          Actualités
+          Derniers courts métrages
         </h2>
-        <div className="grid md:grid-cols-2 gap-12">
-          {actualites.map((actualite, index) => (
-            <NewsCard
-              key={actualite.id}
-              title={actualite.titre}
-              description={actualite.description}
-              imageUrl={actualite.image}
-              imageAlt={actualite.titre}
-              date={actualite.date}
-              category={actualite.categorie}
-              href={`/actualites/${actualite.id}`}
-              variant="newspaper"
-              delay={index * 0.2}
-            />
+        <div className="grid md:grid-cols-2 gap-12 cards-grid">
+          {projets.map((projet, index) => (
+            <div
+              key={projet.id}
+              ref={projetRefs[index]?.ref as React.RefObject<HTMLDivElement>}
+              className={`scroll-animate slide-up scroll-delay-${(index + 1) * 100} ${projetRefs[index]?.isInView ? 'in-view' : ''}`}
+            >
+              <Card
+                title={projet.titre}
+                description={projet.description}
+                imageUrl={projet.image}
+                imageAlt={projet.titre}
+                badge={projet.annee}
+                category={projet.categorie}
+                href={`/projets/${projet.id}`}
+                ctaLabel="En savoir plus →"
+              />
+            </div>
           ))}
         </div>
         <div className="text-center mt-12">
           <ButtonOffset 
-            onClick={() => window.location.href = '/actualites'}
+            onClick={() => window.location.href = '/projets'}
             variant="white"
             className="inline-block"
           >
-            Voir toutes les actualités
+            Voir tous les projets
           </ButtonOffset>
         </div>
       </section>

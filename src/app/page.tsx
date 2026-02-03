@@ -6,13 +6,22 @@ import { getActualites } from '@/lib/actualites';
 import { getHomeHeroImages } from '@/lib/home-settings';
 
 export default async function Home() {
-  // Charger les 3 derniers projets
-  const projets = (await getProjets()).slice(0, 3);
-  
-  // Charger les 2 dernières actualités
-  const actualites = (await getActualites()).slice(0, 2);
+  let projets: Awaited<ReturnType<typeof getProjets>> = [];
+  let actualites: Awaited<ReturnType<typeof getActualites>> = [];
+  let heroImages: string[] = [];
 
-  const heroImages = await getHomeHeroImages();
+  try {
+    const [projetsData, actualitesData, heroImagesData] = await Promise.all([
+      getProjets(),
+      getActualites(),
+      getHomeHeroImages()
+    ]);
+    projets = projetsData.slice(0, 2);
+    actualites = actualitesData.slice(0, 3);
+    heroImages = heroImagesData;
+  } catch {
+    // Directus indisponible (ex. dev sans Docker) : afficher la page avec données vides
+  }
 
   return (
     <div className="">

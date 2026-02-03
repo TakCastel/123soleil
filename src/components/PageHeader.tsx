@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 interface PageHeaderProps {
   seoTitle: string;
   mainTitle: string;
-  subtitle: string;
+  subtitle?: string;
   description: string;
   className?: string;
   onProgress?: (_progress: number) => void;
@@ -21,58 +21,65 @@ export default function PageHeader({
   onProgress
 }: PageHeaderProps) {
   const letters = Array.from(mainTitle);
-  const subtitleLetters = Array.from(subtitle);
-  
+  const subtitleLetters = Array.from(subtitle ?? '');
+  const hasSubtitle = Boolean(subtitle);
+
   const baseDelay = 0.05;
   const perLetterStagger = 0.03;
-  
+
   const [titleVisible, setTitleVisible] = useState(false);
   const [subtitleVisible, setSubtitleVisible] = useState(false);
   const [descriptionVisible, setDescriptionVisible] = useState(false);
+
+  // Réinitialiser l'animation quand le titre ou sous-titre change (ex. changement de filtre)
+  useEffect(() => {
+    setTitleVisible(false);
+    setSubtitleVisible(false);
+    setDescriptionVisible(false);
+  }, [mainTitle, subtitle]);
 
   useEffect(() => {
     // Configuration des timings
     const TIMING = {
       title: 300, // Délai avant de commencer le titre
       subtitleTrigger: 0.75, // 75% du titre
-      descriptionTrigger: 0.75, // 75% du sous-titre
+      descriptionTrigger: hasSubtitle ? 0.75 : 0.5, // 75% du sous-titre ou 50% du titre
     };
 
     // Calculer la durée d'animation du titre
     const titleDuration = (baseDelay + (letters.length * perLetterStagger)) * 1000;
-    
+
     // Démarrer le titre
     setTimeout(() => setTitleVisible(true), TIMING.title);
-    
-    // Démarrer le sous-titre à 75% du titre
-    const subtitleDelay = TIMING.title + (titleDuration * TIMING.subtitleTrigger);
+
+    // Démarrer le sous-titre à 75% du titre (ou immédiatement après le titre si pas de sous-titre)
+    const subtitleDelay = hasSubtitle
+      ? TIMING.title + (titleDuration * TIMING.subtitleTrigger)
+      : TIMING.title + titleDuration;
     setTimeout(() => setSubtitleVisible(true), subtitleDelay);
-    
-    // Calculer la durée d'animation du sous-titre
-    const subtitleDuration = (baseDelay + (subtitleLetters.length * perLetterStagger)) * 1000;
-    
-    // Démarrer la description à 75% du sous-titre
+
+    // Calculer la durée d'animation du sous-titre (0 si pas de sous-titre)
+    const subtitleDuration = hasSubtitle
+      ? (baseDelay + (subtitleLetters.length * perLetterStagger)) * 1000
+      : 0;
+
+    // Démarrer la description après le sous-titre (ou après le titre si pas de sous-titre)
     const descriptionDelay = subtitleDelay + (subtitleDuration * TIMING.descriptionTrigger);
     setTimeout(() => setDescriptionVisible(true), descriptionDelay);
 
     // Calculer la durée totale d'animation pour le callback de progression
-    const totalDuration = descriptionDelay + (subtitleDuration * 0.5); // 50% de la description
-    
+    const totalDuration = descriptionDelay + (hasSubtitle ? subtitleDuration * 0.5 : 0);
+
     // Émettre les callbacks de progression
     if (onProgress) {
-      // 25% - Milieu du titre
       setTimeout(() => onProgress(0.25), TIMING.title + (titleDuration * 0.5));
-      
-      // 50% - Fin du titre (déclencheur principal)
       setTimeout(() => onProgress(0.5), TIMING.title + titleDuration);
-      
-      // 75% - Milieu du sous-titre
-      setTimeout(() => onProgress(0.75), subtitleDelay + (subtitleDuration * 0.5));
-      
-      // 100% - Fin complète
+      if (hasSubtitle) {
+        setTimeout(() => onProgress(0.75), subtitleDelay + (subtitleDuration * 0.5));
+      }
       setTimeout(() => onProgress(1.0), totalDuration);
     }
-  }, [letters.length, subtitleLetters.length, onProgress]);
+  }, [letters.length, subtitleLetters.length, hasSubtitle, onProgress]);
 
   // Variants pour le titre principal
   const titleContainerVariants: Variants = {
@@ -155,19 +162,19 @@ export default function PageHeader({
   };
 
   return (
-    <div className={`max-w-6xl mx-auto px-4 py-16 text-center ${className}`}>
+    <div className={`max-w-6xl mx-auto px-4 py-16 text-center overflow-visible ${className}`}>
       {/* H1 caché pour le SEO */}
       <h1 className="sr-only">{seoTitle}</h1>
       
       {/* Titre principal en rouge penché avec animation lettre par lettre */}
       <motion.div
-        className="mb-3"
+        className="mb-3 overflow-visible py-3 px-6"
         variants={titleContainerVariants}
         initial="hidden"
         animate={titleVisible ? "visible" : "hidden"}
       >
         <motion.span 
-          className="display-title text-5xl md:text-6xl text-[color:var(--secondary)] title-tilt inline-block"
+          className="display-title text-5xl md:text-6xl text-[color:var(--secondary)] title-tilt inline-block overflow-visible"
         >
           {letters.map((char, i) => (
             <motion.span
@@ -182,26 +189,28 @@ export default function PageHeader({
         </motion.span>
       </motion.div>
 
-      {/* Sous-titre en noir avec animation lettre par lettre */}
-      <motion.div
-        className="mb-4"
-        variants={subtitleContainerVariants}
-        initial="hidden"
-        animate={subtitleVisible ? "visible" : "hidden"}
-      >
-        <motion.p className="subtitle-black small">
-          {subtitleLetters.map((char, i) => (
-            <motion.span
-              key={i}
-              custom={i}
-              variants={subtitleLetterVariants}
-              style={{ display: 'inline-block', willChange: 'transform' }}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
-        </motion.p>
-      </motion.div>
+      {/* Sous-titre en noir avec animation lettre par lettre (optionnel) */}
+      {hasSubtitle && (
+        <motion.div
+          className="mb-4"
+          variants={subtitleContainerVariants}
+          initial="hidden"
+          animate={subtitleVisible ? "visible" : "hidden"}
+        >
+          <motion.p className="subtitle-black small">
+            {subtitleLetters.map((char, i) => (
+              <motion.span
+                key={i}
+                custom={i}
+                variants={subtitleLetterVariants}
+                style={{ display: 'inline-block', willChange: 'transform' }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </motion.span>
+            ))}
+          </motion.p>
+        </motion.div>
+      )}
 
       {/* Description SEO avec animation slide up + fade in */}
       <motion.div

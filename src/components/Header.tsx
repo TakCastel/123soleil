@@ -1,13 +1,24 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Button from './Button';
 import Logo from './Logo';
 
+function getLinkProps(href: string, pathname: string, baseClass: string) {
+  const isActive =
+    pathname === href || (href !== '/' && pathname.startsWith(href + '/'));
+  return {
+    className: `${baseClass}${isActive ? ' !text-[color:var(--secondary)] font-bold' : ''}`.trim(),
+    'aria-current': isActive ? ('page' as const) : undefined,
+  };
+}
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 bg-white border-b-2 border-black h-16 md:h-24 text-[color:var(--neutral-dark)]">
@@ -30,10 +41,10 @@ export default function Header() {
         <div className="flex w-full items-center justify-between">
           {/* Desktop Navigation - Centered with logo offset */}
           <nav className="hidden md:flex items-center justify-center space-x-8 flex-1 ml-24">
-            <Link href="/" className="hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-0">Accueil</Link>
-            <Link href="/association" className="hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-1">L&apos;Association</Link>
-            <Link href="/projets" className="hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-2">Médiations</Link>
-            <Link href="/actualites" className="hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-3">Actualités</Link>
+            <Link href="/" {...getLinkProps('/', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-0')}>Accueil</Link>
+            <Link href="/association" {...getLinkProps('/association', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-1')}>L&apos;Association</Link>
+            <Link href="/projets" {...getLinkProps('/projets', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-2')}>Médiations</Link>
+            <Link href="/actualites" {...getLinkProps('/actualites', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-3')}>Actualités</Link>
           </nav>
 
           {/* CTA Button - Right aligned */}
@@ -56,10 +67,10 @@ export default function Header() {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <nav className="md:hidden absolute left-0 right-0 top-16 md:top-24 bg-white border-b border-gray-200 px-4 py-4 space-y-4 z-30">
-            <Link href="/" className="block hover:text-[color:var(--secondary)] transition-colors">Accueil</Link>
-            <Link href="/association" className="block hover:text-[color:var(--secondary)] transition-colors">L&apos;Association</Link>
-            <Link href="/projets" className="block hover:text-[color:var(--secondary)] transition-colors">Médiations</Link>
-            <Link href="/actualites" className="block hover:text-[color:var(--secondary)] transition-colors">Actualités</Link>
+            <Link href="/" {...getLinkProps('/', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Accueil</Link>
+            <Link href="/association" {...getLinkProps('/association', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>L&apos;Association</Link>
+            <Link href="/projets" {...getLinkProps('/projets', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Médiations</Link>
+            <Link href="/actualites" {...getLinkProps('/actualites', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Actualités</Link>
             <Button href="/adhesion" bgColor="var(--secondary)" labelColor="#ffffff">Adhésion</Button>
           </nav>
         )}

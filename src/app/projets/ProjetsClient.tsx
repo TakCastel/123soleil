@@ -120,9 +120,9 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
     switch (displayFilter) {
       case 'court-metrages':
         return {
-          title: 'Réalisations',
-          description: 'Découvrez nos réalisations de fictions cinéma et documentaires. Des créations originales qui explorent différents genres et sujets.',
-          seoTitle: 'Réalisations - Fictions cinéma et documentaires'
+          title: 'Courts métrages',
+          description: 'Découvrez nos courts métrages de fictions cinéma et documentaires. Des créations originales qui explorent différents genres et sujets.',
+          seoTitle: 'Courts métrages - Fictions cinéma et documentaires'
         };
       case 'lipdubs':
         return {
@@ -150,11 +150,12 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
   return (
     <div className="">
       {/* En-tête diagonal jaune à pois */}
-      <section className="bg-diagonal-primary dotted-overlay">
+      <section className="bg-diagonal-primary dotted-overlay overflow-visible">
         <PageHeader
+          key={`${displayFilter}-${seoContent.title}`}
           seoTitle={seoContent.seoTitle}
           mainTitle={seoContent.title}
-          subtitle="DE L'ASSOCIATION"
+          subtitle={displayFilter === 'tous' ? "DE L'ASSOCIATION" : undefined}
           description={seoContent.description}
         />
       </section>

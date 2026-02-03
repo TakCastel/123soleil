@@ -209,7 +209,14 @@ export default function Footer() {
                 animate={contentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                 transition={{ delay: 0.7, duration: 0.3 }}
               >
-                Avignon, France
+                <Link
+                  href="https://www.google.com/maps/place//data=!4m2!3m1!1s0x12b5eb873c8ced35:0xcfb36ac11287a12e?sa=X&ved=1t:8290&ictx=111"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[color:var(--secondary)] transition-colors underline underline-offset-2"
+                >
+                  4 Rue des Esc. Sainte-Anne, 84000 Avignon
+                </Link>
               </motion.p>
               <motion.p 
                 className="text-sm opacity-80"

@@ -12,7 +12,7 @@ export default async function Projets({ searchParams }: ProjetsPageProps) {
 
   const filters = [
     { id: 'tous', label: 'Tous' },
-    { id: 'court-metrages', label: 'Réalisations' },
+    { id: 'court-metrages', label: 'Courts métrages' },
     { id: 'lipdubs', label: 'Lipdubs' },
     { id: 'mediations', label: 'Médiations' }
   ];

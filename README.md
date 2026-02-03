@@ -1,3 +1,26 @@
+## Développement local (voir les modifs en direct)
+
+**Docker** build une image avec le code au moment du build : les changements dans tes fichiers ne sont **pas** vus par le conteneur. Tu vois donc l’ancienne version sur localhost:3000.
+
+Pour le **dev avec hot-reload** (modifs visibles tout de suite) :
+
+1. **Arrête le conteneur front** (si Docker tourne) :  
+   `docker compose stop web`
+
+2. **Lance le front en local** :  
+   `npm run dev`  
+   → Le site est sur http://localhost:3000, chaque sauvegarde se met à jour.
+
+3. **Si tu as besoin de Directus** (actualités, projets, etc.) :  
+   Lance seulement Postgres + Directus en Docker :  
+   `docker compose up postgres directus -d`  
+   Puis `npm run dev` pour le front. Le front en local parlera à Directus sur localhost:8055.
+
+Pour **tester la version “prod”** (build + Docker) :  
+`docker compose up --build` puis aller sur localhost:3000 (il faut rebuild pour voir les derniers changements).
+
+---
+
 ## Migration Directus prod
 
 ### Script de migration (local -> VPS)
