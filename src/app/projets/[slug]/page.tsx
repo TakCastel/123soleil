@@ -69,8 +69,15 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
           </div>
         )}
 
+        {contentHtml && (
+          <div
+            className={styles.projectContent}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
+          />
+        )}
+
         {projet.video_url && (
-          <div className="mb-12 border-2 border-black bg-[color:var(--neutral-dark)] p-2">
+          <div className="mt-12 mb-12 border-2 border-black bg-[color:var(--neutral-dark)] p-2">
             <video
               className="w-full h-auto"
               controls
@@ -82,13 +89,6 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
               Votre navigateur ne supporte pas la lecture de vidéos.
             </video>
           </div>
-        )}
-
-        {contentHtml && (
-          <div
-            className={styles.projectContent}
-            dangerouslySetInnerHTML={{ __html: contentHtml }}
-          />
         )}
 
         <div className="mt-12 text-center">
