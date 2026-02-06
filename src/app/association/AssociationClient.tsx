@@ -7,7 +7,11 @@ import PageHeader from '@/components/PageHeader';
 import { usePageContentDelay } from '@/hooks/usePageContentDelay';
 import type React from 'react';
 
-export default function AssociationClient() {
+interface AssociationClientProps {
+  associationVideoUrl?: string | null;
+}
+
+export default function AssociationClient({ associationVideoUrl }: AssociationClientProps) {
   // Hook pour retarder l'apparition du contenu
   const isContentVisible = usePageContentDelay({ triggerAt: 0.3 }); // Délai plus court pour test
   
@@ -59,7 +63,7 @@ export default function AssociationClient() {
               Chaque année, une douzaine de professionnels du cinéma, avec des bénévoles de l&apos;association, organisent des ateliers cinéma.
             </p>
             <p className={`text-gray-700 mb-4 scroll-animate fade-up scroll-delay-200 ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}>
-              Notre association, fondée par des habitués du cinéma Utopia, se met en lien avec des jeunes issus de diverses structures de la ville le temps d&apos;une collaboration autour d&apos;un court métrage.
+              Notre association, fondée par des habitués du cinéma Utopia, se met en lien avec des jeunes issus de diverses structures de la ville le temps d&apos;une collaboration autour d&apos;un court-métrage.
             </p>
             <p className={`text-gray-700 mb-4 scroll-animate fade-up scroll-delay-300 ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}>
               Chaque médiation est réalisée durant une journée, de l&apos;écriture du scénario au tournage.
@@ -74,11 +78,144 @@ export default function AssociationClient() {
           </div>
           <div 
             ref={gridRightRef.ref as React.RefObject<HTMLDivElement>}
-            className={`w-full ratio-4-3 bg-gray-100 border-2 border-black overflow-hidden flex items-center justify-center scroll-animate scale-in scroll-delay-200 ${gridRightRef.isInView && shouldShowContent ? 'in-view' : ''}`}
+            className={`w-full ratio-4-3 bg-black border-2 border-black overflow-hidden flex items-center justify-center scroll-animate scale-in scroll-delay-200 ${gridRightRef.isInView && shouldShowContent ? 'in-view' : ''}`}
           >
-            <span className="text-gray-500 text-sm">Photo à venir</span>
+            {associationVideoUrl ? (
+              <video
+                src={associationVideoUrl}
+                controls
+                className="w-full h-full object-contain"
+                playsInline
+              >
+                Votre navigateur ne prend pas en charge la lecture de vidéos.
+              </video>
+            ) : (
+              <span className="text-gray-500 text-sm">Vidéo à venir</span>
+            )}
           </div>
         </div>
+      </section>
+
+      {/* Trombinoscope — 3 rôles asso en premier, puis réals en bas — dispersé type tableau */}
+      <section className={`max-w-6xl mx-auto px-4 py-12 transition-opacity duration-500 ${shouldShowContent ? 'opacity-100' : 'opacity-0'}`}>
+        <h2 className="display-title text-3xl mb-2 text-[color:var(--neutral-dark)] text-center">
+          LE BUREAU
+        </h2>
+        <p className="subtitle-black small text-center mb-12">Trombinoscope</p>
+
+        {/* 3 rôles de l'association en premier */}
+        <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4">
+          {[
+            { name: 'Christine Conte', role: 'Présidente', slug: 'christine-conte', rotate: -5, x: -10, y: 6 },
+            { name: 'Claire Feronwilmart', role: 'Administratrice', slug: 'claire-feronwilmart', rotate: 8, x: 12, y: -8 },
+            { name: 'Elisabeth Cozian', role: 'Trésorière', slug: 'elisabeth-cozian', rotate: -4, x: 6, y: 10 }
+          ].map((person, index) => (
+            <li
+              key={person.slug}
+              className={`scroll-animate fade-up scroll-delay-${(index % 5) * 100} ${shouldShowContent ? 'in-view' : ''}`}
+              style={{
+                transform: `rotate(${person.rotate}deg) translate(${person.x}px, ${person.y}px)`
+              }}
+            >
+              <div className="relative w-full max-w-[180px] overflow-visible">
+                <div className="relative z-[1] p-2 pt-3 bg-white border border-black/20 rounded-sm" style={{ boxShadow: '4px 6px 16px rgba(0,0,0,0.18), 1px 2px 4px rgba(0,0,0,0.1)' }}>
+                  <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100 border border-black/30">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/assets/trombinoscope/${person.slug}.png`}
+                      alt={`${person.name}, ${person.role}`}
+                      className="w-full h-full object-cover object-top scale-125"
+                      width={180}
+                      height={240}
+                    />
+                  </div>
+                  <p className="mt-2 font-bold text-[color:var(--neutral-dark)] text-center text-sm">
+                    {person.name}
+                  </p>
+                  <p className="text-[color:var(--neutral-dark)]/80 text-center text-sm">
+                    {person.role}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {/* Réalisateurs et réalisatrices — première ligne de 3 */}
+        <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4 mt-16 md:mt-20">
+          {[
+            { name: 'Arnaud Ban', role: 'Réalisateur', slug: 'arnaud-ban', rotate: 6, x: -14, y: -4 },
+            { name: 'Boris Doussy', role: 'Réalisateur', slug: 'boris-doussy', rotate: -7, x: 10, y: 12 },
+            { name: 'Pierre Lacourt', role: 'Réalisateur', slug: 'pierre-lacourt', rotate: -4, x: 8, y: -10 }
+          ].map((person, index) => (
+            <li
+              key={person.slug}
+              className={`scroll-animate fade-up scroll-delay-${(index % 5) * 100} ${shouldShowContent ? 'in-view' : ''}`}
+              style={{
+                transform: `rotate(${person.rotate}deg) translate(${person.x}px, ${person.y}px)`
+              }}
+            >
+              <div className="relative w-full max-w-[180px] overflow-visible">
+                <div className="relative z-[1] p-2 pt-3 bg-white border border-black/20 rounded-sm" style={{ boxShadow: '4px 6px 16px rgba(0,0,0,0.18), 1px 2px 4px rgba(0,0,0,0.1)' }}>
+                  <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100 border border-black/30">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/assets/trombinoscope/${person.slug}.png`}
+                      alt={`${person.name}, ${person.role}`}
+                      className="w-full h-full object-cover object-top scale-125"
+                      width={180}
+                      height={240}
+                    />
+                  </div>
+                  <p className="mt-2 font-bold text-[color:var(--neutral-dark)] text-center text-sm">
+                    {person.name}
+                  </p>
+                  <p className="text-[color:var(--neutral-dark)]/80 text-center text-sm">
+                    {person.role}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        {/* Réalisateurs et réalisatrices — deuxième ligne de 3 */}
+        <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4 mt-4">
+          {[
+            { name: 'Marie Delaruelle', role: 'Réalisatrice', slug: 'marie-delaruelle', rotate: -6, x: -8, y: 8 },
+            { name: 'Karine Music', role: 'Réalisatrice', slug: 'karine-music', rotate: 5, x: 14, y: -6 },
+            { name: 'Florine Clap', role: 'Réalisatrice', slug: 'florine-clap', rotate: -3, x: -12, y: 10 }
+          ].map((person, index) => (
+            <li
+              key={person.slug}
+              className={`scroll-animate fade-up scroll-delay-${(index % 5) * 100} ${shouldShowContent ? 'in-view' : ''}`}
+              style={{
+                transform: `rotate(${person.rotate}deg) translate(${person.x}px, ${person.y}px)`
+              }}
+            >
+              <div className="relative w-full max-w-[180px] overflow-visible">
+                <div className="relative z-[1] p-2 pt-3 bg-white border border-black/20 rounded-sm" style={{ boxShadow: '4px 6px 16px rgba(0,0,0,0.18), 1px 2px 4px rgba(0,0,0,0.1)' }}>
+                  <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100 border border-black/30">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/assets/trombinoscope/${person.slug}.png`}
+                      alt={`${person.name}, ${person.role}`}
+                      className="w-full h-full object-cover object-top scale-125"
+                      width={180}
+                      height={240}
+                    />
+                  </div>
+                  <p className="mt-2 font-bold text-[color:var(--neutral-dark)] text-center text-sm">
+                    {person.name}
+                  </p>
+                  <p className="text-[color:var(--neutral-dark)]/80 text-center text-sm">
+                    {person.role}
+                  </p>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Objectifs des ateliers */}

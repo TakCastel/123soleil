@@ -160,7 +160,8 @@ export default function Footer() {
                 { href: "/", label: "Accueil" },
                 { href: "/association", label: "L'Association" },
                 { href: "/projets", label: "Médiations" },
-                { href: "/actualites", label: "Actualités" }
+                { href: "/actualites", label: "Actualités" },
+                { href: "/contact", label: "Contact" }
               ].map((link, index) => (
                 <motion.div
                   key={link.href}

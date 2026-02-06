@@ -6,6 +6,7 @@ type HomeSettingsFile = {
 
 type HomeSettingsResponse = {
   hero_images?: HomeSettingsFile[];
+  association_video?: string;
 };
 
 export async function getHomeHeroImages(): Promise<string[]> {
@@ -19,4 +20,18 @@ export async function getHomeHeroImages(): Promise<string[]> {
     .map((item) => item?.directus_files_id)
     .filter(Boolean)
     .map((fileId) => getDirectusAssetUrl(fileId as string));
+}
+
+/** URL de la vidéo de présentation (page Association), ou null si non définie. */
+export async function getAssociationVideoUrl(): Promise<string | null> {
+  try {
+    const response = await fetchDirectus<HomeSettingsResponse>(
+      '/items/home_settings?fields=association_video'
+    );
+    const fileId = response?.data?.association_video;
+    if (!fileId) return null;
+    return getDirectusAssetUrl(fileId);
+  } catch {
+    return null;
+  }
 }

@@ -68,6 +68,22 @@ export async function getProjets(categorie?: string): Promise<Projet[]> {
   }
 }
 
+/** Retourne la liste des catégories distinctes des médiations (pour filtres dynamiques). */
+export async function getCategories(): Promise<string[]> {
+  try {
+    const response = await fetchDirectus<DirectusMediation[]>(
+      `/items/mediations?fields=categorie&limit=-1`
+    );
+    const categories = (response?.data || [])
+      .map((item) => item?.categorie?.trim())
+      .filter((c): c is string => Boolean(c));
+    return [...new Set(categories)];
+  } catch (error) {
+    console.warn('Impossible de charger les catégories depuis Directus.', error);
+    return [];
+  }
+}
+
 export async function getProjetBySlug(slug: string) {
   try {
     const response = await fetchDirectus<DirectusMediation[]>(

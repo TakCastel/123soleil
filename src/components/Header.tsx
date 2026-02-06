@@ -45,10 +45,11 @@ export default function Header() {
             <Link href="/association" {...getLinkProps('/association', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-1')}>L&apos;Association</Link>
             <Link href="/projets" {...getLinkProps('/projets', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-2')}>Médiations</Link>
             <Link href="/actualites" {...getLinkProps('/actualites', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-3')}>Actualités</Link>
+            <Link href="/contact" {...getLinkProps('/contact', pathname, 'hover:text-[color:var(--secondary)] transition-colors animate-in-down anim-delay-4')}>Contact</Link>
           </nav>
 
           {/* CTA Button - Right aligned */}
-          <div className="hidden md:block animate-in-down anim-delay-4">
+          <div className="hidden md:block animate-in-down anim-delay-5">
             <Button href="/adhesion" bgColor="var(--secondary)" labelColor="#ffffff">Adhésion</Button>
           </div>
 
@@ -71,6 +72,7 @@ export default function Header() {
             <Link href="/association" {...getLinkProps('/association', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>L&apos;Association</Link>
             <Link href="/projets" {...getLinkProps('/projets', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Médiations</Link>
             <Link href="/actualites" {...getLinkProps('/actualites', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Actualités</Link>
+            <Link href="/contact" {...getLinkProps('/contact', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Contact</Link>
             <Button href="/adhesion" bgColor="var(--secondary)" labelColor="#ffffff">Adhésion</Button>
           </nav>
         )}

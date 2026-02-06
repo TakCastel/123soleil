@@ -20,7 +20,8 @@ npm run directus:migrate
 
 ## Notes
 - Les images/vidéos sont importées depuis `public/images` et `public/videos`.
-- Le script remplit la galerie `home_settings.hero_images` (max 10).
+- Le script remplit la galerie `home_settings.hero_images` (max 10). Dans le BO, **Paramètres de la page d’accueil** permet de choisir les 10 images du hero.
+- **Vidéo page Association** : dans `home_settings`, le champ `association_video` permet de lier une vidéo (ex. présentation Florine) affichée sur la page Association à la place de l’image.
 - Pour l’accès front, vous pouvez fournir un token Directus via `DIRECTUS_TOKEN`.
 
 ## Sélection d’image depuis la librairie (actualités / médiations)

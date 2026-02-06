@@ -167,7 +167,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
           ref={projetsSection.ref as React.RefObject<HTMLHeadingElement>}
           className={`display-title text-3xl mb-12 text-center text-[color:var(--neutral-dark)] scroll-animate slide-left ${projetsSection.isInView ? 'in-view' : ''}`}
         >
-          Derniers courts métrages
+          Derniers courts-métrages
         </h2>
         <div className="grid md:grid-cols-2 gap-12 cards-grid">
           {projets.map((projet, index) => (

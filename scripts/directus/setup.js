@@ -291,6 +291,12 @@ const homeSettingsFields = [
       special: ['m2m'],
       options: { limit: 10 }
     }
+  },
+  {
+    field: 'association_video',
+    type: 'uuid',
+    schema: { is_nullable: true },
+    meta: { interface: 'file', special: ['file'], note: 'Vidéo de présentation (ex. Florine) pour la page Association' }
   }
 ];
 
@@ -431,6 +437,19 @@ const runSetup = async () => {
     meta: {
       many_collection: 'actualites',
       many_field: 'image',
+      one_collection: 'directus_files',
+      one_field: null,
+      one_deselect_action: 'nullify'
+    }
+  }, token);
+  await ensureRelation({
+    collection: 'home_settings',
+    field: 'association_video',
+    related_collection: 'directus_files',
+    schema: { on_delete: 'SET NULL' },
+    meta: {
+      many_collection: 'home_settings',
+      many_field: 'association_video',
       one_collection: 'directus_files',
       one_field: null,
       one_deselect_action: 'nullify'

@@ -115,37 +115,21 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
     }
   }, [shouldShowContent, filteredProjets.length, isLoading]);
 
-  // Contenu SEO adaptatif selon le filtre
-  const getSeoContent = () => {
-    switch (displayFilter) {
-      case 'court-metrages':
-        return {
-          title: 'Courts métrages',
-          description: 'Découvrez nos courts métrages de fictions cinéma et documentaires. Des créations originales qui explorent différents genres et sujets.',
-          seoTitle: 'Courts métrages - Fictions cinéma et documentaires'
+  // Contenu SEO adaptatif selon le filtre (dynamique depuis les catégories API)
+  const currentFilterLabel = filters.find((f) => f.id === displayFilter)?.label ?? displayFilter;
+  const seoContent =
+    displayFilter === 'tous'
+      ? {
+          title: "L'ACTION",
+          description:
+            "Explorez l'ensemble de nos médiations: courts-métrages, lipdubs et ateliers. Des dispositifs construits pour créer du lien, favoriser l'expression et transmettre par l'image.",
+          seoTitle: 'Médiations - Courts-métrages, Lipdubs et Ateliers'
+        }
+      : {
+          title: currentFilterLabel,
+          description: `Découvrez nos médiations dans la catégorie « ${currentFilterLabel} ».`,
+          seoTitle: `${currentFilterLabel} - Médiations 1,2,3 Soleil`
         };
-      case 'lipdubs':
-        return {
-          title: 'Lipdubs',
-          description: 'Nos lipdubs créatifs et festifs, réalisés avec la participation active des communautés locales.',
-          seoTitle: 'Lipdubs - Créations participatives et festives'
-        };
-      case 'mediations':
-        return {
-          title: 'Médiations',
-          description: 'Nos ateliers et dispositifs pensés sur-mesure pour établissements scolaires, centres sociaux, ESAT, EPAHD et autres structures sociales.',
-          seoTitle: 'Médiations - Ateliers sur-mesure et dispositifs pédagogiques'
-        };
-      default:
-        return {
-          title: 'L\'ACTION',
-          description: 'Explorez l\'ensemble de nos médiations: court métrages, lipdubs et ateliers. Des dispositifs construits pour créer du lien, favoriser l\'expression et transmettre par l\'image.',
-          seoTitle: 'Médiations - Court métrages, Lipdubs et Ateliers'
-        };
-    }
-  };
-
-  const seoContent = getSeoContent();
 
   return (
     <div className="">
