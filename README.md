@@ -1,3 +1,9 @@
+## Structure
+
+- **`frontend/`** – site Next.js (src, public, etc.)
+- **`backend/`** – Directus (schéma, scripts : setup, migrate, export/apply du schéma)
+- À la racine : `docker-compose.yml`, `.env`, scripts npm (dev, deploy, directus:*)
+
 ## Développement local (voir les modifs en direct)
 
 **Docker** build une image avec le code au moment du build : les changements dans tes fichiers ne sont **pas** vus par le conteneur. Tu vois donc l’ancienne version sur localhost:3000.
@@ -21,46 +27,17 @@ Pour **tester la version “prod”** (build + Docker) :
 
 ---
 
-## Migration Directus prod
+## Déploiement automatique (CI/CD)
 
-### Script de migration (local -> VPS)
-Le script `scripts/migrate-directus-db.sh`:
-- dump la DB locale via Docker
-- stream le dump en SSH vers le VPS
-- reset le schema public puis injecte le dump
-- redemarre Directus (et optionnellement le front)
-- option `--backup` pour sauvegarder la DB du VPS avant ecrasement
+Chaque **push sur `main`** déclenche un déploiement sur le serveur (GitHub Actions) : mise à jour du code, rebuild des conteneurs, application du schéma Directus.  
+→ Voir **`docs/deploy.md`** pour configurer les secrets GitHub et le serveur.
 
-Exemple:
-```bash
-chmod +x scripts/migrate-directus-db.sh
-./scripts/migrate-directus-db.sh --backup
-```
+---
 
-Variables (override possible via env):
-- `VPS_HOST`
-- `VPS_USER`
-- `VPS_DIR`
-- `POSTGRES_CONTAINER`
-- `DIRECTUS_CONTAINER`
-- `DB_USER`
-- `DB_NAME`
-- `FRONTEND_CONTAINER` (optionnel)
+## Migration DB Directus (local → VPS)
 
-Pour eviter d'avoir des infos sensibles en clair dans le repo, vous pouvez
-creer un fichier local `scripts/migrate-directus-db.env` (non versionne) :
-```bash
-VPS_HOST=your.vps.ip.or.host
-VPS_USER=your_ssh_user
-VPS_DIR=/path/to/project
-POSTGRES_CONTAINER=postgres
-DIRECTUS_CONTAINER=directus
-DB_USER=directus
-DB_NAME=directus
-FRONTEND_CONTAINER=frontend
-```
-Le script charge automatiquement ce fichier s'il existe, ou bien le `.env` a la
-racine. Pour un autre chemin, utilisez `MIGRATE_DIRECTUS_ENV=/chemin/vers/fichier.env`.
+Le script **`backend/migrate-directus-db.sh`** : dump la DB locale, stream en SSH vers le VPS, restaure et redémarre Directus (option `--backup` pour sauvegarder la DB VPS avant).  
+→ Détail et variables : **`backend/README.md`** (section « Migration DB »).
 
 ### Point critique: Basic Auth
 Ne pas activer de Basic Auth global sur `api.123soleil-cinema.fr`.

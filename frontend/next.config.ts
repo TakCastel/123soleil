@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ['resend'],
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'api.123soleil-cinema.fr', pathname: '/assets/**' },

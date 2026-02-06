@@ -54,30 +54,10 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
         </div>
       </section>
 
-      {/* Contenu : image, vidéo, corps */}
+      {/* Contenu : vidéo OU image, puis corps */}
       <section className="max-w-6xl mx-auto px-4 py-16">
-        {projet.image && (
-          <div className="mb-12 border-2 border-black overflow-hidden relative aspect-video w-full">
-            <Image
-              src={projet.image}
-              alt={projet.titre}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 1152px"
-              priority
-            />
-          </div>
-        )}
-
-        {contentHtml && (
-          <div
-            className={styles.projectContent}
-            dangerouslySetInnerHTML={{ __html: contentHtml }}
-          />
-        )}
-
-        {projet.video_url && (
-          <div className="mt-12 mb-12 border-2 border-black bg-[color:var(--neutral-dark)] p-2">
+        {projet.video_url ? (
+          <div className="mb-12 border-2 border-black bg-[color:var(--neutral-dark)] p-2">
             <video
               className="w-full h-auto"
               controls
@@ -89,6 +69,24 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
               Votre navigateur ne supporte pas la lecture de vidéos.
             </video>
           </div>
+        ) : projet.image ? (
+          <div className="mb-12 border-2 border-black overflow-hidden relative aspect-video w-full">
+            <Image
+              src={projet.image}
+              alt={projet.titre}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 1152px"
+              priority
+            />
+          </div>
+        ) : null}
+
+        {contentHtml && (
+          <div
+            className={styles.projectContent}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
+          />
         )}
 
         <div className="mt-12 text-center">

@@ -2,9 +2,26 @@
 
 import { useState } from 'react';
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+type FieldErrors = { name?: string; email?: string; message?: string };
+
+function validateFields(name: string, email: string, message: string): FieldErrors {
+  const errors: FieldErrors = {};
+  if (!name) errors.name = 'Le nom est requis.';
+  if (!email) {
+    errors.email = 'L\'email est requis.';
+  } else if (!EMAIL_REGEX.test(email)) {
+    errors.email = 'Veuillez entrer une adresse email valide.';
+  }
+  if (!message) errors.message = 'Le message est requis.';
+  return errors;
+}
+
 export default function ContactForm() {
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [globalError, setGlobalError] = useState('');
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -14,14 +31,17 @@ export default function ContactForm() {
     const email = (formData.get('email') as string)?.trim() || '';
     const message = (formData.get('message') as string)?.trim() || '';
 
-    if (!name || !email || !message) {
+    const errors = validateFields(name, email, message);
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setGlobalError('Veuillez corriger les champs indiqués.');
       setStatus('error');
-      setErrorMessage('Veuillez remplir tous les champs.');
       return;
     }
 
+    setFieldErrors({});
+    setGlobalError('');
     setStatus('sending');
-    setErrorMessage('');
 
     try {
       const res = await fetch('/api/contact', {
@@ -33,19 +53,22 @@ export default function ContactForm() {
 
       if (!res.ok) {
         setStatus('error');
-        setErrorMessage((data.error as string) || 'Erreur lors de l\'envoi. Réessayez.');
+        setGlobalError((data.error as string) || 'Erreur lors de l\'envoi. Réessayez.');
         return;
       }
       setStatus('success');
       form.reset();
     } catch {
       setStatus('error');
-      setErrorMessage('Erreur réseau. Réessayez.');
+      setGlobalError('Erreur réseau. Réessayez.');
     }
   }
 
+  const inputErrorClass = 'border-red-600 focus:outline-red-600';
+  const inputBaseClass = 'w-full px-4 py-3 border-2 border-black bg-white text-[color:var(--neutral-dark)] disabled:opacity-60';
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       <div>
         <label htmlFor="contact-name" className="block font-medium text-[color:var(--neutral-dark)] mb-2">
           Nom
@@ -56,8 +79,15 @@ export default function ContactForm() {
           type="text"
           required
           disabled={status === 'sending'}
-          className="w-full px-4 py-3 border-2 border-black bg-white text-[color:var(--neutral-dark)] disabled:opacity-60"
+          aria-invalid={!!fieldErrors.name}
+          aria-describedby={fieldErrors.name ? 'contact-name-error' : undefined}
+          className={`${inputBaseClass} ${fieldErrors.name ? inputErrorClass : ''}`}
         />
+        {fieldErrors.name && (
+          <p id="contact-name-error" className="mt-1 text-red-600 text-sm" role="alert">
+            {fieldErrors.name}
+          </p>
+        )}
       </div>
       <div>
         <label htmlFor="contact-email" className="block font-medium text-[color:var(--neutral-dark)] mb-2">
@@ -69,8 +99,15 @@ export default function ContactForm() {
           type="email"
           required
           disabled={status === 'sending'}
-          className="w-full px-4 py-3 border-2 border-black bg-white text-[color:var(--neutral-dark)] disabled:opacity-60"
+          aria-invalid={!!fieldErrors.email}
+          aria-describedby={fieldErrors.email ? 'contact-email-error' : undefined}
+          className={`${inputBaseClass} ${fieldErrors.email ? inputErrorClass : ''}`}
         />
+        {fieldErrors.email && (
+          <p id="contact-email-error" className="mt-1 text-red-600 text-sm" role="alert">
+            {fieldErrors.email}
+          </p>
+        )}
       </div>
       <div>
         <label htmlFor="contact-message" className="block font-medium text-[color:var(--neutral-dark)] mb-2">
@@ -82,12 +119,19 @@ export default function ContactForm() {
           rows={5}
           required
           disabled={status === 'sending'}
-          className="w-full px-4 py-3 border-2 border-black bg-white text-[color:var(--neutral-dark)] resize-y disabled:opacity-60"
+          aria-invalid={!!fieldErrors.message}
+          aria-describedby={fieldErrors.message ? 'contact-message-error' : undefined}
+          className={`${inputBaseClass} resize-y ${fieldErrors.message ? inputErrorClass : ''}`}
         />
+        {fieldErrors.message && (
+          <p id="contact-message-error" className="mt-1 text-red-600 text-sm" role="alert">
+            {fieldErrors.message}
+          </p>
+        )}
       </div>
-      {status === 'error' && (
+      {status === 'error' && globalError && (
         <p className="text-red-600 text-sm" role="alert">
-          {errorMessage}
+          {globalError}
         </p>
       )}
       {status === 'success' && (

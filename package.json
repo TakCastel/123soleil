@@ -3,39 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
-    "start": "next start",
-    "lint": "eslint",
-    "directus:setup": "node scripts/directus/setup.js",
-    "directus:migrate": "node scripts/directus/migrate.js"
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "start": "cd frontend && npm run start",
+    "lint": "cd frontend && npm run lint",
+    "directus:setup": "node backend/setup.js",
+    "directus:migrate": "node backend/migrate.js",
+    "directus:schema:export": "node backend/export-schema.js",
+    "directus:schema:apply": "node backend/apply-schema.js",
+    "deploy": "docker compose up -d --build && echo 'Attente Directus (25s)...' && sleep 25 && npm run directus:schema:apply"
   },
   "dependencies": {
     "dotenv": "^17.2.3",
-    "framer-motion": "^12.29.2",
-    "gray-matter": "^4.0.3",
-    "marked": "^17.0.1",
-    "next": "^16.1.4",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-icons": "^5.5.0",
-    "resend": "^6.9.1"
-  },
-  "devDependencies": {
-    "@eslint/eslintrc": "^3",
-    "@eslint/js": "^9.39.2",
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^25",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@typescript-eslint/eslint-plugin": "^8.54.0",
-    "@typescript-eslint/parser": "^8.54.0",
-    "eslint": "^9",
-    "eslint-config-next": "^16.1.4",
-    "eslint-plugin-react": "^7.37.5",
-    "eslint-plugin-react-hooks": "^7.0.1",
-    "globals": "^17.1.0",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "gray-matter": "^4.0.3"
   }
 }

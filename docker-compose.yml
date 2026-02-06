@@ -42,7 +42,9 @@ services:
       - directus_uploads:/directus/uploads
 
   web:
-    build: .
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     container_name: frontend
     restart: unless-stopped
     depends_on:
@@ -50,9 +52,10 @@ services:
     ports:
       - "3000:3000"
     volumes:
-      - .:/app
+      - ./frontend:/app
       - /app/node_modules
       - /app/.next
+      - ./backend:/backend
     environment:
       DIRECTUS_URL: http://directus:8055
       NEXT_PUBLIC_DIRECTUS_URL: http://localhost:8055

@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-env_file="${MIGRATE_DIRECTUS_ENV:-scripts/migrate-directus-db.env}"
+# Depuis la racine du projet : ./backend/migrate-directus-db.sh [--backup]
+# Variables : VPS_HOST, VPS_USER, VPS_DIR, POSTGRES_CONTAINER, DIRECTUS_CONTAINER, DB_USER, DB_NAME
+# Fichier optionnel (non versionné) : backend/migrate-directus-db.env
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+root_dir="$(cd "${script_dir}/.." && pwd)"
+env_file="${MIGRATE_DIRECTUS_ENV:-${script_dir}/migrate-directus-db.env}"
 root_env_file="${MIGRATE_DIRECTUS_ROOT_ENV:-.env}"
+
+cd "${root_dir}"
 if [[ -f "${env_file}" ]]; then
   # shellcheck disable=SC1090
   source "${env_file}"
