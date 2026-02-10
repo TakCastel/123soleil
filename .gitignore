@@ -38,6 +38,13 @@ next-env.d.ts
 # backend: dossier de sync des médias (rsync VPS → docker), ne pas versionner
 backend/uploads/
 
+# database dumps et scripts SQL (trop volumineux pour git)
+*.sql
+
+# release (artefacts de déploiement)
+release/
+release
+
 # video files (too large for git)
 *.mp4
 *.webm
