@@ -71,15 +71,25 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
   const gridRightRef = useInView({ threshold: 0.2 });
 
   // Formes autour de chaque carte : jaune et rouge pleins, positions stables par slug
+  type ShapeItem = {
+    type: 'triangle' | 'square';
+    top?: number | string;
+    bottom?: number | string;
+    left?: number | string;
+    right?: number | string;
+    size: number;
+    rot: number;
+    color: string;
+  };
   const shapeColors = ['#facc15', '#dc2626', '#eab308', '#b91c1c']; // jaune vif, rouge vif, amber, rouge foncé
   const seed = (s: string) => s.split('').reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0);
-  const shapesAroundCard = (slug: string) => {
+  const shapesAroundCard = (slug: string): ShapeItem[] => {
     const r = (i: number) => Math.abs((seed(slug) + i * 31) % 100) / 100;
     return [
-      { type: 'triangle' as const, top: -8, left: -12, size: 22 + r(1) * 14, rot: r(2) * 360, color: shapeColors[0] },
-      { type: 'square' as const, top: `${15 + r(3) * 25}%`, right: -14, left: undefined, size: 14 + r(4) * 12, rot: r(5) * 360, color: shapeColors[1] },
-      { type: 'triangle' as const, bottom: -6, left: `${20 + r(6) * 50}%`, top: undefined, right: undefined, size: 18 + r(7) * 10, rot: r(8) * 360, color: shapeColors[2] },
-      { type: 'square' as const, top: `${r(9) * 40}%`, left: -10, size: 12 + r(10) * 10, rot: r(11) * 360, color: shapeColors[3] },
+      { type: 'triangle', top: -8, left: -12, size: 22 + r(1) * 14, rot: r(2) * 360, color: shapeColors[0] },
+      { type: 'square', top: `${15 + r(3) * 25}%`, right: -14, size: 14 + r(4) * 12, rot: r(5) * 360, color: shapeColors[1] },
+      { type: 'triangle', bottom: -6, left: `${20 + r(6) * 50}%`, size: 18 + r(7) * 10, rot: r(8) * 360, color: shapeColors[2] },
+      { type: 'square', top: `${r(9) * 40}%`, left: -10, size: 12 + r(10) * 10, rot: r(11) * 360, color: shapeColors[3] },
     ];
   };
 

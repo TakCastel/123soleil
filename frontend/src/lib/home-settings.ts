@@ -6,7 +6,7 @@ async function getHomeSettings<T>(fields: string): Promise<T | null> {
     const res = await fetchDirectus<{ data: T[] | T }>(`/items/home_settings?fields=${fields}`);
     const data = res.data;
     // Singleton : Directus peut renvoyer { data: [item] } ou { data: item }
-    return Array.isArray(data) ? data[0] ?? null : data;
+    return (Array.isArray(data) ? data[0] ?? null : data) as T | null;
   } catch {
     return null;
   }
