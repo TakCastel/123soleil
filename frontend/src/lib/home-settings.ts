@@ -27,3 +27,14 @@ const CHIFFRES_FIELDS = 'courts_metrages,participants_region,projections,edition
 export async function getHomeChiffres(): Promise<HomeChiffres | null> {
   return getHomeSettings<HomeChiffres>(CHIFFRES_FIELDS);
 }
+
+/** URLs des images du hero (pool statique public/hero ; aligné avec le composant Hero). */
+const HERO_IMAGE_URLS = [
+  ...Array.from({ length: 26 }, (_, i) => `/hero/hero-image-${i + 1}.jpg`),
+  '/hero/hero-image-27.png',
+];
+
+/** Retourne les URLs des images du hero pour l'API /api/hero-images. */
+export async function getHomeHeroImages(): Promise<string[]> {
+  return HERO_IMAGE_URLS;
+}
