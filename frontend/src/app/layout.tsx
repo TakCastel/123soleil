@@ -19,10 +19,10 @@ const glegoo = Glegoo({
   display: "swap",
 });
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://123soleil-cinema.fr";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  ...(siteUrl && { metadataBase: new URL(siteUrl) }),
   title: {
     default: "1, 2, 3 Soleil – Association de cinéma à Avignon",
     template: "%s | 1, 2, 3 Soleil – Association cinéma Avignon",

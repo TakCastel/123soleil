@@ -6,8 +6,7 @@ const getBaseUrl = () => {
   const baseUrl =
     process.env.DIRECTUS_INTERNAL_URL ||
     process.env.DIRECTUS_URL ||
-    process.env.NEXT_PUBLIC_DIRECTUS_URL ||
-    (process.env.NODE_ENV === 'development' ? 'http://localhost:8055' : undefined);
+    process.env.NEXT_PUBLIC_DIRECTUS_URL;
   if (!baseUrl) {
     throw new Error('DIRECTUS_INTERNAL_URL, DIRECTUS_URL ou NEXT_PUBLIC_DIRECTUS_URL manquant.');
   }
@@ -18,8 +17,7 @@ const getBaseUrl = () => {
 const getPublicBaseUrl = () => {
   const publicUrl =
     process.env.DIRECTUS_PUBLIC_URL ||
-    process.env.NEXT_PUBLIC_DIRECTUS_URL ||
-    (process.env.NODE_ENV === 'development' ? 'http://localhost:8055' : undefined);
+    process.env.NEXT_PUBLIC_DIRECTUS_URL;
   if (!publicUrl) {
     return getBaseUrl();
   }

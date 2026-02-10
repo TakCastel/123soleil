@@ -2,9 +2,10 @@ import type { MetadataRoute } from 'next';
 import { getProjets } from '@/lib/projets';
 import { getActualites } from '@/lib/actualites';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://123soleil-cinema.fr';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (!baseUrl) return [];
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
     { url: `${baseUrl}/association`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.9 },

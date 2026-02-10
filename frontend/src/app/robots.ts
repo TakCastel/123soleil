@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://123soleil-cinema.fr';
+const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -11,6 +11,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/admin'],
       },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    ...(baseUrl && { sitemap: `${baseUrl}/sitemap.xml` }),
   };
 }

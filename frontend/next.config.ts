@@ -1,30 +1,33 @@
 import type { NextConfig } from "next";
 
+const directusUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+const directusPattern = directusUrl
+  ? (() => {
+      const u = new URL(directusUrl);
+      return {
+        protocol: u.protocol.replace(":", "") as "http" | "https",
+        hostname: u.hostname,
+        pathname: "/assets/**" as const,
+        ...(u.port && u.port !== "80" && u.port !== "443" ? { port: u.port } : {}),
+      };
+    })()
+  : null;
+
 const nextConfig: NextConfig = {
   serverExternalPackages: ['resend'],
   images: {
     remotePatterns: [
-      { protocol: 'https', hostname: 'api.123soleil-cinema.fr', pathname: '/assets/**' },
-      { protocol: 'http', hostname: 'localhost', pathname: '/assets/**', port: '8055' },
+      ...(directusPattern ? [directusPattern] : []),
       { protocol: 'http', hostname: 'directus', pathname: '/assets/**', port: '8055' }
     ]
   },
   async redirects() {
-    const directusBaseUrl =
-      process.env.NEXT_PUBLIC_DIRECTUS_URL || "https://api.123soleil-cinema.fr";
-    const normalizedBaseUrl = directusBaseUrl.replace(/\/$/, "");
-
+    const baseUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL;
+    if (!baseUrl) return [];
+    const normalized = baseUrl.replace(/\/$/, "");
     return [
-      {
-        source: "/admin",
-        destination: `${normalizedBaseUrl}/admin`,
-        permanent: false
-      },
-      {
-        source: "/admin/:path*",
-        destination: `${normalizedBaseUrl}/admin/:path*`,
-        permanent: false
-      }
+      { source: "/admin", destination: `${normalized}/admin`, permanent: false },
+      { source: "/admin/:path*", destination: `${normalized}/admin/:path*`, permanent: false }
     ];
   }
 };

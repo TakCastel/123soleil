@@ -9,10 +9,8 @@ export const metadata: Metadata = {
   openGraph: { url: "/adhesion" },
 };
 
-const helloAssoAdhesionUrl =
-  process.env.HELLOASSO_ADHESION_URL || 'https://www.helloasso.com';
-const helloAssoDonUrl =
-  process.env.HELLOASSO_DON_URL || 'https://www.helloasso.com';
+const helloAssoAdhesionUrl = process.env.HELLOASSO_ADHESION_URL ?? '';
+const helloAssoDonUrl = process.env.HELLOASSO_DON_URL ?? '';
 
 export default function Adhesion() {
   return (
