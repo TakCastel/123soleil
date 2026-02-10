@@ -19,9 +19,42 @@ const glegoo = Glegoo({
   display: "swap",
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://123soleil-cinema.fr";
+
 export const metadata: Metadata = {
-  title: "1, 2, 3 Soleil - Association Audiovisuelle",
-  description: "Association audiovisuelle 1, 2, 3 Soleil - Films, documentaires, ateliers et projets jeunesse",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "1, 2, 3 Soleil – Association de cinéma à Avignon",
+    template: "%s | 1, 2, 3 Soleil – Association cinéma Avignon",
+  },
+  description:
+    "1, 2, 3 Soleil est une association de cinéma à Avignon dédiée à un cinéma solidaire et inclusif : ateliers, médiation culturelle, films et projets jeunesse sur le territoire avignonnais.",
+  keywords: [
+    "association cinéma Avignon",
+    "cinéma solidaire Avignon",
+    "association audiovisuelle Avignon",
+    "médiation culturelle Avignon",
+    "ateliers cinéma Avignon",
+    "1 2 3 Soleil",
+  ],
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    siteName: "1, 2, 3 Soleil – Association cinéma Avignon",
+    title: "1, 2, 3 Soleil – Association de cinéma à Avignon",
+    description:
+      "Association de cinéma à Avignon pour un cinéma solidaire et inclusif : ateliers, médiation, films et projets jeunesse.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "1, 2, 3 Soleil – Association cinéma Avignon",
+    description:
+      "Association de cinéma à Avignon pour un cinéma solidaire et inclusif.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

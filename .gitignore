@@ -35,6 +35,9 @@ backend/migrate-directus-db.env
 *.tsbuildinfo
 next-env.d.ts
 
+# backend: dossier de sync des médias (rsync VPS → docker), ne pas versionner
+backend/uploads/
+
 # video files (too large for git)
 *.mp4
 *.webm

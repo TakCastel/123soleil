@@ -33,6 +33,7 @@ export default function Supporters() {
               width={200}
               height={100}
               className={`${styles.logo} ${styles.logoGrandAvignon}`}
+              style={{ width: 'auto', height: 'auto' }}
             />
           </a>
           <a 
@@ -48,6 +49,7 @@ export default function Supporters() {
               width={200}
               height={100}
               className={`${styles.logo} ${styles.logoVilleAvignon}`}
+              style={{ width: 'auto', height: 'auto' }}
             />
           </a>
         </div>

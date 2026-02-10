@@ -49,6 +49,17 @@ const getAuthHeaders = (token) => ({
 /** Liste des collections à supprimer (créées par erreur ou pour des tests). */
 const COLLECTIONS_TO_REMOVE = ['test_permission_check', 'test_permission_checks'];
 
+/** Champs attendus sur home_settings : id + 6 chiffres (section Quelques chiffres). */
+const HOME_SETTINGS_ALLOWED_FIELDS = new Set([
+  'id',
+  'courts_metrages',
+  'participants_region',
+  'projections',
+  'editions_festival',
+  'realisateurs',
+  'adherents'
+]);
+
 const getCollections = async (token) => {
   const response = await jsonRequest('/collections', {
     headers: getAuthHeaders(token)
@@ -154,6 +165,17 @@ const deleteField = async (collection, field, token) => {
   });
 };
 
+/** Met à jour les meta d’un champ (ex. interface "files" pour galerie multi-fichiers). */
+const updateFieldMeta = async (collection, field, meta, token) => {
+  const current = await getField(collection, field, token);
+  if (!current) return;
+  await jsonRequest(`/fields/${collection}/${field}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify({ meta: { ...current.meta, ...meta } })
+  });
+};
+
 const mediationsCollection = {
   collection: 'mediations',
   meta: {
@@ -182,12 +204,12 @@ const homeSettingsCollection = {
   schema: {}
 };
 
-const homeSettingsFilesCollection = {
-  collection: 'home_settings_files',
+const aboutSettingsCollection = {
+  collection: 'about_settings',
   meta: {
-    icon: 'collections',
-    hidden: true,
-    note: 'Junction home_settings <-> directus_files'
+    icon: 'info',
+    singleton: true,
+    note: 'Paramètres de la page Association (texte éditable)'
   },
   schema: {}
 };
@@ -214,31 +236,22 @@ const actualitesFields = [
 ];
 
 const homeSettingsFields = [
-  {
-    field: 'hero_images',
-    type: 'alias',
-    schema: null,
-    meta: {
-      interface: 'files',
-      special: ['m2m'],
-      options: { limit: 10 },
-      note: 'Images du hero (page d’accueil), max 10. Glisser-déposer pour l’ordre.',
-      width: 'full'
-    }
-  },
-  {
-    field: 'association_video',
-    type: 'uuid',
-    schema: { is_nullable: true },
-    meta: { interface: 'file', special: ['file'], note: 'Vidéo de présentation (ex. Florine) pour la page Association' }
-  }
+  { field: 'courts_metrages', type: 'string', schema: { is_nullable: true }, meta: { interface: 'input', note: 'Ex. 40+' } },
+  { field: 'participants_region', type: 'string', schema: { is_nullable: true }, meta: { interface: 'input', note: 'Participants de la région' } },
+  { field: 'projections', type: 'string', schema: { is_nullable: true }, meta: { interface: 'input', note: 'Projections' } },
+  { field: 'editions_festival', type: 'string', schema: { is_nullable: true }, meta: { interface: 'input', note: 'Éditions du festival' } },
+  { field: 'realisateurs', type: 'string', schema: { is_nullable: true }, meta: { interface: 'input', note: 'Réalisateurs·rices' } },
+  { field: 'adherents', type: 'string', schema: { is_nullable: true }, meta: { interface: 'input', note: 'Adhérents, membres actifs' } }
 ];
 
-const homeSettingsFilesFields = (homeSettingsIdFieldType) => ([
-  { field: 'home_settings_id', type: homeSettingsIdFieldType || 'integer', schema: { is_nullable: false }, meta: { interface: 'input' } },
-  { field: 'directus_files_id', type: 'uuid', schema: { is_nullable: false }, meta: { interface: 'input' } },
-  { field: 'sort', type: 'integer', schema: { is_nullable: true }, meta: { interface: 'input' } }
-]);
+const aboutSettingsFields = [
+  {
+    field: 'content',
+    type: 'text',
+    schema: { is_nullable: true },
+    meta: { interface: 'input-rich-text-md', note: 'Texte principal de la page Association (Markdown)' }
+  }
+];
 
 const relationExists = async (collection, field, token) => {
   const response = await jsonRequest('/relations', { headers: getAuthHeaders(token) });
@@ -255,6 +268,15 @@ const ensureRelation = async (payload, token) => {
   });
 };
 
+const DEFAULT_HOME_CHIFFRES = {
+  courts_metrages: '40+',
+  participants_region: '400',
+  projections: '25+',
+  editions_festival: '5',
+  realisateurs: '19',
+  adherents: '40'
+};
+
 const ensureHomeSettingsItem = async (token) => {
   const response = await jsonRequest('/items/home_settings?fields=id', {
     headers: getAuthHeaders(token)
@@ -264,8 +286,76 @@ const ensureHomeSettingsItem = async (token) => {
   await jsonRequest('/items/home_settings', {
     method: 'POST',
     headers: getAuthHeaders(token),
-    body: JSON.stringify({})
+    body: JSON.stringify(DEFAULT_HOME_CHIFFRES)
   });
+};
+
+/** Texte par défaut de la page Association (Markdown), pré-rempli dans about_settings à la création. */
+const DEFAULT_ABOUT_CONTENT = `## L'ACTION DE
+### L'ASSOCIATION
+
+Chaque année, une douzaine de professionnels du cinéma, avec des bénévoles de l'association, organisent des ateliers cinéma.
+
+Notre association, fondée par des habitués du cinéma Utopia, se met en lien avec des jeunes issus de diverses structures de la ville le temps d'une collaboration autour d'un court-métrage.
+
+Chaque médiation est réalisée durant une journée, de l'écriture du scénario au tournage. Par la suite les films sont montés par les réalisateurs, parfois en présence des jeunes.
+
+Depuis septembre 2017, 36 films ont été réalisés selon ce dispositif. Ces films sont diffusés lors de projections publiques au cinéma Utopia et dans le cadre de diverses soirées associatives.
+
+Les fonds récoltés vont au bénéfice d'associations locales qui œuvrent auprès de personnes en situation de précarité et de fragilité.`;
+
+const ensureAboutSettingsItem = async (token) => {
+  const response = await jsonRequest('/items/about_settings?fields=id', {
+    headers: getAuthHeaders(token)
+  });
+  const data = response?.data;
+  if (data != null && typeof data === 'object' && data.id != null) return;
+  await jsonRequest('/items/about_settings', {
+    method: 'POST',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify({ content: DEFAULT_ABOUT_CONTENT })
+  });
+};
+
+/** Donne au même rôle (policy) que home_settings le droit de lecture sur about_settings. */
+const ensureAboutSettingsPermission = async (token) => {
+  let existing;
+  try {
+    existing = await jsonRequest('/permissions?filter[collection][_eq]=home_settings&filter[action][_eq]=read&limit=1', {
+      headers: getAuthHeaders(token)
+    });
+  } catch (e) {
+    if (e.status === 403 || e.status === 404) return;
+    throw e;
+  }
+  const list = existing?.data;
+  const homePerm = Array.isArray(list) && list.length > 0 ? list[0] : null;
+  const policyId = homePerm?.policy;
+  if (!policyId) return;
+
+  let aboutPerms;
+  try {
+    aboutPerms = await jsonRequest('/permissions?filter[collection][_eq]=about_settings&filter[action][_eq]=read', {
+      headers: getAuthHeaders(token)
+    });
+  } catch (e) {
+    if (e.status === 403 || e.status === 404) return;
+    throw e;
+  }
+  const aboutList = aboutPerms?.data;
+  if (Array.isArray(aboutList) && aboutList.length > 0) return;
+
+  await jsonRequest('/permissions', {
+    method: 'POST',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify({
+      policy: policyId,
+      collection: 'about_settings',
+      action: 'read',
+      fields: ['*']
+    })
+  });
+  console.log('Permission lecture about_settings ajoutée.');
 };
 
 const runSetup = async () => {
@@ -281,59 +371,33 @@ const runSetup = async () => {
   }
 
   if (await isHomeSettingsBroken(token)) {
-    await deleteCollection('home_settings_files', token);
     await deleteCollection('home_settings', token);
   }
 
   await ensureCollection(mediationsCollection, token);
   await ensureCollection(actualitesCollection, token);
   await ensureCollection(homeSettingsCollection, token);
-  await ensureCollection(homeSettingsFilesCollection, token);
+  await ensureCollection(aboutSettingsCollection, token);
 
-  const homeSettingsPrimaryKey = await getPrimaryKeyField('home_settings', token);
-  const homeSettingsIdType = homeSettingsPrimaryKey?.type || 'integer';
-
-  await ensureFields('home_settings_files', homeSettingsFilesFields(homeSettingsIdType), token);
   await ensureFields('mediations', mediationsFields, token);
   await ensureFields('actualites', actualitesFields, token);
 
-  const existingHeroField = await getField('home_settings', 'hero_images', token);
-  if (existingHeroField && (existingHeroField.type !== 'alias' || existingHeroField.schema)) {
-    await deleteField('home_settings', 'hero_images', token);
-  }
   await ensureFields('home_settings', homeSettingsFields, token);
+  await ensureFields('about_settings', aboutSettingsFields, token);
 
-  await ensureRelation({
-    collection: 'home_settings_files',
-    field: 'home_settings_id',
-    related_collection: 'home_settings',
-    schema: { on_delete: 'CASCADE' },
-    meta: {
-      many_collection: 'home_settings_files',
-      many_field: 'home_settings_id',
-      one_collection: 'home_settings',
-      one_field: 'hero_images',
-      one_deselect_action: 'delete',
-      junction_field: 'directus_files_id',
-      sort_field: 'sort'
+  // Supprimer l’ancienne table de liaison avant de créer la relation hero_images,
+  const homeSettingsFieldsList = await getFields('home_settings', token);
+  for (const f of homeSettingsFieldsList) {
+    const name = f?.field;
+    if (name && !HOME_SETTINGS_ALLOWED_FIELDS.has(name)) {
+      try {
+        await deleteField('home_settings', name, token);
+        console.log('Champ home_settings supprimé (nettoyage):', name);
+      } catch (err) {
+        console.warn('Impossible de supprimer le champ home_settings.' + name, err.message);
+      }
     }
-  }, token);
-
-  await ensureRelation({
-    collection: 'home_settings_files',
-    field: 'directus_files_id',
-    related_collection: 'directus_files',
-    schema: { on_delete: 'CASCADE' },
-    meta: {
-      many_collection: 'home_settings_files',
-      many_field: 'directus_files_id',
-      one_collection: 'directus_files',
-      one_field: null,
-      one_deselect_action: 'delete',
-      junction_field: 'home_settings_id',
-      sort_field: 'sort'
-    }
-  }, token);
+  }
 
   await ensureRelation({
     collection: 'mediations',
@@ -356,15 +420,24 @@ const runSetup = async () => {
     schema: { on_delete: 'SET NULL' },
     meta: { many_collection: 'actualites', many_field: 'image', one_collection: 'directus_files', one_field: null, one_deselect_action: 'nullify' }
   }, token);
-  await ensureRelation({
-    collection: 'home_settings',
-    field: 'association_video',
-    related_collection: 'directus_files',
-    schema: { on_delete: 'SET NULL' },
-    meta: { many_collection: 'home_settings', many_field: 'association_video', one_collection: 'directus_files', one_field: null, one_deselect_action: 'nullify' }
-  }, token);
 
-  await ensureHomeSettingsItem(token);
+  try {
+    await ensureHomeSettingsItem(token);
+  } catch (err) {
+    console.warn('⚠ Item Home Settings non créé (tu peux lancer "npm run directus:schema:apply" après coup) :', err.message);
+  }
+
+  try {
+    await ensureAboutSettingsItem(token);
+  } catch (err) {
+    console.warn('⚠ Item About Settings non créé :', err.message);
+  }
+
+  try {
+    await ensureAboutSettingsPermission(token);
+  } catch (err) {
+    console.warn('⚠ Permission about_settings non ajoutée (à faire à la main dans Paramètres > Accès) :', err.message);
+  }
 };
 
 if (require.main === module) {

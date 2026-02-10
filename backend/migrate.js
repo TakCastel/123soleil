@@ -157,18 +157,11 @@ const migrateHomeSettings = async (token) => {
   const homeSettingsId = await getHomeSettingsId(token);
   if (!homeSettingsId) throw new Error('Impossible de trouver home_settings (id manquant).');
 
-  const existing = await jsonRequest(`/items/home_settings_files?filter[home_settings_id][_eq]=${homeSettingsId}&fields=id&limit=-1`, { headers: getAuthHeaders(token) });
-  const existingIds = Array.isArray(existing?.data) ? existing.data.map((item) => item.id).filter(Boolean) : [];
-  if (existingIds.length > 0) {
-    await jsonRequest('/items/home_settings_files', { method: 'DELETE', headers: getAuthHeaders(token), body: JSON.stringify({ keys: existingIds }) });
-  }
-  for (let i = 0; i < fileIds.length; i++) {
-    await jsonRequest('/items/home_settings_files', {
-      method: 'POST',
-      headers: getAuthHeaders(token),
-      body: JSON.stringify({ home_settings_id: homeSettingsId, directus_files_id: fileIds[i], sort: i + 1 })
-    });
-  }
+  await jsonRequest(`/items/home_settings/${homeSettingsId}`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(token),
+    body: JSON.stringify({ hero_image_ids: fileIds })
+  });
 };
 
 const runMigration = async () => {

@@ -61,6 +61,7 @@ services:
       NEXT_PUBLIC_DIRECTUS_URL: http://localhost:8055
       DIRECTUS_TOKEN: ${DIRECTUS_TOKEN:-}
       WATCHPACK_POLLING: "true"
+      CHOKIDAR_USEPOLLING: "true"
     command: npm run dev
 
 volumes:

@@ -8,6 +8,7 @@ import { useInView } from '@/hooks/useInView';
 import { Projet } from '@/lib/projets';
 import PageHeader from '@/components/PageHeader';
 import { usePageContentDelay } from '@/hooks/usePageContentDelay';
+import { getCategoryDescription } from '@/lib/category-descriptions';
 import type React from 'react';
 
 interface ProjetsClientProps {
@@ -115,20 +116,24 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
     }
   }, [shouldShowContent, filteredProjets.length, isLoading]);
 
-  // Contenu SEO adaptatif selon le filtre (dynamique depuis les catégories API)
+  // Contenu SEO et description selon le filtre (labels au singulier, textes dédiés pour Court-métrage, Lip Dub, Médiation)
   const currentFilterLabel = filters.find((f) => f.id === displayFilter)?.label ?? displayFilter;
+  const categoryDescription =
+    displayFilter !== 'tous' ? getCategoryDescription(displayFilter) : undefined;
   const seoContent =
     displayFilter === 'tous'
       ? {
-          title: "L'ACTION",
+          title: "Ateliers",
           description:
-            "Explorez l'ensemble de nos médiations: courts-métrages, lipdubs et ateliers. Des dispositifs construits pour créer du lien, favoriser l'expression et transmettre par l'image.",
-          seoTitle: 'Médiations - Courts-métrages, Lipdubs et Ateliers'
+            "Explorez l'ensemble de nos ateliers vidéo : courts-métrages, médiations et lip dubs. Des dispositifs de création collective pensés pour favoriser la rencontre, l'apprentissage et l'expression à travers l'image.",
+          seoTitle: 'Ateliers - Courts-métrages, Lipdubs et Ateliers'
         }
       : {
           title: currentFilterLabel,
-          description: `Découvrez nos médiations dans la catégorie « ${currentFilterLabel} ».`,
-          seoTitle: `${currentFilterLabel} - Médiations 1,2,3 Soleil`
+          description:
+            categoryDescription ??
+            `Découvrez nos ateliers dans la catégorie « ${currentFilterLabel} ».`,
+          seoTitle: `${currentFilterLabel} - Ateliers 1,2,3 Soleil`
         };
 
   return (
@@ -197,6 +202,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
                   description={projet.description}
                   imageAlt={projet.titre}
                   imageUrl={projet.image}
+                  videoUrl={projet.video_url}
                   badge={projet.annee}
                   category={projet.categorie}
                   href={`/projets/${projet.id}`}

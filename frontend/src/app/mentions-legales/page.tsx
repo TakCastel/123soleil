@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: "Mentions légales",
+  description: "Mentions légales du site de l'association de cinéma 1, 2, 3 Soleil à Avignon.",
+  robots: { index: false, follow: true },
+};
+
 export default function MentionsLegales() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">

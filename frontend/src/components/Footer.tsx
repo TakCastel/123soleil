@@ -121,7 +121,7 @@ export default function Footer() {
               animate={contentInView ? { opacity: 1 } : { opacity: 0 }}
               transition={{ delay: 0.3, duration: 0.5 }}
             >
-              Association audiovisuelle dédiée à la création, la formation et la diffusion de contenus culturels solidaires et inclusifs.
+              Association de cinéma à Avignon dédiée à la création, la formation et la diffusion de contenus culturels solidaires et inclusifs.
             </motion.p>
             <motion.div 
               className="flex justify-center md:justify-start"
@@ -159,7 +159,7 @@ export default function Footer() {
               {[
                 { href: "/", label: "Accueil" },
                 { href: "/association", label: "L'Association" },
-                { href: "/projets", label: "Médiations" },
+                { href: "/projets", label: "Ateliers" },
                 { href: "/actualites", label: "Actualités" },
                 { href: "/contact", label: "Contact" }
               ].map((link, index) => (

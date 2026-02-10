@@ -43,13 +43,24 @@ const getSchemaDiff = async (token, snapshot) => {
 
 const login = async () => {
   if (!DIRECTUS_EMAIL || !DIRECTUS_PASSWORD) {
-    throw new Error('DIRECTUS_EMAIL / DIRECTUS_PASSWORD manquants dans .env');
+    throw new Error(
+      'Identifiants manquants dans .env. Définir DIRECTUS_EMAIL et DIRECTUS_PASSWORD (ou DIRECTUS_ADMIN_EMAIL et DIRECTUS_ADMIN_PASSWORD) avec le même email/mot de passe que l’admin Directus.'
+    );
   }
-  const res = await jsonRequest('/auth/login', {
-    method: 'POST',
-    body: JSON.stringify({ email: DIRECTUS_EMAIL, password: DIRECTUS_PASSWORD })
-  });
-  return res?.data?.access_token;
+  try {
+    const res = await jsonRequest('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email: DIRECTUS_EMAIL, password: DIRECTUS_PASSWORD })
+    });
+    return res?.data?.access_token;
+  } catch (err) {
+    if (err.message && err.message.includes('401')) {
+      throw new Error(
+        'Connexion Directus refusée (401). Vérifie dans .env : DIRECTUS_URL, DIRECTUS_EMAIL (ou DIRECTUS_ADMIN_EMAIL) et DIRECTUS_PASSWORD (ou DIRECTUS_ADMIN_PASSWORD) — ils doivent être identiques à ceux utilisés pour te connecter à l’interface admin (ex. http://localhost:8055/admin).'
+      );
+    }
+    throw err;
+  }
 };
 
 const ensureHomeSettingsItem = async (token) => {
@@ -72,6 +83,41 @@ const ensureHomeSettingsItem = async (token) => {
   console.log('Enregistrement Home Settings créé.');
 };
 
+const ensureAboutSettingsItem = async (token) => {
+  let data;
+  try {
+    const res = await jsonRequest('/items/about_settings?fields=id', {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    data = res?.data;
+  } catch (e) {
+    if (e.message && (e.message.includes('404') || e.message.includes('403'))) {
+      console.warn('About Settings : collection absente ou sans permission (lance "npm run directus:setup" pour créer la collection et la permission).');
+      return;
+    }
+    throw e;
+  }
+  if (data != null && typeof data === 'object' && data.id != null) return;
+  const defaultContent = `## L'ACTION DE
+### L'ASSOCIATION
+
+Chaque année, une douzaine de professionnels du cinéma, avec des bénévoles de l'association, organisent des ateliers cinéma.
+
+Notre association, fondée par des habitués du cinéma Utopia, se met en lien avec des jeunes issus de diverses structures de la ville le temps d'une collaboration autour d'un court-métrage.
+
+Chaque médiation est réalisée durant une journée, de l'écriture du scénario au tournage. Par la suite les films sont montés par les réalisateurs, parfois en présence des jeunes.
+
+Depuis septembre 2017, 36 films ont été réalisés selon ce dispositif. Ces films sont diffusés lors de projections publiques au cinéma Utopia et dans le cadre de diverses soirées associatives.
+
+Les fonds récoltés vont au bénéfice d'associations locales qui œuvrent auprès de personnes en situation de précarité et de fragilité.`;
+  await jsonRequest('/items/about_settings', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ content: defaultContent })
+  });
+  console.log('Enregistrement About Settings créé.');
+};
+
 const run = async () => {
   const schemaPath = path.join(__dirname, 'schema.json');
   if (!fs.existsSync(schemaPath)) {
@@ -80,7 +126,9 @@ const run = async () => {
     process.exit(1);
   }
 
-  const snapshot = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+  const raw = JSON.parse(fs.readFileSync(schemaPath, 'utf8'));
+  // Le fichier peut être { data: { version, collections, ... } } (export API) ou le snapshot à la racine
+  const snapshot = raw.data ?? raw;
   const token = await login();
 
   const diff = await getSchemaDiff(token, snapshot);
@@ -97,6 +145,7 @@ const run = async () => {
   }
 
   await ensureHomeSettingsItem(token);
+  await ensureAboutSettingsItem(token);
 };
 
 run().catch((err) => {

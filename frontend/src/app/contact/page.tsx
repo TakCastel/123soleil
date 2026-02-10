@@ -2,8 +2,10 @@ import PageHeader from '@/components/PageHeader';
 import ContactForm from './ContactForm';
 
 export const metadata = {
-  title: 'Contact - 1,2,3 Soleil',
-  description: 'Contactez l\'association 1,2,3 Soleil par email.'
+  title: 'Contact',
+  description:
+    "Contactez l'association de cinéma 1, 2, 3 Soleil à Avignon par email. Une question, une idée ou envie de nous rejoindre ?",
+  openGraph: { url: '/contact' },
 };
 
 export default function Contact() {

@@ -1,13 +1,26 @@
 "use client";
+import Image from 'next/image';
 import Button from './Button';
 import { motion, type Variants } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-interface HeroProps {
-  imageUrls?: string[];
+/** Toutes les images du hero (public/hero). Pool de 27 images. */
+const HERO_IMAGE_URLS = [
+  ...Array.from({ length: 26 }, (_, i) => `/hero/hero-image-${i + 1}.jpg`),
+  '/hero/hero-image-27.png'
+];
+
+/** Retourne k indices distincts aléatoires dans [0, n). */
+function getRandomIndices(n: number, k: number): number[] {
+  const indices = Array.from({ length: n }, (_, i) => i);
+  for (let i = 0; i < k; i++) {
+    const j = i + Math.floor(Math.random() * (n - i));
+    [indices[i], indices[j]] = [indices[j], indices[i]];
+  }
+  return indices.slice(0, k);
 }
 
-export default function Hero({ imageUrls = [] }: HeroProps) {
+export default function Hero() {
   const title = '1,2,3 SOLEIL';
   const letters = Array.from(title);
   const subtitle1 = 'POUR UN CINÉMA';
@@ -16,7 +29,17 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
   const subtitle2Letters = Array.from(subtitle2);
   const baseDelay = 0.05; // Réduit de 150ms à 50ms
   const perLetterStagger = 0.03; // Réduit de 60ms à 30ms par lettre
-  
+
+  const heroImages = HERO_IMAGE_URLS;
+
+  /** 10 indices pour les 10 cellules visibles (grille 4x4 avec trou central). Tirés au sort parmi 27 à chaque refresh. */
+  const [pickedIndices, setPickedIndices] = useState<number[]>(() =>
+    Array.from({ length: 10 }, (_, i) => i)
+  );
+  useEffect(() => {
+    setPickedIndices(getRandomIndices(heroImages.length, 10));
+  }, []);
+
   // Calculer la durée totale d'animation pour chaque étape
   const getAnimationDuration = (textLength: number) => baseDelay + (textLength * perLetterStagger);
   
@@ -164,20 +187,16 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
     return (row === 1 || row === 2) && col < 3;
   };
 
-  // Animation aléatoire pendant la durée du titre + première ligne (plus rapide)
-  const getRandomDelay = (index: number) => {
-    // Ne pas animer les cellules vides
+  // Délai déterministe (basé sur l'index) pour éviter les erreurs d'hydratation
+  const getStaggerDelay = (index: number) => {
     if (shouldBeEmpty(index)) {
       return 0;
     }
-    
-    // Calculer la durée totale : titre + première ligne du sous-titre
     const titleDuration = baseDelay + (letters.length * perLetterStagger);
     const subtitle1Duration = baseDelay + (subtitle1Letters.length * adjustedSubtitle1Stagger);
     const totalDuration = titleDuration + subtitle1Duration;
-    
-    // Délai aléatoire entre 0 et 30% de la durée totale pour réduire les animations simultanées
-    return Math.random() * (totalDuration * 0.3);
+    // Pseudo-aléatoire déterministe : même résultat serveur et client
+    return ((index * 17) % 100 / 100) * (totalDuration * 0.3);
   };
 
   const imageVariants: Variants = {
@@ -195,7 +214,7 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
         stiffness: 120, // Plus doux
         damping: 25, // Plus de damping pour moins de rebond
         mass: 1.2, // Plus de masse pour un mouvement plus lent
-        delay: getRandomDelay(index) // Animation aléatoire
+        delay: getStaggerDelay(index)
       }
     }),
   };
@@ -249,10 +268,6 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
     }
   };
 
-  const heroImages = imageUrls.filter(Boolean);
-
-  let imageCursor = 0;
-
   return (
     <section className="hero-section dotted-overlay">
       {/* 4x4 grid full of images; center content overlays the 2x2 area */}
@@ -269,16 +284,18 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
             return null;
           }
 
-          const fallbackUrl = `https://picsum.photos/seed/${i + 200}/1000/800`;
-          const imageUrl = heroImages[imageCursor] || fallbackUrl;
-          imageCursor += 1;
+          const visibleIndex = Array.from({ length: i }, (_, k) => k).filter((k) => !shouldBeEmpty(k)).length;
+          const imageIndex = pickedIndices[visibleIndex] ?? visibleIndex;
+          const imageUrl = heroImages.length > 0 ? heroImages[imageIndex % heroImages.length] : null;
 
           return (
             <motion.div
               key={i}
               className="hero-cell"
-              style={{ 
-                backgroundImage: `url(${imageUrl})`,
+              style={{
+                position: 'relative',
+                overflow: 'hidden',
+                ...(imageUrl ? {} : { backgroundColor: 'var(--neutral-light, #e5e7eb)' }),
                 willChange: 'transform, opacity, filter',
                 backfaceVisibility: 'hidden',
                 transform: 'translateZ(0)' // Force GPU acceleration
@@ -287,7 +304,17 @@ export default function Hero({ imageUrls = [] }: HeroProps) {
               variants={imageVariants}
               initial="hidden"
               animate={imagesVisible ? "visible" : "hidden"}
-            />
+            >
+              {imageUrl ? (
+                <Image
+                  src={imageUrl}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 640px) 50vw, 25vw"
+                />
+              ) : null}
+            </motion.div>
           );
         })}
         {/* Center content cell spanning 3x2 */}

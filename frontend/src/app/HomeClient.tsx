@@ -8,14 +8,47 @@ import MessageBox from '@/components/MessageBox';
 import { MdMovie, MdPeople, MdLocationCity, MdStar, MdVideocam, MdHandshake } from 'react-icons/md';
 import type { Projet } from '@/lib/projets';
 import type { Actualite } from '@/lib/actualites';
+import type { HomeChiffres } from '@/lib/home-settings';
 import type React from 'react';
+
+const CHIFFRES_LABELS = [
+  'courts-métrages dont 7 Lip-dubs',
+  'participants de la région',
+  'projections',
+  'éditions du festival',
+  'réalisateurs·rices',
+  'adhérents, membres actifs'
+] as const;
+
+const CHIFFRES_DETAILS: (string | null)[] = [
+  null,
+  null,
+  'dans des lieux de diffusion récurrents : le cinéma Utopia et le jardin du Verger Urbain V, le Fenouil à vapeur, le stade Désaignes, Écran village, Salle des fêtes de Caromb...',
+  "« On fait de l'image ça se partage » en Ardèche",
+  null,
+  null
+];
 
 interface HomeClientProps {
   projets: Projet[];
   actualites: Actualite[];
+  chiffres?: HomeChiffres | null;
 }
 
-export default function HomeClient({ projets, actualites }: HomeClientProps) {
+function toNum(value: string | null | undefined): string {
+  const s = value?.trim();
+  return s !== undefined && s !== '' ? s : '0';
+}
+
+export default function HomeClient({ projets, actualites, chiffres }: HomeClientProps) {
+  const nums = [
+    toNum(chiffres?.courts_metrages),
+    toNum(chiffres?.participants_region),
+    toNum(chiffres?.projections),
+    toNum(chiffres?.editions_festival),
+    toNum(chiffres?.realisateurs),
+    toNum(chiffres?.adherents)
+  ];
   // Hooks pour chaque section
   const projetsSection = useInView({ threshold: 0.1 });
   const chiffresSection = useInView({ threshold: 0.1 });
@@ -37,7 +70,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
   const projetRefs = [projet1, projet2, projet3];
   return (
     <>
-      {/* Élargissement du champ d'action */}
+      {/* Encart retiré : élargissement du champ d'action
       <section className="max-w-6xl mx-auto px-4 py-12">
         <MessageBox 
           title="1,2,3 Soleil !"
@@ -48,6 +81,7 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
           </p>
         </MessageBox>
       </section>
+      */}
 
       {/* News Section */}
       <section className="max-w-6xl mx-auto px-4 py-16">
@@ -101,8 +135,8 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             >
               <MdMovie className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
-                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">40+</p>
-                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">courts-métrages dont 7 Lip-dubs</p>
+                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">{nums[0]}</p>
+                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">{CHIFFRES_LABELS[0]}</p>
               </div>
             </div>
             <div 
@@ -111,8 +145,8 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             >
               <MdPeople className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
-                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">400</p>
-                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">participants de la région</p>
+                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">{nums[1]}</p>
+                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">{CHIFFRES_LABELS[1]}</p>
               </div>
             </div>
             <div 
@@ -121,9 +155,9 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             >
               <MdLocationCity className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
-                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">25+</p>
-                <p className="text-[color:var(--neutral-dark)] font-bold text-lg mb-2">projections</p>
-                <p className="text-gray-700 text-sm">dans des lieux de diffusion récurrents : le cinéma Utopia et le jardin du Verger Urbain V, le Fenouil à vapeur, le stade Désaignes, Écran village, Salle des fêtes de Caromb...</p>
+                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">{nums[2]}</p>
+                <p className="text-[color:var(--neutral-dark)] font-bold text-lg mb-2">{CHIFFRES_LABELS[2]}</p>
+                {CHIFFRES_DETAILS[2] && <p className="text-gray-700 text-sm">{CHIFFRES_DETAILS[2]}</p>}
               </div>
             </div>
             <div 
@@ -132,9 +166,9 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             >
               <MdStar className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
-                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">5</p>
-                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">éditions du festival</p>
-                <p className="text-gray-700 text-sm">« On fait de l&apos;image ça se partage » en Ardèche</p>
+                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">{nums[3]}</p>
+                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">{CHIFFRES_LABELS[3]}</p>
+                {CHIFFRES_DETAILS[3] && <p className="text-gray-700 text-sm">{CHIFFRES_DETAILS[3]}</p>}
               </div>
             </div>
             <div 
@@ -143,8 +177,8 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             >
               <MdVideocam className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
-                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">19</p>
-                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">réalisateurs·rices</p>
+                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">{nums[4]}</p>
+                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">{CHIFFRES_LABELS[4]}</p>
               </div>
             </div>
             <div 
@@ -153,8 +187,8 @@ export default function HomeClient({ projets, actualites }: HomeClientProps) {
             >
               <MdHandshake className="text-[color:var(--secondary)] text-4xl flex-shrink-0" />
               <div>
-                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">40</p>
-                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">adhérents, membres actifs</p>
+                <p className="display-title text-5xl text-[color:var(--neutral-dark)] mb-2">{nums[5]}</p>
+                <p className="text-[color:var(--neutral-dark)] font-bold text-lg">{CHIFFRES_LABELS[5]}</p>
               </div>
             </div>
           </div>

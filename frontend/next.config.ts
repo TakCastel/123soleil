@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: 'https', hostname: 'api.123soleil-cinema.fr', pathname: '/assets/**' },
       { protocol: 'http', hostname: 'localhost', pathname: '/assets/**', port: '8055' },
-      { protocol: 'https', hostname: 'picsum.photos', pathname: '/**' }
+      { protocol: 'http', hostname: 'directus', pathname: '/assets/**', port: '8055' }
     ]
   },
   async redirects() {

@@ -11,6 +11,7 @@ type CardProps = {
   description?: string;
   imageAlt?: string;
   imageUrl?: string;
+  videoUrl?: string;
   href?: string;
   badge?: string | number;
   category?: string;
@@ -19,23 +20,12 @@ type CardProps = {
   delay?: number;
 };
 
-export default function Card({ title, description, imageAlt = '', imageUrl, href, badge, category, ctaLabel, delay = 0 }: CardProps) {
+export default function Card({ title, description, imageAlt = '', imageUrl, videoUrl, href, badge, category, ctaLabel, delay = 0 }: CardProps) {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [imageError, setImageError] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0.5, y: 0.5 });
   const cardRef = useRef<HTMLDivElement>(null);
-  // Mémoriser le nombre aléatoire basé sur le titre pour éviter les problèmes d'hydratation
-  const [randomSeed] = useState(() => {
-    // Utiliser le titre comme seed pour avoir un nombre déterministe
-    let hash = 0;
-    for (let i = 0; i < title.length; i++) {
-      const char = title.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convertir en 32bit integer
-    }
-    return Math.abs(hash) % 1000;
-  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -63,9 +53,9 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
     setMousePosition({ x: 0.5, y: 0.5 });
   };
 
-  const finalImageUrl = (imageError || !imageUrl || imageUrl === '' || imageUrl.startsWith('/images/'))
-    ? `https://picsum.photos/600/400?random=${randomSeed}`
-    : imageUrl;
+  const hasValidImage = imageUrl && imageUrl !== '' && !imageUrl.startsWith('/images/') && !imageError;
+  const showVideo = Boolean(videoUrl && !imageError);
+  const mediaPoster = showVideo ? (hasValidImage ? imageUrl : undefined) : undefined;
 
   // Calculer la rotation en fonction de la position de la souris
   const rotateX = isHovered ? (mousePosition.y - 0.5) * 15 : 0;
@@ -125,14 +115,27 @@ export default function Card({ title, description, imageAlt = '', imageUrl, href
         }}
       >
         <div className="absolute inset-0 w-full h-full">
-          <Image
-            src={finalImageUrl}
-            alt={imageAlt}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            onError={() => setImageError(true)}
-          />
+          {showVideo ? (
+            <video
+              src={videoUrl}
+              poster={mediaPoster}
+              muted
+              playsInline
+              loop
+              className="w-full h-full object-cover"
+              preload="metadata"
+            />
+          ) : hasValidImage ? (
+            <Image
+              src={imageUrl!}
+              alt={imageAlt}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              onError={() => setImageError(true)}
+              unoptimized={imageUrl.startsWith('http') && (imageUrl.includes('localhost:8055') || imageUrl.includes('directus'))}
+            />
+          ) : null}
         </div>
       </div>
       <div className={styles.cardBody} style={{ position: 'relative', zIndex: 0 }}>

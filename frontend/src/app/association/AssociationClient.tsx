@@ -1,17 +1,28 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { useInView } from '@/hooks/useInView';
 import MessageBox from '@/components/MessageBox';
 import PageHeader from '@/components/PageHeader';
 import { usePageContentDelay } from '@/hooks/usePageContentDelay';
 import type React from 'react';
+import styles from '@/app/actualites/[slug]/actualite.module.css';
+
+const LOGO_GIF_URL = '/assets/logo-123soleil-animated.gif';
+const FALLBACK_VIDEO_URL = '/videos/video.mp4';
+/** Durée d’une boucle du GIF (environ 5 s) : on attend la fin de la boucle avant d’afficher la vidéo */
+const GIF_LOADER_DURATION_MS = 5000;
 
 interface AssociationClientProps {
   associationVideoUrl?: string | null;
+  /** HTML du contenu markdown (page Association), issu de Directus about_settings uniquement */
+  contentHtml?: string | null;
 }
 
-export default function AssociationClient({ associationVideoUrl }: AssociationClientProps) {
+export default function AssociationClient({ associationVideoUrl, contentHtml }: AssociationClientProps) {
+  const videoUrl = associationVideoUrl || FALLBACK_VIDEO_URL;
+
   // Hook pour retarder l'apparition du contenu
   const isContentVisible = usePageContentDelay({ triggerAt: 0.3 }); // Délai plus court pour test
   
@@ -23,10 +34,102 @@ export default function AssociationClient({ associationVideoUrl }: AssociationCl
   }, []);
   
   const shouldShowContent = isContentVisible || fallbackVisible;
+
+  // Loader GIF sur la vidéo : affiché jusqu'à la fin du GIF, puis lecture auto de la vidéo
+  const [showGifLoader, setShowGifLoader] = useState(true);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  // Ratio de la vidéo pour adapter le conteneur et éviter les bandes noires
+  const [videoAspectRatio, setVideoAspectRatio] = useState<string | null>(null);
+
+  // Timer : on laisse le GIF faire toute sa boucle (~5 s), puis on enlève le GIF et on affiche la vidéo
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setShowGifLoader(false), GIF_LOADER_DURATION_MS);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  // Dès que le loader est caché, on lance la vidéo (muted pour autoplay). On attend canplay si besoin.
+  useEffect(() => {
+    if (showGifLoader) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    const startPlay = () => {
+      video.muted = true;
+      video.play().catch(() => {});
+    };
+
+    if (video.readyState >= 2) {
+      startPlay();
+    } else {
+      video.addEventListener('canplay', startPlay, { once: true });
+      return () => video.removeEventListener('canplay', startPlay);
+    }
+  }, [showGifLoader]);
   
   // Hooks pour les animations
   const gridLeftRef = useInView({ threshold: 0.2 });
   const gridRightRef = useInView({ threshold: 0.2 });
+
+  // Formes autour de chaque carte : jaune et rouge pleins, positions stables par slug
+  const shapeColors = ['#facc15', '#dc2626', '#eab308', '#b91c1c']; // jaune vif, rouge vif, amber, rouge foncé
+  const seed = (s: string) => s.split('').reduce((a, c) => ((a << 5) - a + c.charCodeAt(0)) | 0, 0);
+  const shapesAroundCard = (slug: string) => {
+    const r = (i: number) => Math.abs((seed(slug) + i * 31) % 100) / 100;
+    return [
+      { type: 'triangle' as const, top: -8, left: -12, size: 22 + r(1) * 14, rot: r(2) * 360, color: shapeColors[0] },
+      { type: 'square' as const, top: `${15 + r(3) * 25}%`, right: -14, left: undefined, size: 14 + r(4) * 12, rot: r(5) * 360, color: shapeColors[1] },
+      { type: 'triangle' as const, bottom: -6, left: `${20 + r(6) * 50}%`, top: undefined, right: undefined, size: 18 + r(7) * 10, rot: r(8) * 360, color: shapeColors[2] },
+      { type: 'square' as const, top: `${r(9) * 40}%`, left: -10, size: 12 + r(10) * 10, rot: r(11) * 360, color: shapeColors[3] },
+    ];
+  };
+
+  const renderTrombiCard = (person: { name: string; role: string; slug: string; rotate: number; x: number; y: number; imageClass?: string }, index: number) => {
+    const imageClass = person.imageClass ?? 'w-full h-full object-cover object-top scale-125';
+    const shapes = shapesAroundCard(person.slug);
+    return (
+      <li
+        key={person.slug}
+        className={`scroll-animate fade-up scroll-delay-${(index % 5) * 100} ${shouldShowContent ? 'in-view' : ''}`}
+        style={{ transform: `rotate(${person.rotate}deg) translate(${person.x}px, ${person.y}px)` }}
+      >
+        <div className="relative w-full max-w-[180px] overflow-visible">
+          {/* Formes colorées autour de la carte, derrière */}
+          {shapes.map((shape, i) => (
+            <div
+              key={i}
+              className="absolute pointer-events-none z-0"
+              style={{
+                ...(shape.top !== undefined && { top: typeof shape.top === 'number' ? `${shape.top}px` : shape.top }),
+                ...(shape.bottom !== undefined && { bottom: typeof shape.bottom === 'number' ? `${shape.bottom}px` : shape.bottom }),
+                ...(shape.left !== undefined && { left: typeof shape.left === 'number' ? `${shape.left}px` : shape.left }),
+                ...(shape.right !== undefined && { right: typeof shape.right === 'number' ? `${shape.right}px` : shape.right }),
+                width: shape.size,
+                height: shape.size,
+                transform: `rotate(${shape.rot}deg)`,
+                background: shape.color,
+                clipPath: shape.type === 'triangle' ? 'polygon(50% 0%, 0% 100%, 100% 100%)' : 'none',
+                borderRadius: shape.type === 'square' ? 4 : 0
+              }}
+            />
+          ))}
+            <div className="relative z-[1] p-2 pt-3 bg-white border border-black/20 rounded-sm" style={{ boxShadow: '4px 6px 16px rgba(0,0,0,0.18), 1px 2px 4px rgba(0,0,0,0.1)' }}>
+            <div className="relative w-full aspect-[3/4] overflow-hidden bg-gray-100 border border-black/30">
+              <Image
+                src={`/assets/trombinoscope/${person.slug}.png`}
+                alt={`${person.name}, ${person.role}`}
+                className={imageClass}
+                width={180}
+                height={240}
+                sizes="180px"
+              />
+            </div>
+            <p className="mt-2 font-bold text-[color:var(--neutral-dark)] text-center text-sm">{person.name}</p>
+            <p className="text-[color:var(--neutral-dark)]/80 text-center text-sm">{person.role}</p>
+          </div>
+        </div>
+      </li>
+    );
+  };
 
   return (
     <div className="">
@@ -38,59 +141,67 @@ export default function AssociationClient({ associationVideoUrl }: AssociationCl
           subtitle="Quelques mots"
           description="Découvrez l'histoire, les missions et les engagements de notre association audiovisuelle, au service d'une médiation culturelle solidaire et inclusive sur le territoire avignonnais."
         />
-        <div className="flex justify-center pb-8">
-          <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-lg border-2 border-black p-1 bg-black overflow-hidden shrink-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/logo-123soleil-animated.gif"
-              alt="Logo 1, 2, 3 Soleil animé"
-              className="block w-full h-full object-cover rounded-md"
-            />
-          </div>
-        </div>
       </section>
 
-      {/* Présentation */}
+      {/* Présentation : titre fixe + texte (Directus) qui s’écoule autour de la vidéo */}
       <section className={`max-w-6xl mx-auto px-4 py-12 transition-opacity duration-500 ${shouldShowContent ? 'opacity-100' : 'opacity-0'}`}>
-        <div className="grid md:grid-cols-2 gap-12 items-start">
-          <div 
-            ref={gridLeftRef.ref as React.RefObject<HTMLDivElement>}
-            className={`scroll-animate fade-up ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}
-          >
-            <h2 className="display-title text-3xl mb-1 text-[color:var(--neutral-dark)]">L&apos;ACTION DE</h2>
-            <p className="subtitle-black small mb-4">L&apos;ASSOCIATION</p>
-            <p className={`text-gray-700 mb-4 scroll-animate fade-up scroll-delay-100 ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}>
-              Chaque année, une douzaine de professionnels du cinéma, avec des bénévoles de l&apos;association, organisent des ateliers cinéma.
-            </p>
-            <p className={`text-gray-700 mb-4 scroll-animate fade-up scroll-delay-200 ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}>
-              Notre association, fondée par des habitués du cinéma Utopia, se met en lien avec des jeunes issus de diverses structures de la ville le temps d&apos;une collaboration autour d&apos;un court-métrage.
-            </p>
-            <p className={`text-gray-700 mb-4 scroll-animate fade-up scroll-delay-300 ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}>
-              Chaque médiation est réalisée durant une journée, de l&apos;écriture du scénario au tournage.
-              Par la suite les films sont montés par les réalisateurs, parfois en présence des jeunes.
-            </p>
-            <p className={`text-gray-700 mb-4 scroll-animate fade-up scroll-delay-400 ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}>
-              Depuis septembre 2017, 36 films ont été réalisés selon ce dispositif. Ces films sont diffusés lors de projections publiques au cinéma Utopia et dans le cadre de diverses soirées associatives.
-            </p>
-            <p className={`text-gray-700 mb-4 scroll-animate fade-up scroll-delay-500 ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}>
-              Les fonds récoltés vont au bénéfice d&apos;associations locales qui œuvrent auprès de personnes en situation de précarité et de fragilité.
-            </p>
-          </div>
-          <div 
+        <h2 className="display-title text-3xl mb-1 text-[color:var(--neutral-dark)]">L&apos;ACTION DE</h2>
+        <p className="subtitle-black small mb-8">L&apos;ASSOCIATION</p>
+
+        <div className="overflow-hidden">
+          {/* Vidéo flottante à droite : le texte s’écoule à gauche et en dessous */}
+          <div
             ref={gridRightRef.ref as React.RefObject<HTMLDivElement>}
-            className={`w-full ratio-4-3 bg-black border-2 border-black overflow-hidden flex items-center justify-center scroll-animate scale-in scroll-delay-200 ${gridRightRef.isInView && shouldShowContent ? 'in-view' : ''}`}
+            className={`relative w-full md:w-1/2 md:float-right md:ml-6 md:mb-4 bg-black border-2 border-black overflow-hidden flex items-center justify-center scroll-animate scale-in scroll-delay-200 ${gridRightRef.isInView && shouldShowContent ? 'in-view' : ''}`}
+            style={{
+              aspectRatio: videoAspectRatio ?? '4/3',
+            }}
           >
-            {associationVideoUrl ? (
+            <>
+              <div
+                className={`absolute inset-0 flex items-center justify-center bg-black transition-opacity duration-300 z-10 ${showGifLoader ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                aria-hidden={!showGifLoader}
+              >
+                <div className="relative w-[70%] h-[70%] max-w-full max-h-full">
+                  <Image
+                    src={LOGO_GIF_URL}
+                    alt=""
+                    fill
+                    className="object-contain"
+                    sizes="70vw"
+                    unoptimized
+                  />
+                </div>
+              </div>
               <video
-                src={associationVideoUrl}
+                ref={videoRef}
+                src={videoUrl}
                 controls
                 className="w-full h-full object-contain"
                 playsInline
+                muted
+                preload="auto"
+                onLoadedMetadata={(e) => {
+                  const v = e.currentTarget;
+                  if (v.videoWidth && v.videoHeight) {
+                    setVideoAspectRatio(`${v.videoWidth} / ${v.videoHeight}`);
+                  }
+                }}
               >
                 Votre navigateur ne prend pas en charge la lecture de vidéos.
               </video>
-            ) : (
-              <span className="text-gray-500 text-sm">Vidéo à venir</span>
+            </>
+          </div>
+
+          <div
+            ref={gridLeftRef.ref as React.RefObject<HTMLDivElement>}
+            className={`scroll-animate fade-up ${gridLeftRef.isInView && shouldShowContent ? 'in-view' : ''}`}
+          >
+            {contentHtml && (
+              <div
+                className={styles.articleContent}
+                dangerouslySetInnerHTML={{ __html: contentHtml }}
+              />
             )}
           </div>
         </div>
@@ -98,123 +209,39 @@ export default function AssociationClient({ associationVideoUrl }: AssociationCl
 
       {/* Trombinoscope — 3 rôles asso en premier, puis réals en bas — dispersé type tableau */}
       <section className={`max-w-6xl mx-auto px-4 py-12 transition-opacity duration-500 ${shouldShowContent ? 'opacity-100' : 'opacity-0'}`}>
-        <h2 className="display-title text-3xl mb-2 text-[color:var(--neutral-dark)] text-center">
+        <h2 className="display-title text-3xl mb-12 text-[color:var(--neutral-dark)] text-center">
           LE BUREAU
         </h2>
-        <p className="subtitle-black small text-center mb-12">Trombinoscope</p>
 
         {/* 3 rôles de l'association en premier */}
         <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4">
           {[
-            { name: 'Christine Conte', role: 'Présidente', slug: 'christine-conte', rotate: -5, x: -10, y: 6 },
+            { name: 'Christine Conte', role: 'Présidente', slug: 'christine-conte', rotate: -5, x: -10, y: 6, imageClass: 'w-full h-full object-cover object-[center_22%] scale-100' },
             { name: 'Claire Feronwilmart', role: 'Administratrice', slug: 'claire-feronwilmart', rotate: 8, x: 12, y: -8 },
             { name: 'Elisabeth Cozian', role: 'Trésorière', slug: 'elisabeth-cozian', rotate: -4, x: 6, y: 10 }
-          ].map((person, index) => (
-            <li
-              key={person.slug}
-              className={`scroll-animate fade-up scroll-delay-${(index % 5) * 100} ${shouldShowContent ? 'in-view' : ''}`}
-              style={{
-                transform: `rotate(${person.rotate}deg) translate(${person.x}px, ${person.y}px)`
-              }}
-            >
-              <div className="relative w-full max-w-[180px] overflow-visible">
-                <div className="relative z-[1] p-2 pt-3 bg-white border border-black/20 rounded-sm" style={{ boxShadow: '4px 6px 16px rgba(0,0,0,0.18), 1px 2px 4px rgba(0,0,0,0.1)' }}>
-                  <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100 border border-black/30">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/assets/trombinoscope/${person.slug}.png`}
-                      alt={`${person.name}, ${person.role}`}
-                      className="w-full h-full object-cover object-top scale-125"
-                      width={180}
-                      height={240}
-                    />
-                  </div>
-                  <p className="mt-2 font-bold text-[color:var(--neutral-dark)] text-center text-sm">
-                    {person.name}
-                  </p>
-                  <p className="text-[color:var(--neutral-dark)]/80 text-center text-sm">
-                    {person.role}
-                  </p>
-                </div>
-              </div>
-            </li>
-          ))}
+          ].map((person, index) => renderTrombiCard(person, index))}
         </ul>
 
+        <h3 className="display-title text-2xl md:text-3xl mb-8 mt-16 md:mt-20 text-[color:var(--neutral-dark)] text-center">
+          LES RÉALISATEURICES
+        </h3>
+
         {/* Réalisateurs et réalisatrices — première ligne de 3 */}
-        <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4 mt-16 md:mt-20">
+        <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4">
           {[
             { name: 'Arnaud Ban', role: 'Réalisateur', slug: 'arnaud-ban', rotate: 6, x: -14, y: -4 },
             { name: 'Boris Doussy', role: 'Réalisateur', slug: 'boris-doussy', rotate: -7, x: 10, y: 12 },
             { name: 'Pierre Lacourt', role: 'Réalisateur', slug: 'pierre-lacourt', rotate: -4, x: 8, y: -10 }
-          ].map((person, index) => (
-            <li
-              key={person.slug}
-              className={`scroll-animate fade-up scroll-delay-${(index % 5) * 100} ${shouldShowContent ? 'in-view' : ''}`}
-              style={{
-                transform: `rotate(${person.rotate}deg) translate(${person.x}px, ${person.y}px)`
-              }}
-            >
-              <div className="relative w-full max-w-[180px] overflow-visible">
-                <div className="relative z-[1] p-2 pt-3 bg-white border border-black/20 rounded-sm" style={{ boxShadow: '4px 6px 16px rgba(0,0,0,0.18), 1px 2px 4px rgba(0,0,0,0.1)' }}>
-                  <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100 border border-black/30">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/assets/trombinoscope/${person.slug}.png`}
-                      alt={`${person.name}, ${person.role}`}
-                      className="w-full h-full object-cover object-top scale-125"
-                      width={180}
-                      height={240}
-                    />
-                  </div>
-                  <p className="mt-2 font-bold text-[color:var(--neutral-dark)] text-center text-sm">
-                    {person.name}
-                  </p>
-                  <p className="text-[color:var(--neutral-dark)]/80 text-center text-sm">
-                    {person.role}
-                  </p>
-                </div>
-              </div>
-            </li>
-          ))}
+          ].map((person, index) => renderTrombiCard(person, index))}
         </ul>
 
         {/* Réalisateurs et réalisatrices — deuxième ligne de 3 */}
         <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4 mt-4">
-          {[
-            { name: 'Marie Delaruelle', role: 'Réalisatrice', slug: 'marie-delaruelle', rotate: -6, x: -8, y: 8 },
-            { name: 'Karine Music', role: 'Réalisatrice', slug: 'karine-music', rotate: 5, x: 14, y: -6 },
-            { name: 'Florine Clap', role: 'Réalisatrice', slug: 'florine-clap', rotate: -3, x: -12, y: 10 }
-          ].map((person, index) => (
-            <li
-              key={person.slug}
-              className={`scroll-animate fade-up scroll-delay-${(index % 5) * 100} ${shouldShowContent ? 'in-view' : ''}`}
-              style={{
-                transform: `rotate(${person.rotate}deg) translate(${person.x}px, ${person.y}px)`
-              }}
-            >
-              <div className="relative w-full max-w-[180px] overflow-visible">
-                <div className="relative z-[1] p-2 pt-3 bg-white border border-black/20 rounded-sm" style={{ boxShadow: '4px 6px 16px rgba(0,0,0,0.18), 1px 2px 4px rgba(0,0,0,0.1)' }}>
-                  <div className="w-full aspect-[3/4] overflow-hidden bg-gray-100 border border-black/30">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/assets/trombinoscope/${person.slug}.png`}
-                      alt={`${person.name}, ${person.role}`}
-                      className="w-full h-full object-cover object-top scale-125"
-                      width={180}
-                      height={240}
-                    />
-                  </div>
-                  <p className="mt-2 font-bold text-[color:var(--neutral-dark)] text-center text-sm">
-                    {person.name}
-                  </p>
-                  <p className="text-[color:var(--neutral-dark)]/80 text-center text-sm">
-                    {person.role}
-                  </p>
-                </div>
-              </div>
-            </li>
-          ))}
+            {[
+              { name: 'Marie Delaruelle', role: 'Réalisatrice', slug: 'marie-delaruelle', rotate: -6, x: -8, y: 8 },
+              { name: 'Karine Music', role: 'Réalisatrice', slug: 'karine-music', rotate: 5, x: 14, y: -6 },
+              { name: 'Florine Clap', role: 'Réalisatrice', slug: 'florine-clap', rotate: -3, x: -12, y: 10 }
+            ].map((person, index) => renderTrombiCard(person, index))}
         </ul>
       </section>
 

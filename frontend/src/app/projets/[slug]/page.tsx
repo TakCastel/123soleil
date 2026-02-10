@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { getProjetBySlug } from '@/lib/projets';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -7,6 +8,25 @@ import styles from './projet.module.css';
 
 interface ProjetPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: ProjetPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const projet = await getProjetBySlug(slug);
+  if (!projet) return { title: 'Médiation' };
+  const description =
+    projet.description ||
+    `Projet de l'association de cinéma 1, 2, 3 Soleil à Avignon.`;
+  return {
+    title: projet.titre,
+    description,
+    openGraph: {
+      title: projet.titre,
+      description,
+      url: `/projets/${slug}`,
+      type: 'article',
+    },
+  };
 }
 
 export default async function ProjetPage({ params }: ProjetPageProps) {
@@ -55,11 +75,11 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
       </section>
 
       {/* Contenu : vidéo OU image, puis corps */}
-      <section className="max-w-6xl mx-auto px-4 py-16">
+      <section className="max-w-4xl mx-auto px-4 py-16">
         {projet.video_url ? (
-          <div className="mb-12 border-2 border-black bg-[color:var(--neutral-dark)] p-2">
+          <div className="mb-12 border-2 border-black bg-[color:var(--neutral-dark)] p-2 overflow-hidden relative aspect-video w-full">
             <video
-              className="w-full h-auto"
+              className="absolute inset-0 w-full h-full object-cover"
               controls
               preload="metadata"
               poster={projet.image}
@@ -78,6 +98,7 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
               className="object-cover"
               sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 1152px"
               priority
+              unoptimized={projet.image.startsWith('http') && (projet.image.includes('localhost:8055') || projet.image.includes('directus'))}
             />
           </div>
         ) : null}

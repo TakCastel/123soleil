@@ -1,37 +1,29 @@
-import { fetchDirectus, getDirectusAssetUrl } from './directus';
+import { fetchDirectus } from './directus';
 
-type HomeSettingsFile = {
-  directus_files_id?: string;
-};
-
-type HomeSettingsResponse = {
-  hero_images?: HomeSettingsFile[];
-  association_video?: string;
-};
-
-export async function getHomeHeroImages(): Promise<string[]> {
-  const response = await fetchDirectus<HomeSettingsResponse>(
-    '/items/home_settings?fields=hero_images.directus_files_id'
-  );
-
-  const heroImages = Array.isArray(response?.data?.hero_images) ? response.data.hero_images : [];
-
-  return heroImages
-    .map((item) => item?.directus_files_id)
-    .filter(Boolean)
-    .map((fileId) => getDirectusAssetUrl(fileId as string));
-}
-
-/** URL de la vidéo de présentation (page Association), ou null si non définie. */
-export async function getAssociationVideoUrl(): Promise<string | null> {
+/** Récupère l’item singleton home_settings (une seule requête, champs demandés en paramètre). En cas d’erreur (ex. 403), retourne null. */
+async function getHomeSettings<T>(fields: string): Promise<T | null> {
   try {
-    const response = await fetchDirectus<HomeSettingsResponse>(
-      '/items/home_settings?fields=association_video'
-    );
-    const fileId = response?.data?.association_video;
-    if (!fileId) return null;
-    return getDirectusAssetUrl(fileId);
+    const res = await fetchDirectus<{ data: T[] | T }>(`/items/home_settings?fields=${fields}`);
+    const data = res.data;
+    // Singleton : Directus peut renvoyer { data: [item] } ou { data: item }
+    return Array.isArray(data) ? data[0] ?? null : data;
   } catch {
     return null;
   }
+}
+
+export interface HomeChiffres {
+  courts_metrages?: string | null;
+  participants_region?: string | null;
+  projections?: string | null;
+  editions_festival?: string | null;
+  realisateurs?: string | null;
+  adherents?: string | null;
+}
+
+const CHIFFRES_FIELDS = 'courts_metrages,participants_region,projections,editions_festival,realisateurs,adherents';
+
+/** Section « Quelques chiffres » de la page d’accueil (home_settings). */
+export async function getHomeChiffres(): Promise<HomeChiffres | null> {
+  return getHomeSettings<HomeChiffres>(CHIFFRES_FIELDS);
 }

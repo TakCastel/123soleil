@@ -1,11 +1,32 @@
+import type { Metadata } from 'next';
 import { getActualiteBySlug } from '@/lib/actualites';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { marked } from 'marked';
 import styles from './actualite.module.css';
 
 interface ActualitePageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: ActualitePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const actualite = await getActualiteBySlug(slug);
+  if (!actualite) return { title: 'Actualité' };
+  const description =
+    actualite.description ||
+    `Actualité de l'association de cinéma 1, 2, 3 Soleil à Avignon.`;
+  return {
+    title: actualite.titre,
+    description,
+    openGraph: {
+      title: actualite.titre,
+      description,
+      url: `/actualites/${slug}`,
+      type: 'article',
+    },
+  };
 }
 
 export default async function ActualitePage({ params }: ActualitePageProps) {
@@ -58,12 +79,15 @@ export default async function ActualitePage({ params }: ActualitePageProps) {
       {/* Contenu : image, corps */}
       <section className="max-w-6xl mx-auto px-4 py-16">
         {actualite.image && (
-          <div className="mb-12 border-2 border-black overflow-hidden">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+          <div className="mb-12 border-2 border-black overflow-hidden relative w-full aspect-video">
+            <Image
               src={actualite.image}
               alt={actualite.titre}
-              className="w-full h-auto block"
+              fill
+              className="object-contain"
+              sizes="(max-width: 768px) 100vw, (max-width: 1280px) 80vw, 1152px"
+              priority
+              unoptimized={actualite.image.startsWith('http') && (actualite.image.includes('localhost:8055') || actualite.image.includes('directus'))}
             />
           </div>
         )}

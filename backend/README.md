@@ -28,6 +28,8 @@ Tout ce qui concerne **Directus** (CMS) : schéma, scripts d’installation et d
 - **Option A** : modifier dans l’interface Directus en dev, puis `npm run directus:schema:export`, commiter `schema.json`.
 - **Option B** : éditer `backend/schema.json` à la main, puis `npm run directus:schema:apply` pour tester.
 
+**Nouvelle collection (ex. `about_settings`)** : si `directus:schema:apply` affiche « Schéma déjà à jour » alors que la collection n’existe pas encore (ou 403), lancer **`npm run directus:setup`** pour créer la collection, le singleton et la permission de lecture (même policy que `home_settings`).
+
 ## Schéma local → prod
 
 1. En local : modifie le schéma (interface ou `schema.json`).
@@ -41,6 +43,25 @@ Tout ce qui concerne **Directus** (CMS) : schéma, scripts d’installation et d
 - `setup.js` – première installation (collections, champs, relations).
 - `migrate.js` – import de contenu (ex. Decap → Directus).
 - `migrate-directus-db.sh` – migration DB (dump local → stream SSH → restauration VPS).
+- `pull-directus-db.sh` – récupère la DB de la prod et la restaure en local.
+
+## Récupérer les contenus de la prod en local
+
+Pour avoir la même base de données (et donc les mêmes contenus) qu’en production :
+
+1. **Conteneurs locaux démarrés** : `docker compose up -d`
+2. **Mêmes variables que la migration** : `VPS_HOST`, `VPS_USER`, `VPS_DIR`, etc. (fichier optionnel **`backend/migrate-directus-db.env`** ou `.env` à la racine).
+3. **Lancer le script** depuis la racine du projet :
+   ```bash
+   ./backend/pull-directus-db.sh
+   ```
+4. **Fichiers (médias)** : la DB contient les métadonnées ; les fichiers sont dans le volume Directus. Pour les récupérer aussi, depuis ta machine (en adaptant chemins et noms de conteneurs) :
+   ```bash
+   mkdir -p backend/uploads
+   rsync -avz "${VPS_USER}@${VPS_HOST}:${VPS_DIR}/uploads/" backend/uploads/
+   docker compose cp backend/uploads/. directus:/directus/uploads/
+   ```
+   Ou copier manuellement le dossier `uploads` du VPS dans le volume du conteneur `directus`.
 
 ## Migration DB (local → VPS)
 

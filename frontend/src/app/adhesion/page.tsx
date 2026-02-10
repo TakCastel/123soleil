@@ -1,5 +1,13 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageHeader from '@/components/PageHeader';
+
+export const metadata: Metadata = {
+  title: "Adhérer et soutenir",
+  description:
+    "Rejoignez ou soutenez l'association de cinéma 1, 2, 3 Soleil à Avignon : adhésion et dons en ligne via HelloAsso.",
+  openGraph: { url: "/adhesion" },
+};
 
 const helloAssoAdhesionUrl =
   process.env.HELLOASSO_ADHESION_URL || 'https://www.helloasso.com';

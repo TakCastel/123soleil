@@ -168,7 +168,7 @@ export default function PageHeader({
       
       {/* Titre principal en rouge penché avec animation lettre par lettre */}
       <motion.div
-        className="mb-3 overflow-visible py-3 px-6"
+        className="mb-8 overflow-visible py-3 px-6"
         variants={titleContainerVariants}
         initial="hidden"
         animate={titleVisible ? "visible" : "hidden"}
@@ -192,7 +192,7 @@ export default function PageHeader({
       {/* Sous-titre en noir avec animation lettre par lettre (optionnel) */}
       {hasSubtitle && (
         <motion.div
-          className="mb-4"
+          className="mb-6"
           variants={subtitleContainerVariants}
           initial="hidden"
           animate={subtitleVisible ? "visible" : "hidden"}
@@ -212,15 +212,20 @@ export default function PageHeader({
         </motion.div>
       )}
 
-      {/* Description SEO avec animation slide up + fade in */}
+      {/* Description SEO avec animation slide up + fade in (paragraphes séparés par \n\n) */}
       <motion.div
         variants={descriptionVariants}
         initial="hidden"
         animate={descriptionVisible ? "visible" : "hidden"}
+        className="text-gray-700 max-w-3xl mx-auto space-y-3 mt-2"
       >
-        <p className="text-gray-700 max-w-3xl mx-auto">
-          {description}
-        </p>
+        {description.includes('\n\n')
+          ? description.split('\n\n').map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))
+          : (
+              <p>{description}</p>
+            )}
       </motion.div>
     </div>
   );

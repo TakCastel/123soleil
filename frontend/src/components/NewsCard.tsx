@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import styles from './NewsCard.module.css';
 
@@ -31,19 +32,6 @@ export default function NewsCard({
 }: NewsCardProps) {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [imageError, setImageError] = useState(false);
-  
-  // Générer un seed déterministe basé sur le titre pour éviter les problèmes d'hydratation
-  const generateSeed = (str: string) => {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    return Math.abs(hash) % 1000;
-  };
-  
-  const randomSeed = generateSeed(title);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -52,15 +40,7 @@ export default function NewsCard({
     return () => clearTimeout(timer);
   }, [delay]);
 
-  // Utiliser lorem picsum comme fallback
-  const getFinalImageUrl = () => {
-    if (imageError || !imageUrl || imageUrl === '') {
-      // Dimensions selon le variant
-      const dimensions = variant === 'hero' ? '800/600' : variant === 'compact' ? '400/300' : '600/400';
-      return `https://picsum.photos/${dimensions}?random=${randomSeed}`;
-    }
-    return imageUrl;
-  };
+  const hasValidImage = imageUrl && imageUrl !== '' && !imageError;
 
   return (
     <div
@@ -88,13 +68,17 @@ export default function NewsCard({
       
       {/* Image avec effet comics */}
       <div className={`${styles.imageContainer}`} style={{ position: 'relative', zIndex: 0 }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img 
-          src={getFinalImageUrl()} 
-          alt={imageAlt} 
-          className={styles.image}
-          onError={() => setImageError(true)}
-        />
+        {hasValidImage ? (
+          <Image
+            src={imageUrl}
+            alt={imageAlt}
+            fill
+            className={styles.image}
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={() => setImageError(true)}
+            unoptimized={imageUrl.startsWith('http') && (imageUrl.includes('localhost:8055') || imageUrl.includes('directus'))}
+          />
+        ) : null}
         {date && (
           <span className={styles.date}>
             {date}
