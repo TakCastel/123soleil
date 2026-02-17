@@ -51,6 +51,10 @@ export default async function ActualitePage({ params }: ActualitePageProps) {
             ← Retour aux actualités
           </Link>
 
+          <h1 className="display-title text-4xl md:text-5xl text-[color:var(--secondary)] mb-4">
+            {actualite.titre}
+          </h1>
+
           <div className="flex flex-wrap justify-center gap-3 mb-4">
             {actualite.categorie && (
               <span className="inline-block bg-white border-2 border-black px-4 py-2 text-sm font-bold uppercase text-[color:var(--neutral-dark)]">
@@ -63,10 +67,6 @@ export default async function ActualitePage({ params }: ActualitePageProps) {
               </span>
             )}
           </div>
-
-          <h1 className="display-title text-4xl md:text-5xl text-[color:var(--secondary)] mb-4">
-            {actualite.titre}
-          </h1>
 
           {actualite.description && (
             <p className="text-[color:var(--neutral-dark)] text-lg max-w-2xl mx-auto">

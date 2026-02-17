@@ -46,10 +46,14 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
           <Link
             href="/projets"
-            className="inline-block text-[color:var(--neutral-dark)] hover:text-[color:var(--secondary)] transition-colors font-medium mt-4 mb-12"
+            className="inline-block text-[color:var(--neutral-dark)] hover:text-[color:var(--secondary)] transition-colors font-medium mt-4 mb-8"
           >
             ← Retour aux ateliers
           </Link>
+
+          <h1 className="display-title text-4xl md:text-5xl text-[color:var(--secondary)] mb-4">
+            {projet.titre}
+          </h1>
 
           <div className="flex flex-wrap justify-center gap-3 mb-4">
             {projet.categorie && (
@@ -61,10 +65,6 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
               {projet.annee}
             </span>
           </div>
-
-          <h1 className="display-title text-4xl md:text-5xl text-[color:var(--secondary)] mb-4">
-            {projet.titre}
-          </h1>
 
           {projet.description && (
             <p className="text-[color:var(--neutral-dark)] text-lg max-w-2xl mx-auto">

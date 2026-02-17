@@ -236,15 +236,15 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
           LES VIDÉASTES
         </h3>
 
-        {/* Vidéastes — ordre alphabétique par prénom/nom */}
-        <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4">
+        {/* Vidéastes — grille 3 par 3, ordre alphabétique */}
+        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-10 py-4 justify-items-center">
           {[
-            { name: 'Arnaud Ban', role: 'Réalisateur', slug: 'arnaud-ban', rotate: 6, x: -14, y: -4 },
-            { name: 'Boris Doussy', role: 'Réalisateur', slug: 'boris-doussy', rotate: -7, x: 10, y: 12 },
-            { name: 'Florine Clap', role: 'Réalisatrice', slug: 'florine-clap', rotate: -3, x: -12, y: 10 },
-            { name: 'Karine Music', role: 'Réalisatrice', slug: 'karine-music', rotate: 5, x: 14, y: -6 },
-            { name: 'Marie Delaruelle', role: 'Réalisatrice', slug: 'marie-delaruelle', rotate: -6, x: -8, y: 8 },
-            { name: 'Pierre Lacourt', role: 'Réalisateur', slug: 'pierre-lacourt', rotate: -4, x: 8, y: -10 }
+            { name: 'Arnaud Ban', role: 'Réalisateur', slug: 'arnaud-ban', rotate: 0, x: 0, y: 0 },
+            { name: 'Boris Doussy', role: 'Réalisateur', slug: 'boris-doussy', rotate: 0, x: 0, y: 0 },
+            { name: 'Florine Clap', role: 'Réalisatrice', slug: 'florine-clap', rotate: 0, x: 0, y: 0 },
+            { name: 'Karine Music', role: 'Réalisatrice', slug: 'karine-music', rotate: 0, x: 0, y: 0 },
+            { name: 'Marie Delaruelle', role: 'Réalisatrice', slug: 'marie-delaruelle', rotate: 0, x: 0, y: 0 },
+            { name: 'Pierre Lacourt', role: 'Réalisateur', slug: 'pierre-lacourt', rotate: 0, x: 0, y: 0 }
           ].map((person, index) => renderTrombiCard(person, index))}
         </ul>
       </section>

@@ -79,11 +79,6 @@ export default function NewsCard({
             unoptimized={imageUrl.startsWith('http') && (imageUrl.includes('localhost:8055') || imageUrl.includes('directus'))}
           />
         ) : null}
-        {date && (
-          <span className={styles.date}>
-            {date}
-          </span>
-        )}
         {isBreaking && (
           <div className={styles.breakingOverlay}>
             <div className={styles.breakingText}>BREAKING</div>
@@ -93,17 +88,22 @@ export default function NewsCard({
       
       {/* Contenu */}
       <div className={styles.content} style={{ position: 'relative', zIndex: 0 }}>
+        <h3 className={styles.title}>
+          {title}
+        </h3>
+
         <div className={styles.header}>
+          {date && (
+            <span className={styles.date}>
+              {date}
+            </span>
+          )}
           {category && (
             <span className={`${styles.category} ${isBreaking ? styles.breakingCategory : ''}`}>
               {category}
             </span>
           )}
         </div>
-        
-        <h3 className={styles.title}>
-          {title}
-        </h3>
         
         {description && (
           <p className={styles.description}>

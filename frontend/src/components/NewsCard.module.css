@@ -185,12 +185,12 @@
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: white;
-  padding: 4px 8px;
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 20;
+}
+
+/* Date/catégorie sous le titre (dans .content) */
+.content .header .date {
+  background: transparent;
+  padding: 0;
 }
 
 /* ===== TITRE ===== */
