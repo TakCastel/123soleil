@@ -125,7 +125,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
       ? {
           title: "Ateliers",
           description:
-            "Explorez l'ensemble de nos ateliers vidéo : courts-métrages, médiations et lip dubs. Des dispositifs de création collective pensés pour favoriser la rencontre, l'apprentissage et l'expression à travers l'image.",
+            "Explorez l'ensemble de nos ateliers vidéo : courts-métrages, ateliers et lip dubs. Des dispositifs de création collective pensés pour favoriser la rencontre, l'apprentissage et l'expression à travers l'image.",
           seoTitle: 'Ateliers - Courts-métrages, Lipdubs et Ateliers'
         }
       : {
@@ -173,7 +173,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
           </div>
         </div>
 
-        {/* Grille des médiations */}
+        {/* Grille des ateliers */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12 cards-grid">
           {isLoading && (
             <div className="col-span-full flex justify-center items-center py-12">
@@ -206,7 +206,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
                   badge={projet.annee}
                   category={projet.categorie}
                   href={`/projets/${projet.id}`}
-                  ctaLabel="Voir la médiation →"
+                  ctaLabel="Voir l'atelier →"
                 />
               </div>
             );
@@ -215,7 +215,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
 
         {!isLoading && filteredProjets.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Aucune médiation trouvée pour cette catégorie.</p>
+            <p className="text-gray-500">Aucun atelier trouvé pour cette catégorie.</p>
           </div>
         )}
       </div>

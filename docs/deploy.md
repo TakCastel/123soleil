@@ -28,7 +28,7 @@ Ajouter :
 
 ## Première mise en place sur le serveur
 
-1. Cloner le dépôt : `git clone https://github.com/.../123soleil.git` (ou SSH).
+1. Cloner le dépôt : `git clone https://github.com/.../123soleil.git` (ou SSH). Si le projet utilise **Git LFS** (fichiers `.gif`, vidéos), installer Git LFS sur le serveur (`git lfs install`) et après chaque clone ou `git pull` lancer **`git lfs pull`** pour télécharger les vrais fichiers (sans quoi la vidéo et le GIF de la page Association restent des pointeurs et ne s’affichent pas en prod).
 2. Copier `config/example.env` vers `.env` et remplir les valeurs (prod).
 3. Lancer une fois : `docker compose up -d --build`, attendre que Directus soit prêt, puis `npm run directus:setup` (ou appliquer le schéma depuis la machine locale si tu as déjà `backend/schema.json`).
 4. S’assurer que la branche suivie est `main` : `git branch -M main` si besoin.

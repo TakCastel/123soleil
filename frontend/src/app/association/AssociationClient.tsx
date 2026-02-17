@@ -233,25 +233,19 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
         </ul>
 
         <h3 className="display-title text-2xl md:text-3xl mb-8 mt-16 md:mt-20 text-[color:var(--neutral-dark)] text-center">
-          LES RÉALISATEURICES
+          LES VIDÉASTES
         </h3>
 
-        {/* Réalisateurs et réalisatrices — première ligne de 3 */}
+        {/* Vidéastes — ordre alphabétique par prénom/nom */}
         <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4">
           {[
             { name: 'Arnaud Ban', role: 'Réalisateur', slug: 'arnaud-ban', rotate: 6, x: -14, y: -4 },
             { name: 'Boris Doussy', role: 'Réalisateur', slug: 'boris-doussy', rotate: -7, x: 10, y: 12 },
+            { name: 'Florine Clap', role: 'Réalisatrice', slug: 'florine-clap', rotate: -3, x: -12, y: 10 },
+            { name: 'Karine Music', role: 'Réalisatrice', slug: 'karine-music', rotate: 5, x: 14, y: -6 },
+            { name: 'Marie Delaruelle', role: 'Réalisatrice', slug: 'marie-delaruelle', rotate: -6, x: -8, y: 8 },
             { name: 'Pierre Lacourt', role: 'Réalisateur', slug: 'pierre-lacourt', rotate: -4, x: 8, y: -10 }
           ].map((person, index) => renderTrombiCard(person, index))}
-        </ul>
-
-        {/* Réalisateurs et réalisatrices — deuxième ligne de 3 */}
-        <ul className="flex flex-wrap justify-center items-center gap-8 md:gap-12 py-4 mt-4">
-            {[
-              { name: 'Marie Delaruelle', role: 'Réalisatrice', slug: 'marie-delaruelle', rotate: -6, x: -8, y: 8 },
-              { name: 'Karine Music', role: 'Réalisatrice', slug: 'karine-music', rotate: 5, x: 14, y: -6 },
-              { name: 'Florine Clap', role: 'Réalisatrice', slug: 'florine-clap', rotate: -3, x: -12, y: 10 }
-            ].map((person, index) => renderTrombiCard(person, index))}
         </ul>
       </section>
 

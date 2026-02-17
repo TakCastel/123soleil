@@ -46,9 +46,9 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
         <div className="max-w-6xl mx-auto px-4 py-16 text-center">
           <Link
             href="/projets"
-            className="inline-block text-[color:var(--neutral-dark)] hover:text-[color:var(--secondary)] transition-colors font-medium mb-8"
+            className="inline-block text-[color:var(--neutral-dark)] hover:text-[color:var(--secondary)] transition-colors font-medium mt-4 mb-12"
           >
-            ← Retour aux médiations
+            ← Retour aux ateliers
           </Link>
 
           <div className="flex flex-wrap justify-center gap-3 mb-4">
@@ -115,7 +115,7 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
             href="/projets"
             className="inline-block bg-[color:var(--secondary)] text-white font-bold px-6 py-3 border-2 border-black hover:bg-[color:var(--secondary-hover)] transition-colors"
           >
-            Voir toutes les médiations
+            Voir tous les ateliers
           </Link>
         </div>
       </section>

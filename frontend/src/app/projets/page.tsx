@@ -4,7 +4,7 @@ import { getCategoryLabel } from '@/lib/category-descriptions';
 import ProjetsClient from './ProjetsClient';
 
 export const metadata: Metadata = {
-  title: "Ateliers et médiations",
+  title: "Ateliers",
   description:
     "Ateliers et projets de l'association de cinéma 1, 2, 3 Soleil à Avignon : court-métrages, lip dub, médiation culturelle et actions jeunesse sur le territoire avignonnais.",
   openGraph: {

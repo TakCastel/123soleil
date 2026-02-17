@@ -21,7 +21,7 @@ function getRandomIndices(n: number, k: number): number[] {
 }
 
 export default function Hero() {
-  const title = '1,2,3 SOLEIL';
+  const title = '1,2,3 SOLEIL !';
   const letters = Array.from(title);
   const subtitle1 = 'POUR UN CINÉMA';
   const subtitle1Letters = Array.from(subtitle1);
@@ -422,7 +422,7 @@ export default function Hero() {
                     initial="hidden"
                     animate={cta2Visible ? 'visible' : 'hidden'}
                   >
-                    <Button href="/projets" bgColor="var(--secondary)" labelColor="#ffffff">Découvrir nos médiations</Button>
+                    <Button href="/projets" bgColor="var(--secondary)" labelColor="#ffffff">Découvrir nos ateliers</Button>
                   </motion.div>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 "use client";
 import Link from 'next/link';
 import { motion, type Variants } from 'framer-motion';
+import { FaFacebookF } from 'react-icons/fa';
 import { useInView } from '../hooks/useInView';
 import Button from './Button';
 import Logo from './Logo';
@@ -203,7 +204,20 @@ export default function Footer() {
                 animate={contentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
                 transition={{ delay: 0.6, duration: 0.3 }}
               >
-                Association 1, 2, 3 Soleil
+                <Link
+                  href="mailto:123soleilcinemasolidaire@gmail.com"
+                  className="hover:text-[color:var(--secondary)] transition-colors underline underline-offset-2"
+                >
+                  123soleilcinemasolidaire@gmail.com
+                </Link>
+              </motion.p>
+              <motion.p 
+                className="font-medium"
+                initial={{ opacity: 0, y: 10 }}
+                animate={contentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ delay: 0.65, duration: 0.3 }}
+              >
+                Association 1, 2, 3 Soleil !
               </motion.p>
               <motion.p 
                 initial={{ opacity: 0, y: 10 }}
@@ -226,6 +240,21 @@ export default function Footer() {
                 transition={{ delay: 0.8, duration: 0.3 }}
               >
                 Pour un cinéma solidaire et inclusif
+              </motion.p>
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={contentInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
+                transition={{ delay: 0.85, duration: 0.3 }}
+              >
+                <Link
+                  href="https://www.facebook.com/123soleilcinemasolidaire/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex hover:text-[color:var(--secondary)] transition-colors"
+                  aria-label="Page Facebook 1,2,3 Soleil"
+                >
+                  <FaFacebookF className="w-6 h-6" aria-hidden />
+                </Link>
               </motion.p>
             </motion.div>
           </motion.div>
@@ -251,7 +280,7 @@ export default function Footer() {
               animate={bottomInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
               transition={{ delay: 0.3, duration: 0.4 }}
             >
-              &copy; 2025 Association 1, 2, 3 Soleil. Tous droits réservés.
+              &copy; 2025 Association 1, 2, 3 Soleil ! Tous droits réservés.
             </motion.p>
             <motion.div 
               className="flex justify-center space-x-6 text-sm"

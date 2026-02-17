@@ -16,14 +16,14 @@ const CHIFFRES_LABELS = [
   'participants de la région',
   'projections',
   'éditions du festival',
-  'réalisateurs·rices',
+  'Vidéastes',
   'adhérents, membres actifs'
 ] as const;
 
 const CHIFFRES_DETAILS: (string | null)[] = [
   null,
   null,
-  'dans des lieux de diffusion récurrents : le cinéma Utopia et le jardin du Verger Urbain V, le Fenouil à vapeur, le stade Désaignes, Écran village, Salle des fêtes de Caromb...',
+  'dans des lieux de diffusion récurrents : le cinéma Utopia et le jardin du Verger Urbain V, le Fenouil à vapeur, le stade de Désaignes, Cinéma Écran village, Salle des fêtes de Caromb...',
   "« On fait de l'image ça se partage » en Ardèche",
   null,
   null

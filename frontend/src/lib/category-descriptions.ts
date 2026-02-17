@@ -18,25 +18,25 @@ function keyWithoutAccents(s: string): string {
 const LIP_DUB = {
   label: 'Lip Dub',
   description:
-    "Le terme « lip dub » de l'anglais lip, lèvre et dubbing, doublage consiste à mettre en scène un clip en un plan séquence en chantant en play back sur une chanson.\n\nLe lip dub se tourne en une journée avec une cinquantaine de participants, un groupe de réalisateurices et une équipe de bénévoles."
+    "Le terme « lip dub » de l'anglais lip, lèvre et dubbing, doublage consiste à mettre en scène un clip en un plan séquence en chantant en play back sur une chanson.\n\nLe lip dub se tourne en une journée avec une cinquantaine de participants, un groupe de vidéastes et une équipe de bénévoles."
 };
 
 const MEDIATION = {
   label: 'Médiation',
   description:
-    "Ces projets d'atelier s'inventent et se construisent sur mesure avec les réalisateurices et les institutions avec lesquels iels travaillent sur un temps adapté au projet pouvant aller d'une journée à plusieurs mois d'intervention en milieu scolaire ou milieu associatif.\n\nTous les genres cinématographiques peuvent être explorés : documentaires, clips, animations ou fiction."
+    "Ces projets d'atelier s'inventent et se construisent sur mesure avec les vidéastes et les institutions avec lesquels iels travaillent sur un temps adapté au projet pouvant aller d'une journée à plusieurs mois d'intervention en milieu scolaire ou milieu associatif.\n\nTous les genres cinématographiques peuvent être explorés : documentaires, clips, animations ou fiction."
 };
 
 const CONTENT: Record<string, { label: string; description: string }> = {
   'court-métrage': {
     label: 'Court-métrage',
     description:
-      "L'atelier court-métrage se déroule en une journée avec une dizaine de participant(e)s, deux réalisateurices et deux bénévoles de l'association.\n\nÉcriture collective le matin, et tournage l'après-midi après un repas partagé."
+      "L'atelier court-métrage se déroule en une journée avec une dizaine de participant(e)s, deux vidéastes et deux bénévoles de l'association.\n\nÉcriture collective de l'histoire, distribution des rôles et répétitions le matin, puis le tournage l'après-midi après un repas partagé."
   },
   'courts-métrages': {
     label: 'Court-métrage',
     description:
-      "L'atelier court-métrage se déroule en une journée avec une dizaine de participant(e)s, deux réalisateurices et deux bénévoles de l'association.\n\nÉcriture collective le matin, et tournage l'après-midi après un repas partagé."
+      "L'atelier court-métrage se déroule en une journée avec une dizaine de participant(e)s, deux vidéastes et deux bénévoles de l'association.\n\nÉcriture collective de l'histoire, distribution des rôles et répétitions le matin, puis le tournage l'après-midi après un repas partagé."
   },
   'lip dub': LIP_DUB,
   lipdub: LIP_DUB,
