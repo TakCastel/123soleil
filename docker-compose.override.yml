@@ -1,0 +1,21 @@
+# Override pour le dev local : frontend en mode watch (hot reload)
+# Usage : docker compose up
+# Le frontend monte le code source et lance "next dev" au lieu de "next start"
+services:
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+      args:
+        NEXT_PUBLIC_DIRECTUS_URL: ${NEXT_PUBLIC_DIRECTUS_URL}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+    volumes:
+      - ./frontend:/app
+      # Évite que le montage écrase node_modules du container
+      - /app/node_modules
+      # Évite les conflits avec .next du host
+      - /app/.next
+    # HOSTNAME pour que next dev écoute sur toutes les interfaces (accès depuis l’hôte)
+    environment:
+      HOSTNAME: "0.0.0.0"
+      WATCHPACK_POLLING: "true"
