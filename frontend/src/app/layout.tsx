@@ -21,9 +21,17 @@ const glegoo = Glegoo({
 });
 
 const siteUrl = getSiteUrl();
+const googleSiteVerification =
+  process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ||
+  process.env.GOOGLE_SITE_VERIFICATION;
 
 export const metadata: Metadata = {
   ...(siteUrl && { metadataBase: new URL(siteUrl) }),
+  ...(googleSiteVerification && {
+    verification: {
+      google: googleSiteVerification,
+    },
+  }),
   title: {
     default: "1, 2, 3 Soleil – Association de cinéma à Avignon",
     template: "%s | 1, 2, 3 Soleil – Association cinéma Avignon",

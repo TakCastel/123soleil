@@ -9,8 +9,13 @@ export const metadata: Metadata = {
   openGraph: { url: "/adhesion" },
 };
 
-const helloAssoAdhesionUrl = process.env.HELLOASSO_ADHESION_URL ?? '';
-const helloAssoDonUrl = process.env.HELLOASSO_DON_URL ?? '';
+const HELLOASSO_ADHESION_FALLBACK_URL =
+  'https://www.helloasso.com/associations/123-soleil-cinema-solidaire/adhesions/123-soleil-cinema-solidaire';
+const HELLOASSO_DON_FALLBACK_URL =
+  'https://www.helloasso.com/associations/123-soleil-cinema-solidaire/formulaires/1';
+
+const helloAssoAdhesionUrl = process.env.HELLOASSO_ADHESION_URL ?? HELLOASSO_ADHESION_FALLBACK_URL;
+const helloAssoDonUrl = process.env.HELLOASSO_DON_URL ?? HELLOASSO_DON_FALLBACK_URL;
 
 export default function Adhesion() {
   return (
