@@ -38,8 +38,6 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
   // Loader GIF sur la vidéo : affiché jusqu'à la fin du GIF, puis lecture auto de la vidéo
   const [showGifLoader, setShowGifLoader] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
-  // Ratio de la vidéo pour adapter le conteneur et éviter les bandes noires
-  const [videoAspectRatio, setVideoAspectRatio] = useState<string | null>(null);
 
   // Timer : on laisse le GIF faire toute sa boucle (~5 s), puis on enlève le GIF et on affiche la vidéo
   useEffect(() => {
@@ -146,10 +144,10 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
       {/* En-tête diagonal jaune à pois */}
       <section className="bg-diagonal-primary dotted-overlay">
         <PageHeader
-          seoTitle="Association 1,2,3 Soleil - Médiation culturelle solidaire"
+          seoTitle="Association 1,2,3 Soleil - Médiation artistique solidaire"
           mainTitle="1,2,3..."
           subtitle="Quelques mots"
-          description="Découvrez l'histoire, les missions et les engagements de notre association audiovisuelle, au service d'une médiation culturelle solidaire et inclusive sur le territoire avignonnais."
+          description="Découvrez l'histoire, les missions et les engagements de notre association audiovisuelle, au service d'une médiation artistique solidaire et inclusive sur le territoire avignonnais."
         />
       </section>
 
@@ -164,7 +162,7 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
             ref={gridRightRef.ref as React.RefObject<HTMLDivElement>}
             className={`relative w-full md:w-1/2 md:float-right md:ml-6 md:mb-4 bg-black border-2 border-black overflow-hidden flex items-center justify-center scroll-animate scale-in scroll-delay-200 ${gridRightRef.isInView && shouldShowContent ? 'in-view' : ''}`}
             style={{
-              aspectRatio: videoAspectRatio ?? '4/3',
+              aspectRatio: '4 / 3',
             }}
           >
             <>
@@ -172,7 +170,7 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
                 className={`absolute inset-0 flex items-center justify-center bg-black transition-opacity duration-300 z-10 ${showGifLoader ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 aria-hidden={!showGifLoader}
               >
-                <div className="relative w-[70%] h-[70%] max-w-full max-h-full">
+                <div className="relative w-[88%] h-[88%] max-w-full max-h-full">
                   <Image
                     src={LOGO_GIF_URL}
                     alt=""
@@ -187,14 +185,16 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
                 ref={videoRef}
                 src={videoUrl}
                 controls
-                className="w-full h-full object-contain"
+                autoPlay
+                loop
+                className="w-full h-full object-cover"
                 playsInline
                 muted
                 preload="auto"
-                onLoadedMetadata={(e) => {
-                  const v = e.currentTarget;
-                  if (v.videoWidth && v.videoHeight) {
-                    setVideoAspectRatio(`${v.videoWidth} / ${v.videoHeight}`);
+                onCanPlay={() => {
+                  // Renforce le démarrage auto juste après le loader GIF.
+                  if (!showGifLoader) {
+                    videoRef.current?.play().catch(() => {});
                   }
                 }}
               >

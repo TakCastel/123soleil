@@ -1,8 +1,9 @@
 import type { MetadataRoute } from 'next';
 import { getProjets } from '@/lib/projets';
 import { getActualites } from '@/lib/actualites';
+import { getSiteUrl } from '@/lib/site-url';
 
-const baseUrl = process.env.NEXT_PUBLIC_SITE_URL;
+const baseUrl = getSiteUrl();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (!baseUrl) return [];
@@ -23,19 +24,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Directus indisponible
   }
 
-  const projetEntries: MetadataRoute.Sitemap = projets.map((p) => ({
-    url: `${baseUrl}/projets/${p.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  const projetEntries: MetadataRoute.Sitemap = projets
+    .filter((p) => Boolean(p.id))
+    .map((p) => ({
+      url: `${baseUrl}/projets/${encodeURIComponent(p.id)}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }));
 
-  const actualiteEntries: MetadataRoute.Sitemap = actualites.map((a) => ({
-    url: `${baseUrl}/actualites/${a.id}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+  const actualiteEntries: MetadataRoute.Sitemap = actualites
+    .filter((a) => Boolean(a.id))
+    .map((a) => ({
+      url: `${baseUrl}/actualites/${encodeURIComponent(a.id)}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.7,
+    }));
 
   return [...staticRoutes, ...projetEntries, ...actualiteEntries];
 }

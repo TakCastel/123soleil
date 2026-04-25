@@ -6,7 +6,7 @@ import { marked } from 'marked';
 export const metadata: Metadata = {
   title: "L'Association",
   description:
-    "Découvrez 1, 2, 3 Soleil, association de cinéma à Avignon : histoire, missions et engagements pour un cinéma solidaire et une médiation culturelle inclusive sur le territoire avignonnais.",
+    "Découvrez 1, 2, 3 Soleil, association de cinéma à Avignon : histoire, missions et engagements pour un cinéma solidaire et une médiation artistique inclusive sur le territoire avignonnais.",
   openGraph: {
     url: "/association",
   },

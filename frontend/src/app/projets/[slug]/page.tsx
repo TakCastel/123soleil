@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { marked } from 'marked';
 import styles from './projet.module.css';
+import { getCategoryLabel } from '@/lib/category-descriptions';
 
 interface ProjetPageProps {
   params: Promise<{ slug: string }>;
@@ -13,7 +14,7 @@ interface ProjetPageProps {
 export async function generateMetadata({ params }: ProjetPageProps): Promise<Metadata> {
   const { slug } = await params;
   const projet = await getProjetBySlug(slug);
-  if (!projet) return { title: 'Médiation' };
+  if (!projet) return { title: 'Médiation artistique' };
   const description =
     projet.description ||
     `Projet de l'association de cinéma 1, 2, 3 Soleil à Avignon.`;
@@ -58,7 +59,7 @@ export default async function ProjetPage({ params }: ProjetPageProps) {
           <div className="flex flex-wrap justify-center gap-3 mb-4">
             {projet.categorie && (
               <span className="inline-block bg-white border-2 border-black px-4 py-2 text-sm font-bold uppercase text-[color:var(--neutral-dark)]">
-                {projet.categorie}
+                {getCategoryLabel(projet.categorie) ?? projet.categorie}
               </span>
             )}
             <span className="inline-block bg-white border-2 border-black px-4 py-2 text-sm font-bold text-[color:var(--neutral-dark)]">

@@ -12,7 +12,7 @@ export const revalidate = 0;
 export const metadata = {
   title: "Accueil",
   description:
-    "1, 2, 3 Soleil – Association de cinéma à Avignon. Cinéma solidaire et inclusif : ateliers, médiation culturelle, films et projets jeunesse sur le territoire avignonnais.",
+    "1, 2, 3 Soleil – Association de cinéma à Avignon. Cinéma solidaire et inclusif : ateliers, médiation artistique, films et projets jeunesse sur le territoire avignonnais.",
   openGraph: { url: "/" },
   alternates: { canonical: "/" },
 };

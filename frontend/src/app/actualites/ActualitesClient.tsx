@@ -43,7 +43,7 @@ export default function ActualitesClient({ latestNews, otherNews }: ActualitesCl
           seoTitle="Actualités - Association 1,2,3 Soleil"
           mainTitle="SUIVEZ"
           subtitle="NOS ACTUALITÉS"
-          description="Suivez l'actualité de l'association 1,2,3 Soleil: actions de médiation, diffusions, partenariats et appels à participation. Restez informé des temps forts et des nouvelles initiatives."
+          description="Suivez l'actualité de l'association 1,2,3 Soleil : nos ateliers, nos projections et événements ainsi que les appels à participation. Restez informé des temps forts de l’association !"
         />
       </div>
 

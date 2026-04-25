@@ -45,6 +45,9 @@ backend/uploads/
 release/
 release
 
+# backups locaux (archives volumineuses)
+backups/
+
 # video files (too large for git)
 *.mp4
 *.webm

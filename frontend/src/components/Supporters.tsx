@@ -9,6 +9,7 @@ export default function Supporters() {
   const titleRef = useInView({ threshold: 0.3 });
   const logo1Ref = useInView({ threshold: 0.3 });
   const logo2Ref = useInView({ threshold: 0.3 });
+  const logo3Ref = useInView({ threshold: 0.3 });
 
   return (
     <section className={styles.supportersSection}>
@@ -49,6 +50,22 @@ export default function Supporters() {
               width={200}
               height={100}
               className={`${styles.logo} ${styles.logoVilleAvignon}`}
+              style={{ width: 'auto', height: 'auto' }}
+            />
+          </a>
+          <a 
+            ref={logo3Ref.ref as React.RefObject<HTMLAnchorElement>}
+            href="https://cinemas-utopia.org/avignon/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={`${styles.logoWrapper} scroll-animate scale-in scroll-delay-300 ${logo3Ref.isInView ? 'in-view' : ''} transition-transform duration-300 ease-in-out hover:scale-105`}
+          >
+            <Image
+              src="/utopia-logo.png"
+              alt="Cinéma Utopia Avignon"
+              width={200}
+              height={100}
+              className={`${styles.logo} ${styles.logoUtopia}`}
               style={{ width: 'auto', height: 'auto' }}
             />
           </a>

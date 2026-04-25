@@ -8,7 +8,7 @@ import { useInView } from '@/hooks/useInView';
 import { Projet } from '@/lib/projets';
 import PageHeader from '@/components/PageHeader';
 import { usePageContentDelay } from '@/hooks/usePageContentDelay';
-import { getCategoryDescription } from '@/lib/category-descriptions';
+import { getCategoryDescription, getCategoryLabel } from '@/lib/category-descriptions';
 import type React from 'react';
 
 interface ProjetsClientProps {
@@ -116,7 +116,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
     }
   }, [shouldShowContent, filteredProjets.length, isLoading]);
 
-  // Contenu SEO et description selon le filtre (labels au singulier, textes dédiés pour Court-métrage, Lip Dub, Médiation)
+  // Contenu SEO et description selon le filtre (labels au singulier, textes dédiés pour Court-métrage, Lip Dub, Médiation artistique)
   const currentFilterLabel = filters.find((f) => f.id === displayFilter)?.label ?? displayFilter;
   const categoryDescription =
     displayFilter !== 'tous' ? getCategoryDescription(displayFilter) : undefined;
@@ -204,7 +204,7 @@ export default function ProjetsClient({ projets, filters }: ProjetsClientProps) 
                   imageUrl={projet.image}
                   videoUrl={projet.video_url}
                   badge={projet.annee}
-                  category={projet.categorie}
+                  category={projet.categorie ? (getCategoryLabel(projet.categorie) ?? projet.categorie) : undefined}
                   href={`/projets/${projet.id}`}
                   ctaLabel="Voir l'atelier →"
                 />

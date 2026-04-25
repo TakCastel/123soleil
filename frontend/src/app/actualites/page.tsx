@@ -5,7 +5,7 @@ import ActualitesClient from './ActualitesClient';
 export const metadata: Metadata = {
   title: "Actualités",
   description:
-    "Actualités de l'association de cinéma 1, 2, 3 Soleil à Avignon : actions de médiation, diffusions, partenariats et événements sur le territoire avignonnais.",
+    "Actualités de l'association de cinéma 1, 2, 3 Soleil à Avignon : actions de médiation artistique, diffusions, partenariats et événements sur le territoire avignonnais.",
   openGraph: {
     url: "/actualites",
   },

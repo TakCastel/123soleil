@@ -15,16 +15,6 @@ const directusPattern = directusUrl
 
 const nextConfig: NextConfig = {
   serverExternalPackages: ['resend'],
-  // En dev sous Docker, les volumes ne déclenchent pas toujours les événements fichier ; le polling assure le watch
-  webpack: (config, { dev }) => {
-    if (dev) {
-      config.watchOptions = {
-        poll: 1000,
-        aggregateTimeout: 300,
-      };
-    }
-    return config;
-  },
   images: {
     remotePatterns: [
       ...(directusPattern ? [directusPattern] : []),

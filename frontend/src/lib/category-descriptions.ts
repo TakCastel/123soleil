@@ -1,6 +1,6 @@
 /**
  * Labels au singulier et textes de présentation pour les catégories de médiations
- * (Court-métrage, Lip Dub, Médiation).
+ * (Court-métrage, Lip Dub, Médiation artistique).
  */
 
 function normalizeKey(s: string): string {
@@ -22,7 +22,7 @@ const LIP_DUB = {
 };
 
 const MEDIATION = {
-  label: 'Médiation',
+  label: 'Médiation artistique',
   description:
     "Ces projets d'atelier s'inventent et se construisent sur mesure avec les vidéastes et les institutions avec lesquels iels travaillent sur un temps adapté au projet pouvant aller d'une journée à plusieurs mois d'intervention en milieu scolaire ou milieu associatif.\n\nTous les genres cinématographiques peuvent être explorés : documentaires, clips, animations ou fiction."
 };
@@ -65,7 +65,7 @@ export function normalizeCategoryKey(category: string): string {
   return normalizeKey(category);
 }
 
-/** Label au singulier pour l’affichage (ex. "Médiations" → "Médiation"). */
+/** Label au singulier pour l’affichage (ex. "Médiations" → "Médiation artistique"). */
 export function getCategoryLabel(category: string): string | undefined {
   const key = findContentKey(normalizeCategoryKey(category));
   return key ? CONTENT[key].label : undefined;

@@ -2,7 +2,7 @@
 
 Au **push sur la branche `main`**, GitHub Actions déploie automatiquement sur le serveur : `git pull`, `docker compose up -d --build`, puis application du schéma Directus.
 
-Un seul **docker-compose.yml** : le front tourne en **production** (`npm run start`). En local, lancer Postgres et Directus en Docker puis le front en dev sur la machine : `docker compose up -d postgres directus` puis `cd frontend && npm run dev`.
+Un seul **docker-compose.yml** et un seul **Dockerfile** (frontend) : le front tourne en **production** (`npm run build` puis `npm run start`). En local : `docker compose up -d postgres directus` puis `cd frontend && npm run dev` pour le front avec watch.
 
 ## Prérequis sur le serveur
 
