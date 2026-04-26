@@ -33,8 +33,8 @@ export const metadata: Metadata = {
     },
   }),
   title: {
-    default: "1, 2, 3 Soleil – Association de cinéma à Avignon",
-    template: "%s | 1, 2, 3 Soleil – Association cinéma Avignon",
+    default: "1,2,3 Soleil Cinéma Solidaire | Avignon",
+    template: "%s | 1,2,3 Soleil Cinéma Solidaire",
   },
   description:
     "1, 2, 3 Soleil est une association de cinéma à Avignon dédiée à un cinéma solidaire et inclusif : ateliers, médiation artistique, films et projets jeunesse sur le territoire avignonnais.",

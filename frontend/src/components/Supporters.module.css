@@ -61,11 +61,11 @@
 
 /* Logo Utopia : même traitement visuel que les autres logos partenaires */
 .logoUtopia {
-  filter: grayscale(100%) brightness(0.4) contrast(1.2);
+  filter: none;
 }
 
 .logoWrapper:hover .logoUtopia {
-  filter: grayscale(100%) brightness(0.4) contrast(1.2);
+  filter: none;
 }
 
 @media (max-width: 768px) {

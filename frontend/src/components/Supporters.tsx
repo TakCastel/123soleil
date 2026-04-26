@@ -61,7 +61,7 @@ export default function Supporters() {
             className={`${styles.logoWrapper} scroll-animate scale-in scroll-delay-300 ${logo3Ref.isInView ? 'in-view' : ''} transition-transform duration-300 ease-in-out hover:scale-105`}
           >
             <Image
-              src="/utopia-logo.png"
+              src="/Utopia_logo.png"
               alt="Cinéma Utopia Avignon"
               width={200}
               height={100}
