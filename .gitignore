@@ -54,4 +54,5 @@ backups/
 *.mov
 *.avi
 *.mkv
+!frontend/public/videos/video.mp4
 !frontend/public/videos/**/.gitkeep
