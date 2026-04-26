@@ -10,67 +10,81 @@ export default function MentionsLegales() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-8">Mentions Légales</h1>
-      
+
       <div className="prose prose-lg max-w-none">
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Lorem Ipsum Dolor</h2>
+          <h2 className="text-2xl font-semibold mb-4">Editeur du site</h2>
           <p className="text-gray-600 mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor 
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            Le présent site est édité par l&apos;association <strong>1,2,3 Soleil Cinéma Solidaire</strong>.
           </p>
-        </section>
-
-        <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Consectetur Adipiscing</h2>
+          <p className="text-gray-600 mb-2">
+            Siège social : 4 rue des Escaliers Sainte-Anne, 84000 Avignon.
+          </p>
+          <p className="text-gray-600 mb-2">
+            Email : 123soleilcinemasolidaire@gmail.com
+          </p>
+          <p className="text-gray-600 mb-2">
+            Téléphone : 06 84 79 88 75.
+          </p>
+          <p className="text-gray-600 mb-2">
+            RNA : W842010897.
+          </p>
           <p className="text-gray-600">
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu 
-            fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-            culpa qui officia deserunt mollit anim id est laborum.
+            SIREN : 889 422 101 - SIRET (siège) : 889 422 101 00028.
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Sed Do Eiusmod</h2>
+          <h2 className="text-2xl font-semibold mb-4">Directrice de la publication</h2>
           <p className="text-gray-600">
-            Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque 
-            laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi 
-            architecto beatae vitae dicta sunt explicabo.
+            Christine Conte, présidente de l&apos;association.
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Tempor Incididunt</h2>
+          <h2 className="text-2xl font-semibold mb-4">Hébergement</h2>
+          <p className="text-gray-600">
+            Le site est hébergé par OVHcloud.
+          </p>
+          <p className="text-gray-600">
+            OVH SAS - 2 rue Kellermann, 59100 Roubaix, France.
+          </p>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Propriété intellectuelle</h2>
           <p className="text-gray-600 mb-4">
-            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia 
-            consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro 
-            quisquam est, qui dolorem ipsum quia dolor sit amet.
+            L&apos;ensemble des contenus présents sur ce site (textes, images, vidéos, logos, éléments graphiques)
+            est protégé par le droit d&apos;auteur et le droit de la propriété intellectuelle.
           </p>
           <p className="text-gray-600">
-            Consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore 
-            et dolore magnam aliquam quaerat voluptatem.
+            Toute reproduction, représentation, adaptation ou diffusion, totale ou partielle, sans
+            autorisation écrite préalable est interdite.
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Ut Labore Et</h2>
+          <h2 className="text-2xl font-semibold mb-4">Responsabilité</h2>
           <p className="text-gray-600 mb-4">
-            At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium 
-            voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint 
-            occaecati cupiditate non provident.
+            L&apos;association s&apos;efforce de fournir des informations exactes et à jour. Toutefois, elle ne
+            peut garantir l&apos;exactitude, la complétude ou l&apos;actualité de l&apos;ensemble des contenus.
           </p>
           <p className="text-gray-600">
-            Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum 
-            fuga. Et harum quidem rerum facilis est et expedita distinctio.
+            L&apos;utilisation des informations du site se fait sous la responsabilité de l&apos;utilisateur.
           </p>
         </section>
 
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Dolore Magna</h2>
+          <h2 className="text-2xl font-semibold mb-4">Contact</h2>
           <p className="text-gray-600">
-            Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus 
-            id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor 
-            repellendus.
+            Pour toute question, vous pouvez nous contacter à l&apos;adresse : 123soleilcinemasolidaire@gmail.com
+          </p>
+        </section>
+
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4">Crédits</h2>
+          <p className="text-gray-600">
+            Site réalisé et maintenu par l&apos;association 1,2,3 Soleil Cinéma Solidaire.
           </p>
         </section>
       </div>

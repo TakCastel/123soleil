@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Button from './Button';
 import Logo from './Logo';
 
@@ -55,9 +55,11 @@ export default function Header() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden ml-auto"
+            className="md:hidden ml-auto rounded-md p-1.5"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Ouvrir le menu"
+            aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
           >
             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -66,16 +68,43 @@ export default function Header() {
         </div>
 
         {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <nav className="md:hidden absolute left-0 right-0 top-16 md:top-24 bg-white border-b border-gray-200 px-4 py-4 space-y-4 z-30">
-            <Link href="/" {...getLinkProps('/', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Accueil</Link>
-            <Link href="/association" {...getLinkProps('/association', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>L&apos;Association</Link>
-            <Link href="/projets" {...getLinkProps('/projets', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Ateliers</Link>
-            <Link href="/actualites" {...getLinkProps('/actualites', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Actualités</Link>
-            <Link href="/contact" {...getLinkProps('/contact', pathname, 'block hover:text-[color:var(--secondary)] transition-colors')}>Contact</Link>
-            <Button href="/adhesion" bgColor="var(--secondary)" labelColor="#ffffff">Adhésion</Button>
-          </nav>
-        )}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.nav
+              id="mobile-menu"
+              className="md:hidden fixed left-0 right-0 top-16 bottom-0 bg-white border-t border-gray-200 px-6 py-6 z-30"
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -12 }}
+              transition={{ duration: 0.22, ease: 'easeOut' }}
+            >
+              <div className="h-full flex flex-col justify-between">
+                <div className="space-y-6 pt-1">
+                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.04 }}>
+                    <Link onClick={() => setIsMenuOpen(false)} href="/" {...getLinkProps('/', pathname, 'block text-xl hover:text-[color:var(--secondary)] transition-colors')}>Accueil</Link>
+                  </motion.div>
+                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
+                    <Link onClick={() => setIsMenuOpen(false)} href="/association" {...getLinkProps('/association', pathname, 'block text-xl hover:text-[color:var(--secondary)] transition-colors')}>L&apos;Association</Link>
+                  </motion.div>
+                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}>
+                    <Link onClick={() => setIsMenuOpen(false)} href="/projets" {...getLinkProps('/projets', pathname, 'block text-xl hover:text-[color:var(--secondary)] transition-colors')}>Ateliers</Link>
+                  </motion.div>
+                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.16 }}>
+                    <Link onClick={() => setIsMenuOpen(false)} href="/actualites" {...getLinkProps('/actualites', pathname, 'block text-xl hover:text-[color:var(--secondary)] transition-colors')}>Actualités</Link>
+                  </motion.div>
+                  <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                    <Link onClick={() => setIsMenuOpen(false)} href="/contact" {...getLinkProps('/contact', pathname, 'block text-xl hover:text-[color:var(--secondary)] transition-colors')}>Contact</Link>
+                  </motion.div>
+                </div>
+                <motion.div initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }} className="pb-2">
+                  <div className="inline-block origin-left">
+                    <Button href="/adhesion" bgColor="var(--secondary)" labelColor="#ffffff">Adhésion</Button>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </div>
     </header>
   );

@@ -22,10 +22,13 @@ function getRandomIndices(n: number, k: number): number[] {
 
 export default function Hero() {
   const title = '1,2,3 SOLEIL !';
+  const titleWords = title.split(' ');
   const letters = Array.from(title);
   const subtitle1 = 'POUR UN CINÉMA';
+  const subtitle1Words = subtitle1.split(' ');
   const subtitle1Letters = Array.from(subtitle1);
   const subtitle2 = 'SOLIDAIRE ET INCLUSIF !';
+  const subtitle2Words = subtitle2.split(' ');
   const subtitle2Letters = Array.from(subtitle2);
   const baseDelay = 0.05; // Réduit de 150ms à 50ms
   const perLetterStagger = 0.03; // Réduit de 60ms à 30ms par lettre
@@ -134,18 +137,19 @@ export default function Hero() {
       scale: 0.8,
       rotate: ((i * 23) % 13) - 6 // pseudo-random small angle
     }),
-    visible: {
+    visible: (custom: { index: number; stagger: number }) => ({
       opacity: 1,
       y: 0,
       scale: 1,
       rotate: 0,
       transition: {
+        delay: 0.1 + custom.index * custom.stagger,
         type: 'spring' as const,
         stiffness: 480,
         damping: 24,
         mass: 0.7
       }
-    }
+    })
   };
 
   const heroItem: Variants = {
@@ -363,21 +367,37 @@ export default function Hero() {
                     initial="hidden"
                     animate={subtitle1Visible ? 'visible' : 'hidden'}
                   >
-                    {subtitle1Letters.map((char, i) => (
-                      <motion.span
-                        key={i}
-                        custom={i}
-                        variants={subtitleLetterVariants}
-                        style={{ 
-                          display: 'inline-block', 
-                          willChange: 'transform, opacity',
-                          backfaceVisibility: 'hidden',
-                          perspective: 1000
-                        }}
-                      >
-                        {char === ' ' ? '\u00A0' : char}
-                      </motion.span>
-                    ))}
+                    {subtitle1Words.map((word, wordIndex) => {
+                      const letterOffset = subtitle1Words
+                        .slice(0, wordIndex)
+                        .reduce((sum, previousWord) => sum + Array.from(previousWord).length, 0);
+                      return (
+                        <span
+                          key={`${word}-${wordIndex}`}
+                          style={{
+                            display: 'inline-block',
+                            whiteSpace: 'nowrap',
+                            marginRight: wordIndex < subtitle1Words.length - 1 ? '0.32em' : 0
+                          }}
+                        >
+                          {Array.from(word).map((char, charIndex) => (
+                            <motion.span
+                              key={`${wordIndex}-${charIndex}`}
+                              custom={{ index: letterOffset + charIndex, stagger: adjustedSubtitle1Stagger }}
+                              variants={subtitleLetterVariants}
+                              style={{ 
+                                display: 'inline-block', 
+                                willChange: 'transform, opacity',
+                                backfaceVisibility: 'hidden',
+                                perspective: 1000
+                              }}
+                            >
+                              {char}
+                            </motion.span>
+                          ))}
+                        </span>
+                      );
+                    })}
                   </motion.p>
                 </motion.div>
 
@@ -394,21 +414,37 @@ export default function Hero() {
                     initial="hidden"
                     animate={subtitle2Visible ? 'visible' : 'hidden'}
                   >
-                    {subtitle2Letters.map((char, i) => (
-                      <motion.span
-                        key={i}
-                        custom={i}
-                        variants={subtitleLetterVariants}
-                        style={{ 
-                          display: 'inline-block', 
-                          willChange: 'transform, opacity',
-                          backfaceVisibility: 'hidden',
-                          perspective: 1000
-                        }}
-                      >
-                        {char === ' ' ? '\u00A0' : char}
-                      </motion.span>
-                    ))}
+                    {subtitle2Words.map((word, wordIndex) => {
+                      const letterOffset = subtitle2Words
+                        .slice(0, wordIndex)
+                        .reduce((sum, previousWord) => sum + Array.from(previousWord).length, 0);
+                      return (
+                        <span
+                          key={`${word}-${wordIndex}`}
+                          style={{
+                            display: 'inline-block',
+                            whiteSpace: 'nowrap',
+                            marginRight: wordIndex < subtitle2Words.length - 1 ? '0.32em' : 0
+                          }}
+                        >
+                          {Array.from(word).map((char, charIndex) => (
+                            <motion.span
+                              key={`${wordIndex}-${charIndex}`}
+                              custom={{ index: letterOffset + charIndex, stagger: adjustedSubtitle2Stagger }}
+                              variants={subtitleLetterVariants}
+                              style={{ 
+                                display: 'inline-block', 
+                                willChange: 'transform, opacity',
+                                backfaceVisibility: 'hidden',
+                                perspective: 1000
+                              }}
+                            >
+                              {char}
+                            </motion.span>
+                          ))}
+                        </span>
+                      );
+                    })}
                   </motion.p>
                 </motion.div>
 

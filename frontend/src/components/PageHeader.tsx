@@ -20,8 +20,10 @@ export default function PageHeader({
   className = "",
   onProgress
 }: PageHeaderProps) {
-  const letters = Array.from(mainTitle);
-  const subtitleLetters = Array.from(subtitle ?? '');
+  const titleWords = mainTitle.split(' ');
+  const subtitleWords = (subtitle ?? '').split(' ');
+  const titleLetterCount = Array.from(mainTitle.replace(/\s+/g, '')).length;
+  const subtitleLetterCount = Array.from((subtitle ?? '').replace(/\s+/g, '')).length;
   const hasSubtitle = Boolean(subtitle);
 
   const baseDelay = 0.05;
@@ -47,7 +49,7 @@ export default function PageHeader({
     };
 
     // Calculer la durée d'animation du titre
-    const titleDuration = (baseDelay + (letters.length * perLetterStagger)) * 1000;
+    const titleDuration = (baseDelay + (titleLetterCount * perLetterStagger)) * 1000;
 
     // Démarrer le titre
     setTimeout(() => setTitleVisible(true), TIMING.title);
@@ -60,7 +62,7 @@ export default function PageHeader({
 
     // Calculer la durée d'animation du sous-titre (0 si pas de sous-titre)
     const subtitleDuration = hasSubtitle
-      ? (baseDelay + (subtitleLetters.length * perLetterStagger)) * 1000
+      ? (baseDelay + (subtitleLetterCount * perLetterStagger)) * 1000
       : 0;
 
     // Démarrer la description après le sous-titre (ou après le titre si pas de sous-titre)
@@ -79,14 +81,14 @@ export default function PageHeader({
       }
       setTimeout(() => onProgress(1.0), totalDuration);
     }
-  }, [letters.length, subtitleLetters.length, hasSubtitle, onProgress]);
+  }, [titleLetterCount, subtitleLetterCount, hasSubtitle, onProgress]);
 
   // Variants pour le titre principal
   const titleContainerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: perLetterStagger, delayChildren: baseDelay }
+      transition: { delayChildren: baseDelay }
     }
   };
 
@@ -97,18 +99,19 @@ export default function PageHeader({
       scale: 0.7,
       rotate: ((i * 37) % 17) - 8
     }),
-    visible: {
+    visible: (i: number) => ({
       opacity: 1,
       y: 0,
       scale: 1,
       rotate: 0,
       transition: {
+        delay: baseDelay + i * perLetterStagger,
         type: 'spring' as const,
         stiffness: 520,
         damping: 22,
         mass: 0.6
       }
-    }
+    })
   };
 
   // Variants pour le sous-titre
@@ -116,7 +119,7 @@ export default function PageHeader({
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: { staggerChildren: perLetterStagger, delayChildren: 0.1 }
+      transition: { delayChildren: 0.1 }
     }
   };
 
@@ -127,18 +130,19 @@ export default function PageHeader({
       scale: 0.8,
       rotate: ((i * 23) % 13) - 6
     }),
-    visible: {
+    visible: (i: number) => ({
       opacity: 1,
       y: 0,
       scale: 1,
       rotate: 0,
       transition: {
+        delay: baseDelay + i * perLetterStagger,
         type: 'spring' as const,
         stiffness: 480,
         damping: 24,
         mass: 0.7
       }
-    }
+    })
   };
 
   // Variants pour la description (slide up + fade in)
@@ -176,16 +180,26 @@ export default function PageHeader({
         <motion.span 
           className="display-title text-5xl md:text-6xl text-[color:var(--secondary)] title-tilt inline-block overflow-visible"
         >
-          {letters.map((char, i) => (
-            <motion.span
-              key={i}
-              custom={i}
-              variants={titleLetterVariants}
-              style={{ display: 'inline-block', willChange: 'transform' }}
-            >
-              {char === ' ' ? '\u00A0' : char}
-            </motion.span>
-          ))}
+          {titleWords.map((word, wordIndex) => {
+            const letterOffset = titleWords
+              .slice(0, wordIndex)
+              .reduce((sum, previousWord) => sum + Array.from(previousWord).length, 0);
+            return (
+              <motion.span key={`${word}-${wordIndex}`} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                {Array.from(word).map((char, charIndex) => (
+                  <motion.span
+                    key={`${wordIndex}-${charIndex}`}
+                    custom={letterOffset + charIndex}
+                    variants={titleLetterVariants}
+                    style={{ display: 'inline-block', willChange: 'transform' }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+                {wordIndex < titleWords.length - 1 ? ' ' : ''}
+              </motion.span>
+            );
+          })}
         </motion.span>
       </motion.div>
 
@@ -198,16 +212,26 @@ export default function PageHeader({
           animate={subtitleVisible ? "visible" : "hidden"}
         >
           <motion.p className="subtitle-black small">
-            {subtitleLetters.map((char, i) => (
-              <motion.span
-                key={i}
-                custom={i}
-                variants={subtitleLetterVariants}
-                style={{ display: 'inline-block', willChange: 'transform' }}
-              >
-                {char === ' ' ? '\u00A0' : char}
-              </motion.span>
-            ))}
+            {subtitleWords.map((word, wordIndex) => {
+              const letterOffset = subtitleWords
+                .slice(0, wordIndex)
+                .reduce((sum, previousWord) => sum + Array.from(previousWord).length, 0);
+              return (
+                <motion.span key={`${word}-${wordIndex}`} style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
+                  {Array.from(word).map((char, charIndex) => (
+                    <motion.span
+                      key={`${wordIndex}-${charIndex}`}
+                      custom={letterOffset + charIndex}
+                      variants={subtitleLetterVariants}
+                      style={{ display: 'inline-block', willChange: 'transform' }}
+                    >
+                      {char}
+                    </motion.span>
+                  ))}
+                  {wordIndex < subtitleWords.length - 1 ? ' ' : ''}
+                </motion.span>
+              );
+            })}
           </motion.p>
         </motion.div>
       )}
