@@ -84,7 +84,16 @@ export default function MentionsLegales() {
         <section className="mb-8">
           <h2 className="text-2xl font-semibold mb-4">Crédits</h2>
           <p className="text-gray-600">
-            Site réalisé et maintenu par l&apos;association 1,2,3 Soleil Cinéma Solidaire.
+            Site réalisé par Tarik Talhaoui (
+            <a
+              href="https://studio-castel.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline hover:no-underline"
+            >
+              studio-castel.com
+            </a>
+            ).
           </p>
         </section>
       </div>
