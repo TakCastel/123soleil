@@ -27,7 +27,9 @@ const jsonRequest = async (pathName, options = {}) => {
 
 /** Retourne { hash, diff } ou null si 204 / pas de changement. */
 const getSchemaDiff = async (token, snapshot) => {
-  const res = await fetch(`${DIRECTUS_URL}/schema/diff`, {
+  // force=true : ignore le refus de Directus quand la version de l'instance a dérivé (ex. patch
+  // mineur suite à une mise à jour de l'image) par rapport à celle du snapshot exporté.
+  const res = await fetch(`${DIRECTUS_URL}/schema/diff?force=true`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
     body: JSON.stringify(snapshot)
