@@ -23,5 +23,5 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > key.pem
           chmod 600 key.pem
           ssh -o StrictHostKeyChecking=no -i key.pem "$SSH_USER@$SSH_HOST" \
-            "cd $DEPLOY_PATH && git pull origin main && git lfs pull && npm ci && docker compose up -d --build && sleep 25 && docker compose exec -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /backend/apply-schema.js && docker compose exec -w /workspace -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /backend/import-profile-posts.js"
+            "cd $DEPLOY_PATH && git pull origin main && git lfs pull && npm ci && docker compose up -d --build && sleep 25 && docker compose exec -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /workspace/backend/apply-schema.js && docker compose exec -w /workspace -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /workspace/backend/import-profile-posts.js"
           rm -f key.pem
