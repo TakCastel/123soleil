@@ -1,5 +1,8 @@
 # Déploiement automatique au push sur main.
 # Configure les secrets dans GitHub : Settings → Secrets and variables → Actions.
+#
+# Le build Next.js/Docker tourne ici, sur les runners GitHub (pas sur le VPS).
+# Le VPS ne fait plus que "docker compose pull && up -d" : aucune charge de build.
 
 name: Deploy
 
@@ -7,8 +10,41 @@ on:
   push:
     branches: [main]
 
+env:
+  IMAGE: ghcr.io/takcastel/123soleil-web
+
 jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_DIRECTUS_URL=${{ vars.NEXT_PUBLIC_DIRECTUS_URL }}
+            NEXT_PUBLIC_SITE_URL=${{ vars.NEXT_PUBLIC_SITE_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Deploy on server
@@ -23,5 +59,5 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > key.pem
           chmod 600 key.pem
           ssh -o StrictHostKeyChecking=no -i key.pem "$SSH_USER@$SSH_HOST" \
-            "cd $DEPLOY_PATH && git pull origin main && git lfs pull && npm ci && docker compose up -d --build && sleep 25 && docker compose exec -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /workspace/backend/apply-schema.js && docker compose exec -w /workspace -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /workspace/backend/import-profile-posts.js"
+            "cd $DEPLOY_PATH && git pull origin main && git lfs pull && npm ci && docker compose pull && docker compose up -d && sleep 10 && docker compose exec -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /workspace/backend/apply-schema.js && docker compose exec -w /workspace -e DIRECTUS_URL=http://directus:8055 -e DIRECTUS_EMAIL='$DIRECTUS_EMAIL' -e DIRECTUS_PASSWORD='$DIRECTUS_PASSWORD' web node /workspace/backend/import-profile-posts.js"
           rm -f key.pem

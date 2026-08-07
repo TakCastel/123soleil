@@ -42,12 +42,9 @@ services:
       - directus_uploads:/directus/uploads
 
   web:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-      args:
-        NEXT_PUBLIC_DIRECTUS_URL: ${NEXT_PUBLIC_DIRECTUS_URL}
-        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL}
+    # Image construite et poussée par GitHub Actions (voir .github/workflows/deploy.yml) :
+    # le VPS ne build plus rien, il pull juste l'image prête.
+    image: ghcr.io/takcastel/123soleil-web:latest
     container_name: frontend
     restart: unless-stopped
     depends_on:
