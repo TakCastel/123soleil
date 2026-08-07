@@ -196,7 +196,7 @@ export default function PageHeader({
                     {char}
                   </motion.span>
                 ))}
-                {wordIndex < titleWords.length - 1 ? ' ' : ''}
+                {wordIndex < titleWords.length - 1 ? ' ' : ''}
               </motion.span>
             );
           })}
@@ -228,7 +228,7 @@ export default function PageHeader({
                       {char}
                     </motion.span>
                   ))}
-                  {wordIndex < subtitleWords.length - 1 ? ' ' : ''}
+                  {wordIndex < subtitleWords.length - 1 ? ' ' : ''}
                 </motion.span>
               );
             })}

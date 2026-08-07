@@ -61,8 +61,8 @@ export default function PolitiqueConfidentialite() {
             Elles ne sont ni vendues, ni cédées à des tiers à des fins commerciales.
           </p>
           <p className="text-gray-600">
-            Pour l&apos;envoi des messages via le formulaire de contact, un prestataire technique d&apos;email
-            peut être utilisé (Resend).
+            Pour l&apos;envoi des messages via le formulaire de contact, les données transitent par les
+            serveurs Google (Gmail), utilisés comme prestataire technique d&apos;envoi d&apos;email.
           </p>
         </section>
 

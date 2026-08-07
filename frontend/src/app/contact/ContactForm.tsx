@@ -30,6 +30,14 @@ export default function ContactForm() {
     const name = (formData.get('name') as string)?.trim() || '';
     const email = (formData.get('email') as string)?.trim() || '';
     const message = (formData.get('message') as string)?.trim() || '';
+    const website = (formData.get('website') as string)?.trim() || '';
+
+    // Honeypot : champ invisible pour les humains, souvent rempli par les bots. On feint le succès sans envoyer.
+    if (website) {
+      setStatus('success');
+      form.reset();
+      return;
+    }
 
     const errors = validateFields(name, email, message);
     if (Object.keys(errors).length > 0) {
@@ -69,6 +77,11 @@ export default function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+      {/* Honeypot anti-spam : caché visuellement et du DOM tab order, mais présent pour les bots qui remplissent tout. */}
+      <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }} aria-hidden="true">
+        <label htmlFor="contact-website">Site web</label>
+        <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
       <div>
         <label htmlFor="contact-name" className="block font-medium text-[color:var(--neutral-dark)] mb-2">
           Nom

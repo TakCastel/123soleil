@@ -9,10 +9,9 @@ import { usePageContentDelay } from '@/hooks/usePageContentDelay';
 import type React from 'react';
 import styles from '@/app/actualites/[slug]/actualite.module.css';
 
-const LOGO_GIF_URL = '/assets/logo-123soleil-animated.gif';
+/** Logo animé (vidéo mp4, ~360 Ko) : remplace l'ancien GIF (104 Mo) qui pesait bien plus que la vidéo qu'il précède. */
+const LOGO_VIDEO_URL = '/assets/logo-123soleil-animated.mp4';
 const FALLBACK_VIDEO_URL = '/videos/video.mp4';
-/** Durée d’une boucle du GIF (environ 5 s) : on attend la fin de la boucle avant d’afficher la vidéo */
-const GIF_LOADER_DURATION_MS = 5000;
 
 interface AssociationClientProps {
   associationVideoUrl?: string | null;
@@ -35,15 +34,9 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
   
   const shouldShowContent = isContentVisible || fallbackVisible;
 
-  // Loader GIF sur la vidéo : affiché jusqu'à la fin du GIF, puis lecture auto de la vidéo
+  // Loader (logo animé) sur la vidéo : affiché jusqu'à la fin de sa boucle, puis lecture auto de la vidéo
   const [showGifLoader, setShowGifLoader] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  // Timer : on laisse le GIF faire toute sa boucle (~5 s), puis on enlève le GIF et on affiche la vidéo
-  useEffect(() => {
-    const timeoutId = setTimeout(() => setShowGifLoader(false), GIF_LOADER_DURATION_MS);
-    return () => clearTimeout(timeoutId);
-  }, []);
 
   // Dès que le loader est caché, on lance la vidéo (muted pour autoplay). On attend canplay si besoin.
   useEffect(() => {
@@ -171,13 +164,13 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
                 aria-hidden={!showGifLoader}
               >
                 <div className="relative w-[88%] h-[88%] max-w-full max-h-full">
-                  <Image
-                    src={LOGO_GIF_URL}
-                    alt=""
-                    fill
-                    className="object-contain"
-                    sizes="70vw"
-                    unoptimized
+                  <video
+                    src={LOGO_VIDEO_URL}
+                    autoPlay
+                    muted
+                    playsInline
+                    className="w-full h-full object-contain"
+                    onEnded={() => setShowGifLoader(false)}
                   />
                 </div>
               </div>

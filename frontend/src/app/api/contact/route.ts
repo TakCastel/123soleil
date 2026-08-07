@@ -1,23 +1,40 @@
 import { NextRequest } from 'next/server';
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+const gmailUser = process.env.GMAIL_USER || '';
+const gmailAppPassword = process.env.GMAIL_APP_PASSWORD || '';
 
-const primaryEmail = process.env.CONTACT_EMAIL_PRIMARY || '';
+const transporter =
+  gmailUser && gmailAppPassword
+    ? nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: gmailUser, pass: gmailAppPassword },
+      })
+    : null;
+
+const primaryEmail = process.env.CONTACT_EMAIL_PRIMARY || gmailUser;
 const fallbackEmail = process.env.CONTACT_EMAIL_FALLBACK || '';
-const from = process.env.RESEND_FROM || '1,2,3 Soleil <onboarding@resend.dev>';
 
 export async function POST(request: NextRequest) {
-  if (!resend) {
+  if (!transporter) {
     return Response.json(
-      { error: 'Configuration email manquante (RESEND_API_KEY).' },
+      { error: 'Configuration email manquante (GMAIL_USER / GMAIL_APP_PASSWORD).' },
       { status: 500 }
     );
   }
 
   try {
     const body = await request.json();
-    const { name, email, message } = body as { name?: string; email?: string; message?: string };
+    const { name, email, message, website } = body as {
+      name?: string;
+      email?: string;
+      message?: string;
+      website?: string; // honeypot : doit rester vide, un bot le remplit généralement
+    };
+
+    if (website?.trim()) {
+      return Response.json({ ok: true });
+    }
 
     if (!name?.trim() || !email?.trim() || !message?.trim()) {
       return Response.json(
@@ -26,8 +43,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const to = [primaryEmail].filter(Boolean);
-    if (to.length === 0) {
+    if (!primaryEmail) {
       return Response.json(
         { error: 'Aucune adresse de destination configurée (CONTACT_EMAIL_PRIMARY).' },
         { status: 500 }
@@ -43,19 +59,16 @@ export async function POST(request: NextRequest) {
       <pre style="white-space: pre-wrap; font-family: inherit;">${escapeHtml(message.trim())}</pre>
     `;
 
-    const { data, error } = await resend!.emails.send({
-      from,
-      to,
+    await transporter.sendMail({
+      from: `"1,2,3 Soleil" <${gmailUser}>`,
+      to: primaryEmail,
       replyTo,
       subject,
       html,
-      ...(fallbackEmail && { bcc: [fallbackEmail] })
+      ...(fallbackEmail && { bcc: fallbackEmail }),
     });
 
-    if (error) {
-      return Response.json({ error: error.message }, { status: 500 });
-    }
-    return Response.json(data);
+    return Response.json({ ok: true });
   } catch (e) {
     console.error('Contact API error:', e);
     return Response.json(

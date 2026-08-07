@@ -598,3 +598,17 @@ body {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
+
+/* Respecte "réduire les animations" côté OS : neutralise les animations/transitions CSS
+   (keyframes, scroll-reveal, etc.). Les animations Framer Motion sont gérées à part via
+   <MotionConfig reducedMotion="user"> dans layout.tsx. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

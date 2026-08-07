@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 /** Toutes les images du hero (public/hero). Pool de 27 images. */
 const HERO_IMAGE_URLS = [
   ...Array.from({ length: 26 }, (_, i) => `/hero/hero-image-${i + 1}.jpg`),
-  '/hero/hero-image-27.png'
+  '/hero/hero-image-27.jpg'
 ];
 
 /** Retourne k indices distincts aléatoires dans [0, n). */
@@ -336,14 +336,16 @@ export default function Hero() {
                 variants={titleContainerVariants}
                 initial="hidden"
                 animate={titleVisible ? "visible" : "hidden"}
+                aria-label={title}
               >
                 {letters.map((char, i) => (
                     <motion.span
                       key={i}
                       custom={i}
                       variants={titleLetterVariants}
-                      style={{ 
-                        display: 'inline-block', 
+                      aria-hidden="true"
+                      style={{
+                        display: 'inline-block',
                         willChange: 'transform, opacity',
                         backfaceVisibility: 'hidden',
                         perspective: 1000
@@ -361,11 +363,12 @@ export default function Hero() {
                   animate={subtitle1Visible ? 'visible' : 'hidden'}
                   className="mb-2"
                 >
-                  <motion.p 
+                  <motion.p
                     className="display-title text-3xl text-[color:var(--neutral-dark)]"
                     variants={subtitle1ContainerVariants}
                     initial="hidden"
                     animate={subtitle1Visible ? 'visible' : 'hidden'}
+                    aria-label={subtitle1}
                   >
                     {subtitle1Words.map((word, wordIndex) => {
                       const letterOffset = subtitle1Words
@@ -374,6 +377,7 @@ export default function Hero() {
                       return (
                         <span
                           key={`${word}-${wordIndex}`}
+                          aria-hidden="true"
                           style={{
                             display: 'inline-block',
                             whiteSpace: 'nowrap',
@@ -385,8 +389,8 @@ export default function Hero() {
                               key={`${wordIndex}-${charIndex}`}
                               custom={{ index: letterOffset + charIndex, stagger: adjustedSubtitle1Stagger }}
                               variants={subtitleLetterVariants}
-                              style={{ 
-                                display: 'inline-block', 
+                              style={{
+                                display: 'inline-block',
                                 willChange: 'transform, opacity',
                                 backfaceVisibility: 'hidden',
                                 perspective: 1000
@@ -408,11 +412,12 @@ export default function Hero() {
                   animate={subtitle2Visible ? 'visible' : 'hidden'}
                   className="mb-8 md:mb-12 lg:mb-16"
                 >
-                  <motion.p 
+                  <motion.p
                     className="display-title text-3xl text-[color:var(--neutral-dark)]"
                     variants={subtitle2ContainerVariants}
                     initial="hidden"
                     animate={subtitle2Visible ? 'visible' : 'hidden'}
+                    aria-label={subtitle2}
                   >
                     {subtitle2Words.map((word, wordIndex) => {
                       const letterOffset = subtitle2Words
@@ -421,6 +426,7 @@ export default function Hero() {
                       return (
                         <span
                           key={`${word}-${wordIndex}`}
+                          aria-hidden="true"
                           style={{
                             display: 'inline-block',
                             whiteSpace: 'nowrap',
@@ -432,8 +438,8 @@ export default function Hero() {
                               key={`${wordIndex}-${charIndex}`}
                               custom={{ index: letterOffset + charIndex, stagger: adjustedSubtitle2Stagger }}
                               variants={subtitleLetterVariants}
-                              style={{ 
-                                display: 'inline-block', 
+                              style={{
+                                display: 'inline-block',
                                 willChange: 'transform, opacity',
                                 backfaceVisibility: 'hidden',
                                 perspective: 1000

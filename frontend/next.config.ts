@@ -14,7 +14,7 @@ const directusPattern = directusUrl
   : null;
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ['resend'],
+  serverExternalPackages: ['nodemailer'],
   images: {
     remotePatterns: [
       ...(directusPattern ? [directusPattern] : []),

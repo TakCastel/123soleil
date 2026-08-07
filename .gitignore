@@ -56,3 +56,4 @@ backups/
 *.mkv
 !frontend/public/videos/video.mp4
 !frontend/public/videos/**/.gitkeep
+!frontend/public/assets/logo-123soleil-animated.mp4

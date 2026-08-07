@@ -3,6 +3,7 @@ import { Slackey, Glegoo } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MotionProvider from "@/components/MotionProvider";
 import type React from "react";
 import { getSiteUrl } from "@/lib/site-url";
 
@@ -66,6 +67,25 @@ export const metadata: Metadata = {
   },
 };
 
+/** Organization schema.org : aide Google à afficher un panneau de connaissance pour l'association. */
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "1, 2, 3 Soleil",
+  alternateName: "1, 2, 3 Soleil Cinéma Solidaire",
+  description:
+    "Association de cinéma à Avignon dédiée à un cinéma solidaire et inclusif : ateliers, médiation artistique, films et projets jeunesse.",
+  ...(siteUrl && { url: siteUrl, logo: `${siteUrl}/logo.jpg` }),
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: "4 Rue des Esc. Sainte-Anne",
+    postalCode: "84000",
+    addressLocality: "Avignon",
+    addressCountry: "FR",
+  },
+  sameAs: ["https://www.facebook.com/123soleilcinemasolidaire/"],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -74,12 +94,18 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${slackey.variable} ${glegoo.variable}`}>
       <body className={`antialiased bg-white text-[color:var(--neutral-dark)]`}>
-        <Header />
-        {/* Add extra top padding on small screens to accommodate smaller logo overlap */}
-        <main className="min-h-screen pt-16 sm:pt-24">
-          {children}
-        </main>
-        <Footer />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
+        <MotionProvider>
+          <Header />
+          {/* Add extra top padding on small screens to accommodate smaller logo overlap */}
+          <main className="min-h-screen pt-16 sm:pt-24">
+            {children}
+          </main>
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

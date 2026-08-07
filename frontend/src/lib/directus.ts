@@ -37,7 +37,8 @@ export async function fetchDirectus<T = unknown>(path: string): Promise<Directus
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {})
     },
-    cache: 'no-store'
+    // Revalide en arrière-plan toutes les 60s au lieu de refaire un aller-retour Directus à chaque requête.
+    next: { revalidate: 60 }
   });
 
   if (!response.ok) {

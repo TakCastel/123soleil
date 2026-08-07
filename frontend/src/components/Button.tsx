@@ -40,7 +40,7 @@ export default function Button({
     <Link
       href={href}
       aria-label={ariaLabel}
-      className={`relative px-6 py-3 font-bold group ${className}`}
+      className={`relative inline-block px-6 py-3 font-bold group ${className}`}
     >
       <span
         className="absolute inset-0 w-full h-full transition duration-300 ease-out transform -translate-x-2 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0"
