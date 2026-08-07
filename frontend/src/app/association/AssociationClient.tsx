@@ -163,7 +163,18 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
                 className={`absolute inset-0 flex items-center justify-center bg-black transition-opacity duration-300 z-10 ${showGifLoader ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
                 aria-hidden={!showGifLoader}
               >
-                <div className="relative w-[88%] h-[88%] max-w-full max-h-full">
+                {/* Perforations façon pellicule 35mm, de part et d'autre du logo animé */}
+                <div className="absolute inset-y-0 left-0 w-4 sm:w-6 flex flex-col justify-evenly items-center py-4">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <span key={i} className="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#e8e2d0]/80 rounded-[1px]" />
+                  ))}
+                </div>
+                <div className="absolute inset-y-0 right-0 w-4 sm:w-6 flex flex-col justify-evenly items-center py-4">
+                  {Array.from({ length: 9 }).map((_, i) => (
+                    <span key={i} className="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#e8e2d0]/80 rounded-[1px]" />
+                  ))}
+                </div>
+                <div className="relative w-[78%] h-[88%] max-w-full max-h-full">
                   <video
                     src={LOGO_VIDEO_URL}
                     autoPlay
