@@ -15,12 +15,15 @@ const transporter =
 const primaryEmail = process.env.CONTACT_EMAIL_PRIMARY || gmailUser;
 const fallbackEmail = process.env.CONTACT_EMAIL_FALLBACK || '';
 
+const genericErrorMessage =
+  "Une erreur est survenue lors de l'envoi. Réessayez dans quelques instants, ou écrivez-nous directement à " +
+  '123soleilcinemasolidaire@gmail.com.';
+
 export async function POST(request: NextRequest) {
   if (!transporter) {
-    return Response.json(
-      { error: 'Configuration email manquante (GMAIL_USER / GMAIL_APP_PASSWORD).' },
-      { status: 500 }
-    );
+    // Détail technique gardé côté serveur uniquement : l'utilisateur ne doit jamais voir "GMAIL_USER manquant".
+    console.error('Contact API: configuration email manquante (GMAIL_USER / GMAIL_APP_PASSWORD).');
+    return Response.json({ error: genericErrorMessage }, { status: 500 });
   }
 
   try {
@@ -44,10 +47,8 @@ export async function POST(request: NextRequest) {
     }
 
     if (!primaryEmail) {
-      return Response.json(
-        { error: 'Aucune adresse de destination configurée (CONTACT_EMAIL_PRIMARY).' },
-        { status: 500 }
-      );
+      console.error('Contact API: aucune adresse de destination configurée (CONTACT_EMAIL_PRIMARY).');
+      return Response.json({ error: genericErrorMessage }, { status: 500 });
     }
 
     const replyTo = email.trim();
@@ -71,10 +72,7 @@ export async function POST(request: NextRequest) {
     return Response.json({ ok: true });
   } catch (e) {
     console.error('Contact API error:', e);
-    return Response.json(
-      { error: 'Erreur lors de l\'envoi du message.' },
-      { status: 500 }
-    );
+    return Response.json({ error: genericErrorMessage }, { status: 500 });
   }
 }
 
