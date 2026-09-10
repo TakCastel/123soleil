@@ -74,13 +74,10 @@ export default function Adhesion() {
           </p>
           <ul className="list-stars space-y-3 text-[color:var(--neutral-dark)] mb-8">
             <li>
-              Pour soutenir financièrement la rémunération des réalisateurs qui animent les différents ateliers tout au long de l&apos;année.
+              Pour soutenir l&apos;association dans la mise en place des festivals et soirées de projection, qui participent à la sensibilisation des avignonnais aux questions de l&apos;inclusion sociale, de l&apos;immigration et de la mixité.
             </li>
             <li>
               Pour aider l&apos;association à financer ses différents supports de communication.
-            </li>
-            <li>
-              Pour soutenir financièrement l&apos;association dans la mise en place des festivals et soirées de projection, qui participent à la sensibilisation des Avignonnais aux questions de l&apos;inclusion sociale, de l&apos;immigration et de la mixité.
             </li>
           </ul>
           <a
@@ -98,7 +95,7 @@ export default function Adhesion() {
           </a>
         </section>
 
-        <p className="text-center">
+        <p className="text-center mt-16 pt-4">
           <Link
             href="/contact"
             className="text-[color:var(--secondary)] font-medium hover:underline underline-offset-2"
