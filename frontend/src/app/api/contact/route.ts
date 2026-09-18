@@ -4,7 +4,7 @@ import { Resend } from 'resend';
 const resendApiKey = process.env.RESEND_API_KEY || '';
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-const fromAddress = process.env.RESEND_FROM || 'onboarding@resend.dev';
+const fromAddress = process.env.RESEND_FROM || '1,2,3 Soleil <onboarding@resend.dev>';
 const primaryEmail = process.env.CONTACT_EMAIL_PRIMARY || '123soleilcinemasolidaire@gmail.com';
 const fallbackEmail = process.env.CONTACT_EMAIL_FALLBACK || '';
 
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
     `;
 
     const { error } = await resend.emails.send({
-      from: `1,2,3 Soleil <${fromAddress}>`,
+      from: fromAddress,
       to: primaryEmail,
       replyTo,
       subject,
