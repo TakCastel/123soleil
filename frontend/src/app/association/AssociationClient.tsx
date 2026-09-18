@@ -10,7 +10,7 @@ import type React from 'react';
 import styles from '@/app/actualites/[slug]/actualite.module.css';
 
 /** Logo animé (vidéo mp4, ~360 Ko) : remplace l'ancien GIF (104 Mo) qui pesait bien plus que la vidéo qu'il précède. */
-const LOGO_VIDEO_URL = '/assets/logo-123soleil-animated.mp4';
+const LOGO_VIDEO_URL = '/assets/logo-123soleil-animated-v2.mp4';
 const FALLBACK_VIDEO_URL = '/videos/video.mp4';
 
 interface AssociationClientProps {
@@ -174,13 +174,13 @@ export default function AssociationClient({ associationVideoUrl, contentHtml }: 
                     <span key={i} className="block w-2 h-2 sm:w-2.5 sm:h-2.5 bg-[#e8e2d0]/80 rounded-[1px]" />
                   ))}
                 </div>
-                <div className="relative w-[78%] h-[88%] max-w-full max-h-full">
+                <div className="relative w-[78%] h-[88%] max-w-full max-h-full overflow-hidden rounded-[10%] border-4 border-black bg-black">
                   <video
                     src={LOGO_VIDEO_URL}
                     autoPlay
                     muted
                     playsInline
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-cover scale-[1.03]"
                     onEnded={() => setShowGifLoader(false)}
                   />
                 </div>

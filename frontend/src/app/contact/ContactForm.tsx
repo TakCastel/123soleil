@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { FiCheckCircle, FiAlertCircle } from 'react-icons/fi';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -30,10 +31,12 @@ export default function ContactForm() {
     const name = (formData.get('name') as string)?.trim() || '';
     const email = (formData.get('email') as string)?.trim() || '';
     const message = (formData.get('message') as string)?.trim() || '';
-    const website = (formData.get('website') as string)?.trim() || '';
+    const hpValue = (formData.get('hp_confirm') as string)?.trim() || '';
 
     // Honeypot : champ invisible pour les humains, souvent rempli par les bots. On feint le succès sans envoyer.
-    if (website) {
+    // Nom volontairement générique (pas "website"/"email"/"phone"...) pour éviter l'autofill navigateur,
+    // qui peut sinon remplir ce champ caché et faire échouer silencieusement l'envoi pour un vrai visiteur.
+    if (hpValue) {
       setStatus('success');
       form.reset();
       return;
@@ -79,8 +82,8 @@ export default function ContactForm() {
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       {/* Honeypot anti-spam : caché visuellement et du DOM tab order, mais présent pour les bots qui remplissent tout. */}
       <div style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }} aria-hidden="true">
-        <label htmlFor="contact-website">Site web</label>
-        <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+        <label htmlFor="contact-hp-confirm">Ne pas remplir</label>
+        <input id="contact-hp-confirm" name="hp_confirm" type="text" tabIndex={-1} autoComplete="off" />
       </div>
       <div>
         <label htmlFor="contact-name" className="block font-medium text-[color:var(--neutral-dark)] mb-2">
@@ -143,14 +146,24 @@ export default function ContactForm() {
         )}
       </div>
       {status === 'error' && globalError && (
-        <p className="text-red-600 text-sm" role="alert">
-          {globalError}
-        </p>
+        <div
+          role="alert"
+          className="flex items-start gap-3 border-2 border-black bg-[color:var(--secondary-light)]/25 px-4 py-3"
+        >
+          <FiAlertCircle className="mt-0.5 shrink-0 text-[color:var(--secondary)]" size={20} aria-hidden="true" />
+          <p className="text-sm font-medium text-[color:var(--neutral-dark)]">{globalError}</p>
+        </div>
       )}
       {status === 'success' && (
-        <p className="text-green-700 text-sm" role="status">
-          Message envoyé. Nous vous répondrons dès que possible.
-        </p>
+        <div
+          role="status"
+          className="flex items-start gap-3 border-2 border-black bg-green-100 px-4 py-3"
+        >
+          <FiCheckCircle className="mt-0.5 shrink-0 text-green-700" size={20} aria-hidden="true" />
+          <p className="text-sm font-medium text-[color:var(--neutral-dark)]">
+            Message envoyé. Nous vous répondrons dès que possible.
+          </p>
+        </div>
       )}
       <button
         type="submit"

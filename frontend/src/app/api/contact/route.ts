@@ -1,18 +1,11 @@
 import { NextRequest } from 'next/server';
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-const gmailUser = process.env.GMAIL_USER || '';
-const gmailAppPassword = process.env.GMAIL_APP_PASSWORD || '';
+const resendApiKey = process.env.RESEND_API_KEY || '';
+const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
-const transporter =
-  gmailUser && gmailAppPassword
-    ? nodemailer.createTransport({
-        service: 'gmail',
-        auth: { user: gmailUser, pass: gmailAppPassword },
-      })
-    : null;
-
-const primaryEmail = process.env.CONTACT_EMAIL_PRIMARY || gmailUser;
+const fromAddress = process.env.RESEND_FROM || 'onboarding@resend.dev';
+const primaryEmail = process.env.CONTACT_EMAIL_PRIMARY || '123soleilcinemasolidaire@gmail.com';
 const fallbackEmail = process.env.CONTACT_EMAIL_FALLBACK || '';
 
 const genericErrorMessage =
@@ -20,22 +13,22 @@ const genericErrorMessage =
   '123soleilcinemasolidaire@gmail.com.';
 
 export async function POST(request: NextRequest) {
-  if (!transporter) {
-    // Détail technique gardé côté serveur uniquement : l'utilisateur ne doit jamais voir "GMAIL_USER manquant".
-    console.error('Contact API: configuration email manquante (GMAIL_USER / GMAIL_APP_PASSWORD).');
+  if (!resend) {
+    // Détail technique gardé côté serveur uniquement : l'utilisateur ne doit jamais voir "RESEND_API_KEY manquant".
+    console.error('Contact API: configuration email manquante (RESEND_API_KEY).');
     return Response.json({ error: genericErrorMessage }, { status: 500 });
   }
 
   try {
     const body = await request.json();
-    const { name, email, message, website } = body as {
+    const { name, email, message, hp_confirm: hpValue } = body as {
       name?: string;
       email?: string;
       message?: string;
-      website?: string; // honeypot : doit rester vide, un bot le remplit généralement
+      hp_confirm?: string; // honeypot : doit rester vide, un bot le remplit généralement
     };
 
-    if (website?.trim()) {
+    if (hpValue?.trim()) {
       return Response.json({ ok: true });
     }
 
@@ -44,11 +37,6 @@ export async function POST(request: NextRequest) {
         { error: 'Tous les champs (nom, email, message) sont requis.' },
         { status: 400 }
       );
-    }
-
-    if (!primaryEmail) {
-      console.error('Contact API: aucune adresse de destination configurée (CONTACT_EMAIL_PRIMARY).');
-      return Response.json({ error: genericErrorMessage }, { status: 500 });
     }
 
     const replyTo = email.trim();
@@ -60,14 +48,19 @@ export async function POST(request: NextRequest) {
       <pre style="white-space: pre-wrap; font-family: inherit;">${escapeHtml(message.trim())}</pre>
     `;
 
-    await transporter.sendMail({
-      from: `"1,2,3 Soleil" <${gmailUser}>`,
+    const { error } = await resend.emails.send({
+      from: `1,2,3 Soleil <${fromAddress}>`,
       to: primaryEmail,
       replyTo,
       subject,
       html,
       ...(fallbackEmail && { bcc: fallbackEmail }),
     });
+
+    if (error) {
+      console.error('Contact API error (Resend):', error);
+      return Response.json({ error: genericErrorMessage }, { status: 500 });
+    }
 
     return Response.json({ ok: true });
   } catch (e) {

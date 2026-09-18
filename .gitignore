@@ -28,6 +28,9 @@ yarn-error.log*
 .env*
 backend/migrate-directus-db.env
 
+# docker compose override (config locale, ne pas versionner)
+docker-compose.override.yml
+
 # vercel
 .vercel
 
@@ -56,4 +59,4 @@ backups/
 *.mkv
 !frontend/public/videos/video.mp4
 !frontend/public/videos/**/.gitkeep
-!frontend/public/assets/logo-123soleil-animated.mp4
+!frontend/public/assets/logo-123soleil-animated-v2.mp4
