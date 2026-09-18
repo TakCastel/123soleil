@@ -6,7 +6,6 @@ const resend = resendApiKey ? new Resend(resendApiKey) : null;
 
 const fromAddress = process.env.RESEND_FROM || '1,2,3 Soleil <onboarding@resend.dev>';
 const primaryEmail = process.env.CONTACT_EMAIL_PRIMARY || '123soleilcinemasolidaire@gmail.com';
-const fallbackEmail = process.env.CONTACT_EMAIL_FALLBACK || '';
 
 const genericErrorMessage =
   "Une erreur est survenue lors de l'envoi. Réessayez dans quelques instants, ou écrivez-nous directement à " +
@@ -48,13 +47,15 @@ export async function POST(request: NextRequest) {
       <pre style="white-space: pre-wrap; font-family: inherit;">${escapeHtml(message.trim())}</pre>
     `;
 
+    // Tant qu'aucun domaine n'est vérifié sur Resend, le compte est en mode "test" :
+    // il refuse tout envoi (y compris en bcc) vers une adresse autre que celle du compte.
+    // On ignore donc fallbackEmail pour l'instant (voir backend/README.md).
     const { error } = await resend.emails.send({
       from: fromAddress,
       to: primaryEmail,
       replyTo,
       subject,
       html,
-      ...(fallbackEmail && { bcc: fallbackEmail }),
     });
 
     if (error) {
